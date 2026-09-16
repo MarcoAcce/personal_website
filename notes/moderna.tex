@@ -1,0 +1,3017 @@
+\documentclass[12pt,a4paper,titlepage, twoside, openright]{book}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}  
+\usepackage{amsmath, amsthm, amsfonts, amssymb, xfrac}
+\usepackage{arydshln} %Linea dotted in array
+\usepackage{xparse}
+\usepackage[italian]{babel}
+\usepackage{titling} %Funzioni per modificare maketitle
+\usepackage{titlesec} %Ridefinizione semplice di titoli 
+\usepackage{float} %Comando H per posizione di float
+\usepackage[left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry} 
+\usepackage{perpage}
+\usepackage{fancyhdr} 
+\usepackage[hidelinks]{hyperref} 
+\usepackage{graphicx, wrapfig} 
+\usepackage[shortlabels]{enumitem}
+\usepackage[skins, breakable, theorems, fitting]{tcolorbox}
+
+%------------------------------------------------------------------------------
+\author{Marco Accerenzi}
+\title{Relatività}
+%------------------------------------------------------------------------------------
+
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{ \markboth{\chaptername \  \thechapter :\ #1}{} } 
+\renewcommand{\sectionmark}[1]{ \markright{#1}{} }
+\lhead[]{\small Marco Accerenzi}
+\chead[\small\leftmark]{} 
+\rhead[]{\small Appunti di Relatività speciale} 
+\fancyfoot[LO,RE]{\large\thepage} 
+\fancyfoot[C]{\small\rightmark} 
+\renewcommand{\headrulewidth}{0.25pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+%--------------------------------------------------------------------------------------
+
+\fancypagestyle{plain}
+{
+	\fancyhf{} 
+	\fancyfoot[LO,RE]{\large\thepage} 
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+
+%-----------------------------------------------------------------------------------
+
+\newenvironment{proofT}[1][\proofname]{  %ambiente proof con titoletto
+  \begin{proof}[\bfseries #1:]$ $\par\nobreak\ignorespaces\noindent
+  }{
+  \end{proof}
+}
+
+\newenvironment{proof:}[1][\proofname]{  %ambiente proof con : integrato
+ \begin{tcolorbox}[
+	breakable, 
+	enhanced, 
+	interior hidden, 
+	frame hidden, 
+	borderline west = {1pt}{0pt}{gray}, 
+	top=0pt, bottom=0pt, left=0pt]
+\begin{proof}[#1:]~
+}
+{
+\end{proof}
+\end{tcolorbox}
+}
+
+%Box per equazioni importanti-------------------------
+
+\newenvironment{importante}[0]{ 
+  \begin{center}\begin{tcolorbox}[
+  enhanced,
+  before skip=2mm,after skip=3mm,
+  boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
+  colback=yellow!5,
+  colframe=yellow!20!black,
+  sharp corners,arc=3mm,
+  ]\boldmath
+  }{
+ \normalsize \end{tcolorbox}\end{center}
+}
+
+%-------------------------------------------------------------------------------------
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\titleformat{\section}{\huge\bfseries}{{\Large \thesection}}{0.5em}{}
+\titleformat{\subsection}{\Large\bfseries}{{\large \thesubsection}}{0.5em}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries}{{}}{0}{}
+%----------------------------------------------------------------------------------------
+
+\DeclareMathOperator*{\immagine}{Im}
+\DeclareMathOperator*{\id}{Id}
+\DeclareMathOperator*{\res}{Res}
+\DeclareMathOperator*{\reale}{Re}
+\DeclareMathOperator*{\immaginaria}{Imm}
+
+%---------------------------------------------------------------------------------------
+
+%Box per proposizione
+\newtcbtheorem[number within=section]{Proposizione}{Proposizione}{
+	enhanced,
+	boxrule=0pt,frame hidden,
+	borderline west={2.5pt}{0pt}{black},
+	colback=yellow!1!white,
+	sharp corners,
+	coltitle=black,
+	attach title to upper={\noindent},
+	fonttitle=\bfseries\large,
+}{thm}
+
+%Box per Definizione
+\newtcbtheorem[use counter from=Proposizione]{Definizione}{Definizione}{
+enhanced,
+	boxrule=0pt,frame hidden,
+	borderline west={2.5pt}{0pt}{black},
+	colback=yellow!1!white,
+	sharp corners,
+	coltitle=black,
+	attach title to upper={\noindent},
+	fonttitle=\bfseries\large,
+}{defi}
+
+%Box per Corollario
+\newtcbtheorem[use counter from=Proposizione]{Teorema}{Teorema}{
+enhanced,
+	boxrule=0pt,frame hidden,
+	borderline west={2.5pt}{0pt}{black},
+	colback=yellow!1!white,
+	sharp corners,
+	coltitle=black,
+	attach title to upper={\noindent},
+	fonttitle=\bfseries\large,
+}{Cor}
+
+
+
+%Ambienti per proposizione, definizione, lemma e corollario
+\newenvironment{proposizione}[1][\empty]{\begin{Proposizione}{
+\ifx\empty#1\relax\else\mdseries\itshape#1\\\fi
+}{}}{\end{Proposizione}}  
+\newenvironment{definizione}[1][\empty]{\begin{Definizione}{
+\ifx\empty#1\relax\else\mdseries\itshape#1\\\fi
+}{}}{\end{Definizione}}
+\newenvironment{teorema}[1][\empty]{\begin{Teorema}{
+\ifx\empty#1\relax\else\mdseries\itshape#1\\\fi
+}{}}{\end{Teorema}}
+
+%---------------------------------------------------------------------------------
+
+
+\MakePerPage{footnote}
+\numberwithin{equation}{chapter} 
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\hypersetup{linktoc=all}
+\newcommand{\sectionbreak}{\newpage}
+
+%--------------------------------------------------------------------
+
+\begin{document}
+\frontmatter
+\pagestyle{plain}
+\begin{titlepage}
+	\begin{center}
+
+	\begin{center}
+		\centering
+		Anno accademico 2019-2020\par
+		\vspace{.05\textheight}
+	\end{center}	
+
+		\vspace{.1\textheight}
+		{\LARGE\scshape \textsc{Marco Accerenzi}\par}
+		\vspace{.1\textheight}
+		\textsc{}\par
+		\vspace{.05\textheight}
+		{\Huge \textsc{Relatività speciale}\par}
+		\vspace{.05\textheight}
+		{\large Riassunto degli appunti\par}
+		\vfill
+		{\centering\large
+Raccolta degli appunti della prima parte del corso di \textit{Fisica Moderna} dell'anno 2019-2020 tenuto dal professor Ferruglio, integrati con appunti della prima parte del corso \textit{Campi Elettromagnetici} dello stesso anno.
+Alcune parti della sezione \ref{sezPostulatiRelatività} e il capitolo \ref{sezOrigineFormalismo} sono tratti dai miei appunti del corso di \textit{Fisica Moderna} dell'anno 2018-2019 tenuto dal professor Marchetti.}
+  \vspace{2cm} 
+\end{center}
+\end{titlepage}
+\setcounter{page}{1}
+
+
+
+\tableofcontents
+
+\clearpage
+\titleformat{\chapter}[display]
+{\normalfont\Large\filcenter}
+{\vspace*{\fill}
+\vspace{1pt}
+ \vspace{1pc} \LARGE{\chaptertitlename}~\thechapter}
+{1pc}
+{
+ \titlerule[1pt]\Huge
+  \vspace{1pt}
+ \vspace{1pc}}
+[\vspace*{\fill}\newpage]
+
+\newpage
+
+
+\mainmatter
+
+%--------------------------
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{ \markboth{\chaptername \  \thechapter :\ #1}{} } 
+\renewcommand{\sectionmark}[1]{ \markright{#1}{} }
+\lhead[]{Marco Accerenzi}
+\chead[\leftmark]{} 
+\rhead[]{Relatività speciale} 
+\fancyfoot[LO,RE]{\large\thepage} 
+\fancyfoot[C]{\rightmark} 
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.4pt}
+%-------------------------------
+
+\chapter{Nascita della relatività}
+
+La relatività galieiana, su cui si appoggia in larga parte la fisica pre-relativistica, è basata sull'impossibilità di distinguere sperimentalmente due sistemi di riferimento inerziali e sul concetto di tempo assoluto.
+
+Un sistema inerziale è un sistema in cui vale il principio di inerziale e, dato un qualsiasi sistema inerziale di riferimento, tutti i sistemi in moto uniforme rispetto ad esso saranno a loro volta sistemi inerziali.
+
+L'esistenza di un sistema di riferimento inerziale, e quindi dei riferimenti inerziali in generale, è un postulato, però siamo in grado sperimentalmente di verificare la presenza di forze di inerzia e quindi di dire che un dato sistema non è inerziale.
+
+In relatività galileiana, dato un sistema $S$ che ne vede un altro $S'$ in moto uniforme a velocità $\vec{v}_{O}'$ potremo trasformare facilmente le grandezze misurate in un sistema in quelle misurate nell' altro tramite le trasformazioni di Galileo:
+\[
+\begin{cases}
+t=t'\\
+\vec{x}(t)=\overline{OO}'(t)+\vec{x}'(t) & \vec{x}(t)=\vec{v}_{O}'t + \vec{x}' \\
+\vec{v}(t)=\dfrac{\partial}{\partial t} \overline{OO}'(t) + \vec{v}'(t)=\vec{v}_{O'} + \vec{v}'(t) \\
+\end{cases}
+\]
+
+Queste trasformazioni vedono come \textbf{assoluto} il tempo: ogni riferimento avrà lo stesso tempo. Quindi chiaramente anche gli intervalli di tempo e la derivata temporale saranno invarianti.
+
+La posizione chiaramente non sarà invariante ma gli intervalli spaziali lo saranno, non ha alcun senso da un punto di vista classico pensare che due osservatori misurino lunghezze diverse relativamente agli stessi estremi.
+
+Da come sono definite queste definizioni è chiaro che le differenze di velocità, sia per lo stesso oggetto nel tempo sia tra oggetti diversi allo stesso istante, non cambiano sotto una trasformazione di Galileo. 
+Questo significherà che tutte le grandezze che si possono derivare da differenze di velocità saranno a loro volta degli invarianti.
+
+Guardiamo ora come cambia una legge sotto queste trasformazioni: nello specifico ci limitiamo ad osservare la seconda legge della dinamica.
+
+In generale ci aspetteremmo qualcosa del tipo
+\[
+\vec{F}=m\vec{a} \longrightarrow \vec{F}'=m'\vec{a}'
+\]
+ma ci accorgiamo immediatamente che per quanto detto $\vec{a}$ è invariante per trasformazioni di Galileo e che sia $\vec{F}$ sia $m$ sono misurabili tramite sole misure di variazioni di velocità e quindi dovranno anche loro essere invarianti.
+
+Questo non è limitato alla sola seconda legge di Newton: tutte le leggi della meccanica classica sono invarianti per le trasformazioni di Galileo tra due sistemi inerziali!
+
+\pagebreak
+
+\section{Gruppo di Galileo}
+
+Abbiamo detto che le trasformazioni di Galileo lasciano invariati gli intervalli temporali $\Delta t$ e spaziali $\Delta \vec{x}$, ci sono altre trasformazioni che non li cambiano?
+
+Chiaramente le traslazioni spaziali $\vec{x}'=\vec{x}+\vec{a}$ e le traslazioni temporali $t'=t+t_0$ lasciano invariati gli intervalli ma anche le rotazioni spaziali $\vec{x}'=R\vec{x}$.
+
+Le rotazioni non sono trasformazioni di Galileo e chiaramente non potremo mai trasformare un sistema inerziali in un altro a sua volta inerziale tramite una rotazione a causa delle forze inerziali che ne risulterebbe, nonostante questo come sappiamo le rotazioni sono delle trasformazioni molto importanti.
+
+L'insieme delle trasformazioni che lasciano invarianti $\Delta t$ e $\Delta \vec{x}$ è un gruppo che chiameremo \textbf{gruppo di Galileo}. Una trasformazioni qualsiasi del gruppo di Galileo sarà determinata da $10$ parametri indipendenti:\begin{itemize}
+\item $3$ per la traslazione spaziale
+\item $1$ per la traslazione temporale
+\item $3$ per la rotazione spaziale
+\item $3$ per la trasformazione di Galileo
+\end{itemize}
+\[
+\begin{cases}
+t'=t+t_0 \\
+\vec{x}'=R\vec{x}+\vec{v_0}t+\vec{a}
+\end{cases}
+\]
+
+In generale le leggi della meccanica classica non sono invarianti sotto rotazioni ma sono \textbf{covarianti}. 
+\begin{definizione}
+Diremo che un'equazione è covariante per una trasformazione se le quantità presenti nell'equazione cambiano in modo tale che l'equazione sia vera nella stessa forma dopo la trasformazione
+\[
+\vec{F} = m\vec{a} \overset{R}{\longrightarrow} \vec{F}' = m'\vec{a}'
+\]
+\end{definizione}
+
+Nel caso di una rotazione la relazione di covarianza per la seconda legge della dinamica è 
+\[
+\vec{F}=m\vec{a} \longrightarrow \begin{array}{cc} \vec{F}'=m'\vec{a}' & \begin{cases} \vec{F}' = R\vec{F} \\ m'=m \\ \vec{a}'=R\vec{a} \end{cases} \end{array}
+\]
+
+Le rotazioni formano un gruppo, detto gruppo delle rotazioni $O(3)$, che è un sottogruppo del gruppo di Galileo. 
+
+Se traslazioni e trasformazioni di Galileo commutano tra loro, cioè $\vec{v_0}t+\vec{a}=\vec{a}+\vec{v_0}t$, le rotazioni non commutano né con trasformazioni di Galileo e traslazione e neppure con altre rotazioni $RR'\neq R'R$.
+
+\subsection{Matrici di rotazione}
+Le rotazioni spaziali sono una trasformazioni lineare e le possiamo quindi rappresentare con una matrice $3\times 3$. Abbiamo però detto che le rotazioni sono determinate solo da $3$ parametri indipendenti e non da $9$.
+Per capire perchè prima di tutto scriviamo esplicitamente un intervallo spaziale ed il suo trasformato tramite una rotazione generica $R$
+\[
+\Delta \vec{x}^2=\Delta \vec{x} \cdot \Delta \vec{x} = (\Delta \vec{x})^T \Delta \vec{x} \qquad\quad  \Delta \vec{x}'^2 = (R \Delta \vec{x})^T (R\Delta \vec{x})=(\Delta \vec{x})^T R^T (R\Delta \vec{x})
+\]
+abbiamo detto che le rotazioni mantengono invariati gli intervalli spaziali quindi avremo
+\[
+\Delta \vec{x}'^2=\Delta \vec{x}^2 \implies R^T  R = \mathbb{I}
+\]
+Quindi le matrici associate a rotazioni spaziali sono ortogonali!
+La condizione di ortogonalità darà $6$ equazioni indipendenti che riduce il numero di parametri liberi da $9$ a $3$.
+
+Vediamo ora un modo un po' naif per costruire una matrice di rotazione.
+Le rotazioni formano un gruppo e quindi sono deformabili con continuità alla matrice identità, possiamo allora prendere per esempio una
+\[
+R=\mathbb{I}+\alpha
+\]
+Dove pensiamo alla matrice $\alpha$ come ad un ``piccolo'' cambiamento da $\mathbb{I}$, allora dato che la rotazione è ortogonale dovremo avere
+\[
+\mathbb{I}=(\mathbb{I}+\alpha)^T (\mathbb{I}+\alpha)=(\mathbb{I}+\alpha^T)(\mathbb{I}+\alpha)= \mathbb{I}+\alpha+\alpha^T+\alpha^T\alpha
+\]
+dato che $\alpha$ è piccolo possiamo trascurare il termine quadratico e quindi troviamo $\alpha=-\alpha^T$ cioè $\alpha$ è antisimmetrica.
+Quindi, avendo le rotazioni solo $3$ parametri indipendenti, possiamo usare $3$ matrici antisimmetriche
+\[
+t_1=\left(\begin{array}{ccc}
+0 & 1 &0 \\ -1 & 0 & 0 \\ 0 & 0 & 0
+\end{array}\right)\hspace{0.1\linewidth}
+t_2=\left(\begin{array}{ccc}
+0 & 0 & 1 \\ 0 & 0 & 0 \\ -1 & 0 & 0
+\end{array}\right)\hspace{0.1\linewidth}
+t_3=\left(\begin{array}{ccc}
+0 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & -1 & 0
+\end{array}\right)
+\]
+e possiamo scrivere
+$R=\mathbb{I} \sum_{i=1}^3 \lambda_i t_i$
+
+\section{Equazioni di Maxwell e relatività galileiana}
+
+Le equazioni di Maxwell in forma differenziale sono
+
+\begin{minipage}[H]{0.45\linewidth}
+\begin{align}
+\nabla\times\vec{E}+\dfrac{\partial \vec{B}}{\partial t}=0  \\
+\nabla \cdot \vec{E}=\dfrac{\rho}{\epsilon_0} 
+\end{align}
+\end{minipage}
+\begin{minipage}[H]{0.45\linewidth}
+\begin{align}
+\nabla \cdot \vec{B}= 0 \\
+\nabla\times\vec{B}=\mu_0\vec{j}+\epsilon_0\mu_0\dfrac{\partial \vec{E}}{\partial t}
+\end{align}
+\end{minipage}
+
+Come sappiamo nel vuoto possiamo semplificarle ponendo $\rho=0$, $\vec{j}=0$ e le onde elettromagnetiche saranno le soluzioni delle equazioni semplificate. 
+\begin{equation}
+\nabla^2 \vec{E} -\mu_0\epsilon_0\dfrac{\partial^2}{\partial t^2}\vec{E}=0 \hspace{0.15\linewidth} \nabla^2 \vec{B} -\mu_0\epsilon_0\dfrac{\partial^2}{\partial t^2}\vec{B}=0
+\end{equation}
+Un'onda qualsiasi che si propaga a velocità $\vec{v}=v \hat{u_v}$ ha equazione
+\begin{equation}
+\nabla^2 \varphi(t,\vec{x}) -\dfrac{1}{v^2}\dfrac{\partial^2}{\partial t^2}\varphi(t,\vec{x})=0
+\end{equation}
+
+Si vede subito che il modulo della velocità di propagazione sarà $v=\sqrt{\dfrac{1}{\mu_0\epsilon_0}}$. 
+
+Le due costanti non ha senso che cambino da un sistema inerziale ad un altro ma allora la velocità di un'onda elettromagnetica dovrebbe essere un invariante e le velocità \textbf{non} sono invarianti galileiani.
+
+Proviamo a trasformare l'equazione d'onda e vediamo cosa succede. Usiamo un'onda piana che si propaga lungo l'asse $x$ per comodità.
+Prima di tutto cerchiamo di ottenere le derivate parziali\footnotemark{}  in $S'$ a partire da quelle nel sistema $S$ a partire da $x=x'-v_0t'$ e $t=t'$:
+\footnotetext{Come si fa a trasformare una derivata parziale? Qua non ci spendiamo troppo tempo perchè questo ragionamento è fatto solo per farci intuire i problemi del modello classico, più avanti nella trattazione sulla relatività vedremo meglio come trasformano derivate e gradienti.}
+\[
+\dfrac{\partial}{\partial x}=
+\dfrac{\partial x}{\partial x'}\dfrac{\partial}{\partial x'}+\dfrac{\partial x}{\partial t'}\dfrac{\partial }{\partial t'}
+= \dfrac{\partial}{\partial x'} 
+\qquad\quad
+\dfrac{\partial}{\partial t}=\dfrac{\partial t}{\partial x}\dfrac{\partial}{\partial x}+\dfrac{\partial t}{\partial x'}\dfrac{\partial }{\partial x'}+\dfrac{\partial t}{\partial t'}\dfrac{\partial}{\partial t'}
+=\dfrac{1}{v_O}\dfrac{\partial}{\partial x'}+\dfrac{\partial}{\partial t'}
+\]
+Ora inserendo queste scritture per le derivate parziali nell'equazione d'onda per il campo elettrico troviamo
+\[
+\left[ \dfrac{\partial^2}{\partial x^2}-\dfrac{1}{c^2}\dfrac{\partial^2}{\partial t^2} \right] \vec{E}(\vec{x},t)=
+\left[ \dfrac{\partial^2}{\partial x'^2}-\dfrac{1}{c^2}\left( v_0 \dfrac{\partial}{\partial x'} + \dfrac{\partial}{\partial t'}\right)^2 \right] \vec{E}(\vec{x'}-v_Ot,t)
+\]
+Questa nuova equazione non è più nella forma delle equazioni d'onda! Questo è un problema: le equazioni dell'elettromagnetismo non sono invarianti per le trasformazioni di Galileo.
+
+
+A questo punto si hanno essenzialmente $3$ opzioni per risolvere questa inconsistenza:\begin{enumerate}
+\item La relatività galileiana e la meccanica classica sono corrette e l'elettromagnetismo classico ha bisogno di un sistema di riferimento privilegiato per essere corretto
+\item La relatività galileiana e la meccanica classica sono corrette e l'elettromagnetismo classico non ha un riferimento privilegiato e quindi è sbagliato
+\item L'elettromagnetismo è corretto senza bisogno di un riferimento privilegiato e quindi la relatività galileiana e la meccanica classica sono sbagliate.
+\end{enumerate}
+
+\section{Etere}
+
+Cosa significherebbe l'esistenza di un sistema privilegiato per l'elettromagnetismo?
+
+La natura ondulatoria della luce e delle onde elettromagnetiche fa pensare che questi abbiano bisogno di un mezzo in cui propagarsi, come per tutte le altre onde studiate fin'ora. Non essendo però chiaro per le onde elettromagnetiche per esempio nello spazio quale potrebbe essere questo mezzo di propagazione ed essendo emersa l'inconsistenza tra le equazioni di Maxwell e le trasformazioni di Galileo tra sistemi inerziali venne postulata l'esistenza dell'etere luminifero. 
+
+Questo mezzo dovrebbe in qualche modo pervadere tutto lo spazio ed essere completamente rigido. 
+L'etere inoltre sarebbe un sistema di riferimento inerziale a sé stante (pervadendo tutto lo spazio omogeneamente ``non ha nessun posto dove andare''  e quindi è globalmente assolutamente fermo) e le leggi di Maxwell come le abbiamo viste dovrebbero valere nella forma che conosciamo in quel sistema privilegiato ma non necessariamente nei sistemi inerziali ``normali''.
+
+Tutte queste ipotesi sulle caratteristiche dell'etere sembrano dette così un po' campate per aria perchè vanno contestualizzate storicamente all'inizio del novecento, subito dopo la scoperta della natura oscillatoria della luce e prima della formulazione della relatività.
+
+\subsection{Effetto doppler}
+
+Come possiamo fare a mettere in evidenza sperimentalmente l'esistenza dell'etere?
+Potremmo sfruttare l'effetto Doppler: siano $S$ la sorgente delle onde, $R$ un ricevitore e $M$ il mezzo in cui si propagano le onde. Allora
+
+\begin{table}[H]
+\flushright
+\begin{minipage}[H]{0.47\linewidth}
+Se $R$ è in quiete rispetto al mezzo $M$ e $S$ si muove con velocità $v_S$ lungo la dire di propagazione dell'onda il ricevitore misurerà una frequenza
+\begin{equation}
+\nu_R=\nu_S\dfrac{1}{1-\dfrac{v_S}{c}}
+\end{equation}
+\end{minipage}
+\begin{minipage}[H]{0.05\linewidth}
+$ $
+\end{minipage}
+\begin{minipage}[H]{0.46\linewidth}
+Se $S$ è in quiete rispetto al mezzo $M$ e $R$ si muove con velocità $v_R$ lungo la dire di propagazione dell'onda il ricevitore misurerà una frequenza
+\begin{equation}
+\nu_R=\nu_S\dfrac{1}{1+\dfrac{v_S}{c}}
+\end{equation}
+\end{minipage}
+\end{table}
+
+e in generale se il ricevitore si muove con velocità $v_R$ e la sorgente a velocità $v_S$ rispetto al mezzo di propagazione la frequenza misurata dal ricevitore è
+\begin{equation}
+\nu_R = \nu_S \dfrac{1-\dfrac{v_R}{c}}{1-\dfrac{v_S}{c}}
+\end{equation}
+
+Allora se consideriamo come sorgente una stella e come ricevitore un oggetto solidale alla terra possiamo, presupponendo noti $\nu_S$ e $c$, possiamo misurare sperimentalmente la $\nu_R$ e ottenere da altri esperimenti le $v_{terra}$ e $v_S-v_{terra}$ e quindi potremo confrontare le velocità relative per verificare se l'effetto Doppler con la supposizione dell'etere fisso prevede efficacemente il risultato.
+
+Espandendo la formula generale dell'effetto Doppler nel limite $v_{R,S}<<c$ otteniamo
+\begin{align*}
+\nu_R &= \nu_S \left(1-\dfrac{v_R}{c} \right) \left(1+\dfrac{v_S}{c}+\dfrac{v_S^2}{c^2}+\dots\right)= \\ &=  
+\nu_S \left(1+\dfrac{v_S-v_R}{c}+\dfrac{v_S^2-v_Sv_R}{c^2}+\dots \right)
+\end{align*}
+dove il primo termine dipenderà solo dalla velocità relativa $v_S-v_R$.
+
+Il problema con questo ragionamento è che la velocità della terra è troppo piccola rispetto alla velocità della luce $\dfrac{v}{c}\approx 10^{-4}$ e quindi non riusciamo a misurare efficacemente i cambiamenti dei termini quadratici con un esperimento sull'effetto Doppler.
+
+\section{Esperimente di Michelson-Morley}
+L'esperimento di Michelson e Morley per verificare la presenza dell'etere essenzialmente consiste nel misurare tramite un interferometro la differenza tra due cammini luminosi in qualche modo influenzati dall'etere e poi ruotare rigidamente l'apparato per verificare se i cambiamenti ai risultati sono compatibili con l'ipotesi dell'etere.
+
+L'interferometro è costituito da una sorgente di luce monocromatica $S$ diretta verso uno specchio semi riflettente $M$ adeguatamente orientato. La luce incidente sullo specchio verrà divisa in due fasci in direzioni ortogonali che percorerrano cammini $l_1$ e $l_2$ prima di colpire uno specchio e venire riflessi all'indietro. Tornati in $M$ entrambi i fasci riflessi passeranno in una stessa direzione ricongiungendosi in un unico fascio di luce che è poi raccolto su uno schermo $R$ dove si misura l'interferenza.
+
+L'interferometro è inizialmente orientato in modo che il cammino $l_1$ sia parallelo al moto relativo terra-etere.
+
+\begin{enumerate}[i.]
+\item Il tempo impiegato dal primo fascio per uscire da $M$ e poi tornarvi è
+\[
+t_1=\dfrac{l_1}{c-v}+\dfrac{l_1}{c+v}=l_1\dfrac{c+v+c-v}{c^2-v^2}=2l_1\dfrac{1}{1-\sfrac{v^2}{c^2}}
+\]
+Infatti la luce si muove di velocità $c$ nell'etere e il moto relativo della terra prima ``allontana'' lo specchio e poi ``avvicina'' $M$. 
+\item Il tempo in questa trattazione classica è assoluto quindi possiamo calcolare $t_2$ con più semplicità nel riferimento solidale all'etere. In questo riferimento la luce ha velocità $c$ e compie una cammino a forma di triangolo isoscele: la base del triangolo sarà data dal moto della terra $vt_2$ e l'altezza dalla distanza tra $M$ e lo specchio $l_2$
+\[
+t_2=\dfrac{2\sqrt{l_2^2+\dfrac{v^2t_2^2}{4}}}{c}
+\]
+e risolvendo l'equazione in $t_2$ si trova
+\[
+t_2=\dfrac{2l_2}{c\sqrt{1-\sfrac{v^2}{c^2}}}
+\]
+\item La differenza tra i tempi di percorrenza quindi è
+\begin{align*}
+\Delta t &= \dfrac{2l_2}{c\sqrt{1-\sfrac{v^2}{c^2}}} - 2l_1\dfrac{1}{1-\sfrac{v^2}{c^2}} =\\
+&= \dfrac{2l_2}{c}\left(1+\dfrac{1}{2}\dfrac{v^2}{c^2}+o\left(\dfrac{v^2}{c^2}\right)\right)-\dfrac{2l_1}{c}\left(1+\dfrac{v^2}{c^2}+o\left(\dfrac{v^2}{c^2}\right)\right) =\\
+&= 2\dfrac{l_2-l_1}{c} + \dfrac{v^2}{c^2}\left(\dfrac{l_2}{c}-\dfrac{2l_1}{c}\right)+o\left(\dfrac{v^2}{c^2}\right)
+\end{align*}
+vediamo che è data da due termini: uno dipendente solo dalla differenza tra i bracci dell'interferometro che esisterebbe anche in mancanza dell'etere e l'altro invece dipendente dalla velocità terra-etere.
+\item Ruotando rigidamente l'apparato in modo che ruoli dei due cammini si scambino avrò
+\[
+\Delta t'= 2\dfrac{l_1-l_2}{c} + \dfrac{v^2}{c^2}\left(\dfrac{l_1}{c}-\dfrac{2l_2}{c}\right)
+\]
+e quindi
+\[
+\Delta t' - \Delta t =2\dfrac{l_1-l_2}{c} + \dfrac{v^2}{c^2}\left(\dfrac{l_1}{c}-\dfrac{2l_2}{c}\right) - 2\dfrac{l_2-l_1}{c} - \dfrac{v^2}{c^2}\left(\dfrac{l_2}{c}-\dfrac{2l_1}{c}\right)
+\]
+che in generale non sarà nullo. Da questo ci aspettiamo che le frange di interferenza cambino secondo
+\[
+\Delta \varphi = 2\pi \dfrac{c}{\lambda} (\Delta t' - \Delta t)
+\]
+\item L'interferometro di Michelson e Morley aveva i bracci uguali $l_1=l_2\approx 22m$ e lunghezza d'onda alla sorgente $\lambda = 5.5\times 10^{-7}m$ e quindi ci si aspetterebbe
+\[
+\Delta \varphi = 2\pi\dfrac{2}{\lambda}\dfrac{v^2}{c^2}\dfrac{2l}{c}+o
+\]
+e, ipotizzando che $\dfrac{v^2}{c^2}\approx10^{-8}$, questo dovrebbe dare un $\Delta N\approx 0.4$.
+
+In esperimento ripetuti anche in condizioni e con apparati diversi e più precisi però non si misura mai un $\Delta N$ diverso da $0$, anche se perfino l'apparato originale avrebbe potuto mostrare valori di $\Delta N$ dell'ordine di $0.01$.
+\end{enumerate}
+
+
+\section{Contrazioni delle lunghezze di Lorentz-Fitzgerald}
+
+L'esperimento di Michelson e Morley sembra indicare che non esista un riferimento privilegiato e che la relatività Galileiana sia sbagliata. Un' interpretazione alternativa è quella della contrazione di Lorentz-Fitzgerald: un sistema in moto relativo rispetto ad un altro misura le lunghezza solidali a quest'ultimo contratte nella direzione del moto relativo di un fattore
+\[
+\sqrt{1-\dfrac{v^2}{c^2}}
+\]
+
+Se applichiamo questa contrazione all'esperimento di Michelson e Morley avremo che il tempo $t_1$ viene modificato in
+\[
+t_1=\dfrac{2l_1}{c} \dfrac{1}{ 1-\sfrac{v^2}{c^2} }\sqrt{ 1-\sfrac{v^2}{c^2} }=t_1=\dfrac{2l_1}{c} \dfrac{1}{\sqrt{ 1-\sfrac{v^2}{c^2} }}
+\]
+mentre $t_2$ non è modificato e quindi 
+\[
+\Delta t = 2\dfrac{l_2-l_1}{c\sqrt{1-\sfrac{v^2}{c^2}}}
+\]
+e ruotando l'apparato ci si aspetta un $\Delta N$ nullo.
+
+Però ci si aspetterebbe che cambiando la velocità relativa tra la terra e l'etere, per esempio misurando in stagioni diverse, si trovino dei $\Delta t$ e quindi delle frange diverse mentre sperimentalmente questo non avviene mai.
+
+\subsection{Aberrazione stellare}
+Un'altra ipotesi per cercare di salvare la relatività è quella del trascinamento dell'etere: nell'esperimento di MM non si misura niente perchè la terra in qualche modo trascina l'etere che la circondo e quindi la velocità relativa risulta nulla.
+
+Questa ipotesi è però smentita dal fenomeno dell'aberrazione stellare.
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\linewidth]{img/aberrazione.png}
+\end{figure}
+
+Consideriamo una stella fissa da cui un segnale luminoso va a incidere sulla terra. Se si pone un telescopio parallelamente alla direzione del segnale non riusciremo a raccogliere luce nell'oculare. Infatti per percorrere l'interno del telescopio in verticale la luce impiega un tempo $t=\sfrac{l}{c}$ ma a causa del moto relativo il telescopio si muove orizzontalmente di $vt=l\,\sfrac{v}{c}$ e quindi la luce colpisce solo il bordo del telescopio.
+
+Per poter raccogliere il segnale sperimentalmente ossercviamo che è effettivamente necessario inclinare il telescopio di un angolo $\tan{\frac{\alpha}{2}}=\sfrac{v}{c}$.
+
+
+Se fosse vera l'ipotesi di trascinamento allora l'etere si muoverebbe insieme alla terra e relativamente al telescopio la luce si muoverebbe solo verticalmente e quindi non avrebbe senso inclinarlo.
+
+Questo fenomeno si spiega facilmente in relatività ristretta.
+
+
+
+\chapter{Postulati della relatività}\label{sezPostulatiRelatività}
+
+Per spiegare le criticità della relatività galileiana Einstein usa 3 postulati, su cui poi si fonderà la relatività speciale.
+
+\begin{itemize}
+\item Spazio e tempo sono omogenei e lo spazio è isotropo.
+\item Le leggi della fisica devono avere la stessa forma in tutti i sistemi inerziali, la fisica è invariante in forma.
+\item La velocità della luce nel vuoto è la stessa per tutti gli osservatori inerziali.
+\end{itemize}
+
+Dai postulati segue la relatività della simultaneità, vediamolo graficamente:
+
+
+Consideriamo una sbarra o un segmente $\overline{AB}$ solidale ad un sistema di riferimento $S'$, cioè disposto in modo tale che $S'$ veda i due punti fermi ed a distanza costante.
+
+Sia $S$ un altro sistema di riferimento rispetto al quale $S'$ si muove di modo uniforme, ipotizziamo il movimento sia parallelo al segmento e che al tempo $t_0=t'_0=0$ i due sistemi coincidano.
+
+
+\begin{figure}[H]
+	\centering
+  	\includegraphics[width=0.5\linewidth]{img/simult_1.png}
+  	\label{Figura_simultaneità_1}
+\end{figure}
+
+
+Essendo la velocità della luce costante ed invariante potremo usare come assi $ct$ e $ct'$ al posto di $t$ e $t'$ con una sola dilatazione del grafico senza modicare nessuna proprietà.
+
+Ora consideriamo un fascio di luce che, partendo dal punto medio della sbarra e solidarmente a $S'$, va ad incidere su dei rilevatori posti in $A$ e $B$.
+Chiaramente per $S'$ la luce arriva contemporaneamente ai due punti e quindi diremo che i due eventi \textit{Luce in A} e \textit{Luce in B} sono simultanei per $S'$.
+
+Però se analizziamo lo stesso fenomeno in $S$ vediamo che la sbarra si muove mentre i due fasci di luce sono in viaggio.
+
+Entrambi i grafici $ct,x$ avranno i due fasci di luce inclinati a $45\deg$ dato che abbiamo scelto $ct$ come asse verticale ma se $S'$ vede $A$ e $B$ fermi nello spazio e quindi muoversi parallelamente all'asse temporale invece $S$ vedrà i due punti spostarsi verso destra nello spazio ad una velocità $v$. Quindi le rette in $S$ formate dal movimento di $A$ e $B$ saranno inclinate come $\dfrac{c}{v}$.
+
+\begin{table}[H]
+\begin{minipage}[H]{0.45\linewidth}
+\centering
+	\begin{figure}[H]
+  	\includegraphics[width=\linewidth]{img/simult_2.png}
+  	\label{Figura_simultaneità_2}
+	\end{figure}
+\end{minipage}
+\begin{minipage}[H]{0.45\linewidth}
+\centering
+	\begin{figure}[H]
+  	\includegraphics[width=\linewidth]{img/simult_3.png}
+  	\label{Figura_simultaneità_3}
+	\end{figure}
+\end{minipage}
+\end{table}
+
+Si vede chiaramente che per $S$ la luce raggiunge i due punti a tempi diversi e quindi gli eventi \textit{Luce in A} e \textit{Luce in B} non sono simultanei per $S$.
+
+La simultaneità dei due eventi in $S'$ ci fa capire che i due eventi \textit{Luce in A} e \textit{Luce in B} avvengono in $S'$ lungo l'asse spaziale al tempo $t'_1$, quindi possiamo usare i due eventi per rappresentare nel piano $ct, x$ di $S$ ``presente'' al tempo $t'_1$ di $S'$. 
+
+Chiameremo linee di universo le traiettorie di un oggetto nel grafico di spazio-tempo.
+
+
+
+\section{Intervallo invariante}
+Le trasformazioni di Lorentz che abbiamo appena ricavato lasciano invariante l'intervallo definito \\ $s^2\mathrel{\mathop:}=c^2t^2-x^2$, infatti
+
+\begin{align*}
+s'^2=(ct')^2-x^2 &=\gamma^2(ct-\beta x)^2-\gamma^2(x-\beta ct)^2=\gamma^2 (c^2t^2+\beta^2 x^2 -2ct\beta x -x^2 - \beta^2c^2t^2 +2x\beta ct)\\
+&= \gamma^2 (1-\beta^2)(c^2t^2-x^2)=(ct)^2-x^2 = s^2
+\end{align*}
+
+L'intervallo $s^2$ potrà essere di 3 tipi :
+\begin{itemize}
+\item $s^2=0$ Intervallo di tipo luce
+\item $s^2>0$ intervallo di tipo tempo
+\item $s^2<0$ intervallo di tipo spazio
+\end{itemize}
+
+\subsection{Intervallo nullo e infinitesimo}
+
+Due eventi collegati da un raggio di luce avranno per definizione intervallo invariante nullo in ogni sistema di riferimento infatti chiaramente $c\Delta t=\Delta x$ e $c\Delta t'=\Delta x'$.
+
+Quindi se $\Delta s=0$ anche sarà sempre $\Delta s'=0$.
+
+Ma allora per continuità anche intervalli infinitesimi dovranno essere legati da $\Delta s'= a \Delta s$. Il parametro $a$ potrà essere solo una funzione della velocità relativa per l'omogeneità dello spazio tempo.
+
+Consideriamo allora tre sistemi inerziali $K$, $K'$ e $K''$ tali che la velocità tra $K'$ e $K$ sia $v_1$, quella tra $K''$ e $K$ sia $v_2$ e quella tra $K''$ e $K'$ sia $v_{21}$. Allora
+\[\begin{cases}
+ds^2=a(v_1)ds_1^2 \\
+ds^2=a(v_1)ds_2^2 \\
+ds_1^2=a(v_{21})ds_2^2
+\end{cases} \implies
+ds_1^2=\dfrac{a(v_2)}{a(v_1)}ds_2^2 \implies
+\dfrac{a(v_2)}{a(v_1)}=a(v_{21}) 
+\]
+che per velocità completamente generiche implica $a(v)=a$ costante e quindi che per ogni coppia di riferimenti inerziali $ds^2=ds'^2$.
+\section{Trasformazioni di Lorentz}\label{sezTrasformazioniLorentz}
+
+Ora che abbiamo un intervallo invariante possiamo cercare delle trasformazioni tra riferimenti inerziali che lo lascino invariato. Consideriamo solo trasformazioni a meno di traslazioni spaio-temporali per semplicità.
+
+La trasformazioni dovrà essere lineare nello spazio e nel tempo per l'omogeneità. 
+
+Se prendiamo come evento iniziale dell'intervallo l'origine spazio-temporale l'intervallo si riduce a $ct^2-x^2$ e potremo sfruttarlo per ricavare la trasformazione delle coordinate.
+L'equazione per l'invarianza dell'intervallo è 
+\begin{equation}ct^2-x^2=ct'^2-x'^2 
+\label{eqSInvariante} \end{equation}
+ che notiamo essere molto simile all'equazione per una rotazione spazio-temporale, che sarebbe stata $ct^2+x^2=ct'^2+x'^2$.
+In effetti una rotazione iperbolica 
+\begin{equation}\label{eqRotazIperbolicaLorentz}
+\left(\begin{array}{c}
+ct' \\ x'
+\end{array}\right)=\left(\begin{array}{cc}
+\cosh{\psi} & -\sinh{\psi} \\ -\sinh{\psi} & \cosh{\psi}
+\end{array}\right)\left(\begin{array}{c}
+ct \\ x
+\end{array}\right)
+\end{equation}
+soddisfa la \eqref{eqSInvariante}. Infatti
+\begin{align*}
+ct'^2-x'^2&= \cosh^2{\psi}c^2t^2 + \sinh^2{\psi}x^2 -2\cosh{\psi}\sinh{\psi}ctx -\\&\quad - \sinh^2{\psi}c^2t^2-\cosh^2{\psi}x^2+2\cosh{\psi}\sinh{\psi}ctx = \\
+&= ct-x
+\end{align*}
+
+A questo punto consideriamo la legge oraria di $O'$ in $K$ 
+\[
+x_{O}'-v_{O}'t=0
+\]
+che dovrà corrispondere a $x'_{O'}=0$ in $K'$. Quindi usando le trasformazioni \eqref{eqRotazIperbolicaLorentz} troviamo
+\[
+x'=-\sinh{\psi}ct+\cosh{\psi}x=0 \qquad x=vt \implies vt\cosh{\psi}-ct\sinh{\psi}=0
+\]
+Quindi avremo $\tanh{\psi}=\dfrac{v}{c}$ e potremo finalmente definire l'angolo $\psi$ delle \eqref{eqRotazIperbolicaLorentz}
+\begin{equation}
+\begin{cases}
+ct'=\gamma ct-\beta x \\
+\\
+x' =-\beta\gamma ct +\gamma x
+\end{cases} \quad \qquad
+\begin{array}{c}
+\beta:=\dfrac{v}{c}\\
+\\
+\gamma:=\dfrac{1}{\sqrt{1-\beta^2}}\end{array}
+\end{equation}
+
+Queste sono le trasformazioni di Lorentz tra due sistemi in moto relativo uniforme lungo l'asse $x$, cioè per i \textbf{Boost} lungo l'asse $x$.
+
+Tratteremo più generale le trasformazioni tra due sistemi inerziali nella sezione \ref{sezGruppo}.
+\section{Contrazione delle lunghezze e dilatazione dei tempi}
+Abbiamo detto che dai postulati di Einstein non c'è più nessuna garanzia a priori che lunghezze e intervalli di tempi siano invarianti come in relatività galileiana. 
+
+Consideriamo una sbarra che sia solidale ad un sistema $S'$. Sia $S$ un altro sistema inerziale che veda $S'$ in moto rettilineo uniforme parallelo alla sbarra
+
+Una lunghezza si otterrà misurando allo stesso tempo le posizioni dei suoi estremi, dalle trasformazioni di Lorentz sugli estremi si trova
+
+\[
+x'_B= \dfrac{x_B - vt_B}{\sqrt{1-\dfrac{v^2}{c^2}}} \hspace{0.15\linewidth} x'_A =\dfrac{x_A -vt_A}{\sqrt{1-\dfrac{v^2}{c^2}}}
+\]
+
+e chiaramente
+
+\[
+\Delta x'=x'_B-x'_A=\dfrac{x_B - vt_B}{\sqrt{1-\dfrac{v^2}{c^2}}}-\dfrac{x_A -vt_A}{\sqrt{1-\dfrac{v^2}{c^2}}}
+\]
+
+Allora se imponiamo che le misurazioni siano fatte allo stesso tempo per ottenere la lunghezza in $S$, cioè che $t_A=t_B$ si ha
+
+\begin{equation}
+L_0 = \dfrac{x_B - x_A}{\sqrt{1-\dfrac{v^2}{c^2}}} = \gamma \Delta x  \hspace{0.15\linewidth} L_0 > \Delta x \footnotemark{}
+\end{equation}
+dove la $\Delta x'$ è chiamata $L_0$ poichè prende il nome di lunghezza propria.
+
+\begin{definizione}[Lunghezza propria]
+Definiamo lunghezza propria di un segmento o di un corpo la lunghezza misurata in un sistema ad esso solidale, cioè che lo veda a riposo. \\
+La lunghezza propria è sempre maggiore di ogni lunghezza ottenuta da una misurazione dello stesso segmento effettuata da un osservatore in moto rispetto ad esso.
+\end{definizione}
+
+\footnotetext{Potrebbe venire il dubbio che l'ipotesi che la sbarra sia solidale ad $S'$ non sia importante e che questo risultato si trovi in ogni caso. Se la sbarra non fosse solidale però dovremmo ripetere questo stesso procedimento anche per confrontare la lunghezza misurata in $S'$ e la lunghezza misurata dal sistema della sbarra e quindi ancora, la lunghezza misurata in un sistema inerziale in moto relativo rispetto al segmento misurato è minore della lunghezza misurata nel sistema che vede il segmento fermo.}
+
+
+Adesso invece consideriamo sempre i due sistemi inerziali $S$ ed $S'$ in moto relativo ma stavolta guardiamo ad una misura di tempo $\Delta t'$ effettuata in $S'$. Ipotizziamo che l'orologio della misurazione in $S'$ sia fermo e che i due eventi che demarcano l'intervallo di tempo siano nello stesso punto dello spazio, cioè che $\Delta x'=0$.
+
+Dalle trasformazioni di Lorentz si trova
+\[
+c\Delta t'= \gamma (ct_B - \beta x_B) -\gamma (ct_B - \beta x_A)=\gamma (c\Delta t -\beta \Delta x)
+\]
+Dove $\Delta x$ sarà l'intervallo spaziale tra i due eventi $A$ e $B$ secondo $S$, cioè lo spazio di cui $S$ vede spostarsi l'orologio di $S'$. Allora continuando sempre con le trasformazioni però si trova $c\Delta t'=\gamma (c\Delta t -\beta v \Delta t)$ e quindi
+
+\begin{equation}
+\tau=\dfrac{\Delta t}{\gamma} \hspace{0.15\linewidth} \tau < \Delta t
+\end{equation}
+
+dove il $\Delta t'$ è chiamato $\tau$ poichè prende il nome di tempo proprio.
+
+\begin{definizione}[Tempo proprio]
+Definiamo tempo proprio di un fenomeno l'intervallo di tempo misurato solidarmente al fenomeno, cioè l'intervallo di tempo misurato da un orologio fermo. \\
+Il tempo proprio relativo ad un fenomeno è sempre minore del tempo misurato per lo stesso fenomeno da un qualsiasi osservatore inerziale che vede il fenomeno ``muoversi'' nello spazio. 
+\end{definizione}
+
+Consideriamo un orologio fermo che misuri un tempo $dt'$, allora chiaramente $ds^2=c^2dt'^2$ cioè il tempo proprio dell'orologio sarà legato all'intervallo invariante corrispondente alla stessa porzione della linea di universo dell'orologio, in generale per un fenomeno qualsiasi potremo sempre ricavare il tempo proprio del fenomeno a partire dall'intervallo invariante che un qualsiasi osservatore misura per il fenomeno.
+\begin{equation}
+c^2 d\tau^2=ds'^2=ds^2=c^2dt^2- \left|\vec{dx}\right|^2 = dt^2 \sqrt{1-\dfrac{\left| \vec{v}\right|^2}{c^2}}
+\hspace{0.15\linewidth}
+\tau=\int_{\Gamma} \dfrac{ds}{c} = \int_{t_0}^{t_f} \dfrac{dt}{\gamma} 
+\end{equation}
+
+
+\section{Invarianza della fase}
+Consideriamo un'onda piana monocromatica avente frequenza $\nu$ e lunghezza d'onda $\lambda$ che si propaghi lungo una direzione $\hat{n}$. Sappiamo che valgono
+\[
+c=\lambda\nu \qquad \omega=2\pi\nu \qquad  \vec{k}=\dfrac{2\pi}{\lambda}\vec{n} \qquad c=\dfrac{\omega}{k}
+\]
+Consideriamo un osservatore nel sistema inerziale $K$: questo vedrà l'onda come $\cos{(\omega t -\vec{k}\cdot\vec{x})}$ dove $\omega t -\vec{k}\cdot\vec{x}$ è la fase.
+
+
+La fase è un invariante di Lorentz.
+
+
+\begin{proof:}
+Per mostrarlo dobbiamo dimostrare che $\omega t -\vec{k}\cdot\vec{x}=\omega' t' -\vec{k}'\cdot\vec{x}'$
+Abbiamo già visto che per un boost lungo l'asse $x$ la trasformazione per le coordinate è una
+\[
+\left(\begin{array}{c}
+ct' \\ \vec{x}' \end{array}\right)=\left(\begin{array}{cccc}
+\gamma & -\beta\gamma & 0 &0 \\ -\beta\gamma & \gamma & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1\end{array}\right)\left(\begin{array}{c}
+ct \\ \vec{x}
+\end{array}\right) = \Lambda \left(\begin{array}{c}
+ct \\ \vec{x}
+\end{array}\right) 
+\]
+quindi possiamo immaginare che le grandezze dell'onda trasformino in modo simile. Non lo dimostriamo ma effettivamente \begin{equation}\label{eqTrasfFase}
+\left(\begin{array}{c}
+\dfrac{\omega}{c} \\ \vec{k} \end{array}\right) = \Lambda \left(\begin{array}{c}
+\dfrac{\omega}'{c} \\ \vec{k}'
+\end{array}\right)
+\end{equation}
+
+Vediamo che la fase rispetta
+\[\begin{split}
+\omega t - \vec{k}\cdot\vec{x} = \left(\begin{array}{cc} \dfrac{\omega}{c} & \vec{k} \end{array}\right) \left(\begin{array}{cccc}
+1 & 0 & 0 & 0 \\
+0 & -1 & 0 & 0 \\
+0 & 0 & -1 & 0 \\
+0 & 0 & 0 & -1
+\end{array}\right) \left(\begin{array}{c}
+ct \\ \vec{x}
+\end{array}\right)
+\\ 
+\omega' t' - \vec{k}'\cdot\vec{x}' = \left(\begin{array}{cc} \dfrac{\omega}'{c} & \vec{k}' \end{array}\right) \left(\begin{array}{cccc}
+1 & 0 & 0 & 0 \\
+0 & -1 & 0 & 0 \\
+0 & 0 & -1 & 0 \\
+0 & 0 & 0 & -1
+\end{array}\right)  \left(\begin{array}{c}
+ct' \\ \vec{x}'
+\end{array}\right)
+\end{split}
+\]
+
+e usando la trasformazione per le coordinate e la \eqref{eqTrasfFase}
+\begin{align*}
+\omega t -\vec{k}\cdot\vec{x} &= \left(\begin{array}{cc} \dfrac{\omega}'{c} & \vec{k}' \end{array}\right) \left(\begin{array}{cccc}
+1 & 0 & 0 & 0 \\
+0 & -1 & 0 & 0 \\
+0 & 0 & -1 & 0 \\
+0 & 0 & 0 & -1
+\end{array}\right) \left(\begin{array}{c}
+ct' \\ \vec{x}'
+\end{array}\right) = \\ &=
+\left(\begin{array}{cc} \dfrac{\omega}{c} & \vec{k} \end{array}\right) \Lambda^T \left(\begin{array}{cccc}
+1 & 0 & 0 & 0 \\
+0 & -1 & 0 & 0 \\
+0 & 0 & -1 & 0 \\
+0 & 0 & 0 & -1
+\end{array}\right) \Lambda \left(\begin{array}{c}
+ct \\ \vec{x}
+\end{array}\right)
+\end{align*}
+
+Vediamo subito che \[\Lambda^T \left(\begin{array}{cccc}
+1 & 0 & 0 & 0 \\
+0 & -1 & 0 & 0 \\
+0 & 0 & -1 & 0 \\
+0 & 0 & 0 & -1
+\end{array}\right) \Lambda = \left(\begin{array}{cccc}
+1 & 0 & 0 & 0 \\
+0 & -1 & 0 & 0 \\
+0 & 0 & -1 & 0 \\
+0 & 0 & 0 & -1
+\end{array}\right) \]
+Parleremo più in dettaglio di questa uguaglianza e della matrice $\text{diag}(1 -1 -1 -1)$ nel capitolo \ref{sezOrigineFormalismo} e nella sezione \ref{sezGruppo}.
+
+Da questo segue l'invarianza della fase.
+\end{proof:}
+
+Consideriamo ora due sistemi di riferimento $S,S'$ inerziali coincidenti al tempo $t_0=0$ con tali che $S$ veda $K'$ in moto rettilineo uniforme lungo il suo asse $x$ a velocità $v$.
+
+Consideriamo un segnale luminoso che parta dall'origine a $t_0$ che in $K$ abbia $k_3=0$ cioè con $(k_1,k_2)=\left|\vec{k}\right|(\cos{\theta},\sin{\theta})$.
+Usando la conservazione della fase avremo
+\[
+\left(\begin{array}{c}
+\dfrac{\omega}'{c} \\ k'\cos{\theta} \\ k'\sin{\theta} \\ 0
+\end{array}\right)=\left(\begin{array}{cccc}
+\gamma & -\beta\gamma & 0 & 0 \\
+-\beta\gamma & \gamma & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+\end{array}\right)\left(\begin{array}{c}
+\dfrac{\omega}{c} \\ k\cos{\theta} \\ k\sin{\theta} \\0
+\end{array}\right)
+\]
+che dà
+\[
+\begin{cases}
+\dfrac{\omega }'{c} = \gamma \dfrac{\omega}{c} -\gamma\beta k\cos{\theta} \\
+k'\cos{\theta}'=-\gamma\beta\dfrac{\omega}{c} + \gamma k \cos{\theta} \\
+k'\sin{\theta}'=k\sin{\theta}
+\end{cases}
+\]
+Ricordando che $k=\sfrac{\omega}{c}$ troviamo
+\begin{gather}
+\omega'=\omega \left(1-\beta\cos{\theta}\right)\gamma=\omega \dfrac{\left( 1-\beta\cos{\theta}\right)}{\sqrt{1-\beta^2}} \\
+\nu' = \nu \left(1-\beta\cos{\theta}\right)\gamma = \nu \dfrac{1-\beta\cos{\theta}}{\sqrt{1-\beta^2}}\\
+\tan{\theta}'=\dfrac{\sin{\theta}}{\gamma\left(\cos{\theta}-\beta\right)}=\dfrac{\sin{\theta}}{\cos{\theta}-\beta}\sqrt{1-\beta^2}
+\end{gather}
+
+
+
+\subsection{Aberrazione relativistica}
+Consideriamo il sistema terra-stella dell'aberrazione in due sistemi di riferimento inerziali: $S$, in cui la stella è fissa e la terra è in moto lungo l'asse $x$, e $S'$ solidale alla terra.
+\begin{figure}[H]\centering
+\includegraphics[width=0.5\linewidth]{img/aberrazioneRelativistica.png}
+\end{figure}
+L'angolo $\theta'$ è
+\[
+\tan{\theta}'=\dfrac{1}{-\beta}\sqrt{1-\beta^2}
+\]
+mentre per $\sfrac{\alpha}'{2}$
+\[
+\tan{\frac{\alpha}'{2}}=\dfrac{\sin{\frac{\alpha}{2}}+\beta}{\cos{\frac{\alpha}{2}}} \gamma
+\]
+L'aberrazione stellare esaminata precedentemente vedeva la stella allo Zenit, quindi $\sfrac{\alpha}{2}=0$, in cui si trova
+\[
+\tan{\frac{\alpha}'{2}}=\beta \gamma = \dfrac{\beta}{\sqrt{1-\beta^2}}
+\]
+che nel limite $\beta<<1$ della velocità della terra dà
+\[
+\tan{\frac{\alpha}'{2}}=\beta\left(1+\dfrac{\beta^2}{2}+\dots\right)
+\]
+Il risultato sperimentale visto precedentemente era di $\tan{\frac{\alpha}'{2}}=\beta$ che è compatibile, essendo la $v$ della terra relativamente piccola, con questo risultato.
+
+\subsection{Trasformazione dell'angolo di propagazione}
+Tramite le formule ottenute dall'invarianza della fase per un'onda con vettore d'onda nel piano $(x,y)$
+\[
+\omega'=\omega\gamma\left(1-\beta\cos{\theta}\right)  \qquad \quad k'\cos{\theta}'=k \gamma( \cos{\theta}-\beta)
+\]
+ e ricordando che $c=\sfrac{k}{\omega}$ e che quindi $k=\sfrac{\omega}{\omega}'k'$ ricaviamo
+\begin{align*}
+k'\cos{\theta}'&=\dfrac{\omega}{\omega}'k' \gamma(\cos{\theta}-\beta)=\dfrac{1}{\gamma(1-\beta\cos{\theta})}k'\gamma(\cos{\theta}-\beta)= \\
+& = k' \dfrac{\cos{\theta}-\beta}{1-\beta\cos{\theta}}
+\end{align*}
+da cui troviamo la legge di trasformazione per il coseno dell'angolo tra il vettore d'onda e la direzione $x$ del boost.
+\begin{equation}
+\cos{\theta}'=\dfrac{\cos{\theta}-\beta}{1-\beta\cos{\theta}}
+\end{equation}
+
+\subsection{Effetto Doppler relativistico}
+Consideriamo un' onda di frequenza $\nu$ inviata parallelamente all'asse $x$ da una sorgente $S$ e ricevuta da un osservatore $O$ in modo che sorgente e osservatore siano in moto relativo lungo questo stesso asse. La fase dell' onda sarà $\omega t - k\cos{\theta_S}$ e se i due si avvicinano si avrà $\theta_S=0$ mentre se si allontanano $\theta_S=\pi$. 
+
+
+\begin{minipage}[H]{0.7\linewidth}
+La previsione classica, per cui le onde si propagano in un mezzo e osservatore e sorgente sono in quiete o in modo con velocità $v_S$ e $v_O$ in quel mezzo, è
+\begin{enumerate}[i.]
+\item Se l'osservatore è in quiete e la sorgente è in moto $\nu'=\nu\dfrac{1}{1+\beta}$
+\item Se la sorgente è in quiete e l'osservatore è in moto $\nu'=\nu(1-\beta)$
+\end{enumerate}
+
+e la formula ottenuta dall'invarianza della fase che la frequenza si trasforma secondo $\nu'=\nu\dfrac{1-\beta\cos{\theta}}{\sqrt{1-\beta^2}}$ interpola i due comportamenti previsti classicamente
+\end{minipage}
+\begin{minipage}[H]{0.3\linewidth}
+\centering
+\includegraphics[width=\linewidth]{img/dopplerRelat.png}
+\end{minipage}
+
+\section{Composizione delle velocità}
+
+Consideriamo 3 sistemi inserziali: $K$, $K_1$ e $K_2$. Siano questi tre sistemi tali che tutti e tre coincidano al tempo $t_0=0$ e che siano tra loro in moto relativo rettilineo uniforme lungo l'asse $x$. Chiamiamo $v_1$ la velocità con cui $K_1$ si muove in $K$ e $v_{21}$ la velocità con cui $K_2$ si muove in $K_1$. 
+
+Possiamo usare le trasformazioni delle coordinate per trovare come la velocità di $K_2$ viene misurata in $K$ a partire dalla sua misura $v_{21}$ in $K_1$.
+
+\[
+\left(\begin{array}{c}
+ct_1 \\ x_1 \end{array}\right)=\left(\begin{array}{cc}
+\gamma_1 & -\beta_1\gamma_1 \\
+-\beta_1\gamma_1  & \gamma_1 \end{array}\right)\left(\begin{array}{c} ct \\ x \end{array}\right)
+\qquad \quad
+\left(\begin{array}{c}
+ct_2 \\ x_2 \end{array}\right)=\left(\begin{array}{cc}
+\gamma_{21} & -\beta_{21}\gamma_{21} \\
+-\beta_{21}\gamma_{21} & \gamma_{21} \end{array}\right)\left(\begin{array}{c} ct_1 \\ x_1 \end{array}\right)
+\]
+
+e allora 
+
+\begin{align*}
+\left(\begin{array}{c}
+ct_2 \\ x_2 \end{array}\right) &=\left(\begin{array}{cc}
+\gamma_{21} & -\beta_{21}\gamma_{21} \\
+-\beta_{21}\gamma_{21} & \gamma_{21} \end{array}\right)\left(\begin{array}{cc}
+\gamma_1 & -\beta_1\gamma_1 \\
+-\beta_1\gamma_1  & \gamma_1 \end{array}\right)\left(\begin{array}{c} ct \\ x \end{array}\right) = \\
+&=\left(\begin{array}{cc}
+\gamma_1\gamma_{21}+\beta_1\beta_{21}\gamma_1\gamma_{21} & -\beta_1\gamma_1\gamma_{21}-\beta_{21}\gamma_1\gamma_{21} \\
+-\beta_1\gamma_1\gamma_{21}-\beta_{21}\gamma_1\gamma_{21} & \gamma_1\gamma_{21}+\beta_1\beta_{21}\gamma_1\gamma_{21} \end{array}\right)\left(\begin{array}{c} ct \\ x \end{array}\right) 
+\end{align*}
+
+Ma dato che anche $K$ e $K_2$ sono in moto relativo rettilineo uniforme\footnote{nella sezione \ref{sezComposizioneBoost} vedremo il caso generale della composizione tra due boost e troveremo che effettivamente in questo caso è ancora un boost.} questa trasformazione deve essere un boost lungo l'asse $x$ e quindi si ha che la velocità di $K_2$ in $K$ è
+\begin{equation}
+\beta_2=\dfrac{\beta_1+\beta_{21}}{1+\beta_1\beta_{21}}
+\end{equation}
+
+Questo risultato nel limite non relativisto dà $\beta_2\overset{c>>v}{\longrightarrow} \beta_1+\beta_{21} +o$ che è il risultato previsto classicamente.
+
+\section{Diagrammi di Minkowski}
+Abbiamo visto che il tempo in relatività non è più un parametro invariante ma una coordinata. 
+Il nuovo spazio quadridimensionale in cui lavoriamo in relatività è chiamato spazio-tempo di Minkowski. \\
+Abbiamo già visto alcuni grafici dello spazio-tempo, vediamone ora delle regole più generali.
+Per semplicità grafica rappresenteremo uno spazio unidimensionale con un asse spaziale, inoltre nello spazio-tempo l'asse temporale di un sistema di riferimento è dato da $ct$ e non dal solo $t$!
+
+\begin{definizione}[Evento]
+In relatività un punto nello spazio-tempo rispetto ad un sistema di riferimento, ovvero una quaterna $(ct,\vec{x})$, si chiama evento.
+\end{definizione}
+\begin{definizione}[Linea di universo]
+Definiamo linea di universo di un oggetto o di un punto la curva nello spazio-tempo data dall'insieme degli eventi occupati da quell'oggetto o punto.
+\end{definizione}
+
+Una linea di universo nello spazio-tempo, intesa come curva, è assoluta per tutti i sistemi di riferimento. Osservatori diversi però la vedranno inclinata nello spazio-tempo diversamente.  
+
+
+
+Scegliendo un qualsiasi sistema di riferimento inerziale spazio-temporale ed una sua origine in un evento $O$, se rappresentiamo dei fasci di luce che escono dalla sua origine questi saranno inclinati a $45^\circ$ rispetto ad entrambi gli assi, cioè saranno inclinati allo stesso modo sia rispetto allo spazio che al tempo.
+Lo stesso varrà per i fasci di luce che entrano nell'origine.
+
+\begin{figure}[H]
+\centering
+  	\includegraphics[width=0.4\linewidth]{img/minkow1.png}
+  	\label{Figura_spazio_tempo_1}
+\end{figure}
+Un oggetto visto fermo da un osservatore $S$ avrà una linea di universo parallela all'asse temporale di $S$, cioè i suoi eventi saranno tutti nello stesso punto spaziale di $S$. La linea di universo di un oggetto in moto rispetto ad $S$ sarà invece inclinata rispetto ai suoi assi in base al rapporto $\frac{v}{c}$.
+
+Chiaramente ogni altro riferimento con origine in $O$, avrà gli assi spaziale e temporale inclinati dello stesso angolo rispetto al raggio di luce. Ricordandoci se due eventi sono simultanei in un sistema $S'$ la loro congiungente in $S$ sarà parallela all'asse spaziale di $S'$ possiamo rappresentare gli altri sistemi inerziali con origine in $O$ come visti da $S$. Il cambio di origine di un sistema di riferimento sarà solo una traslazione quindi non ce ne preoccupiamo.
+
+\begin{figure}[H]
+\centering
+  	\includegraphics[width=0.4\linewidth]{img/minkow2.png}
+  	\label{Figura_spazio_tempo_2}
+\end{figure}
+Il triangolo isoscele con vertice in $O$ e lati obliqui i due fasci di luce $x\underset{t\rightarrow+\infty}{\rightarrow}\pm\infty$ contiene la semiretta dei tempi positivi di ogni riferimento inerziale di origine $O$. 
+Essendo lo spazio tridimensionale e non unidimensionale questo oggetto quadridimensionale risulta analogo ad un cono ed infatti viene chiamato \textbf{cono di luce del futuro di $O$}.
+Un qualsiasi oggetto che passi per l'evento $O$ infatti sarà ``costretto'' a rimanere sempre all'interno di questo cono, qualunque sia il suo moto. Oggetti ``lenti'' rispetto ad $S$ avranno linee di universo inclinate ``vicine'' all'asse temporale e oggetti più veloci saranno progressivamente più inclinati verso l'asse spaziale ma risulteranno sempre al di sopra della bisettrice poichè non potranno avere velocità maggiore di $c$.\\
+Similmente il cono simmetrico che contiene la semiretta dei tempi negativi è detto \textbf{cono di luce del passato di $O$}.
+
+Le parti dello spazio-tempo al di fuori dei due coni di luce sono irraggiungibili per degli oggetti passanti per $O$, possiamo dire che nessun evento all'esterno del cono di luce possa influenzare causalmente un evento all'interno e viceversa. Infatti per quanto ``vicino'' spazialmente un evento al di fuori del cono richiederebbe un velocità maggiore di $c$ per raggiungere $O$.
+
+Vediamo inoltre che $(ct)^2-x^2=\pm1$ sono delle iperboli nel piano $ct,x$ e che le loro intersezioni con gli assi del sistema di riferimento sono rispettivamente
+\[
+\begin{cases}
+s^2=-1 \\
+t=0
+\end{cases}
+\implies \left| x\right| =1
+\hspace{0.15\linewidth}
+\begin{cases}
+s^2=1 \\
+x=0
+\end{cases}
+\implies \left| ct\right| =1
+\] 
+
+Quindi, sapendo che l'intervallo invariante e le iperboli sono le stesse per tutti i sistemi di riferimento, potremo usare queste iperboli per individuare graficamente le unità di tempo e spazio dei diversi sistemi inerziali.
+
+\begin{figure}[H]
+\centering
+  	\includegraphics[width=0.4\linewidth]{img/minkow3.png}
+  	\label{Figura_spazio_tempo_3}
+\end{figure}
+
+
+
+
+
+
+
+\chapter{Metrica e Teorema di Poincarè}\label{sezOrigineFormalismo}
+
+Dobbiamo definire un formalismo per ``vedere'' lo spazio $3+1$ dimensionale della relatività e le sue proprietà, iniziamo con le coordinate:
+
+\[
+x^0=ct \hspace{0.1\linewidth} x^1= x \hspace{0.1\linewidth} x^2=y \hspace{0.1\linewidth} x^3=z
+\]
+
+Chiameremo $x^\mu$ l'insieme delle $4$ coordinate spazio-temporali e $x^i$ l'insieme delle sole coordinate spaziali, in generale useremo indici greci $\mu,\nu,$etc. per indicare oggetti che variano in $0,3$ , $\nu\in[0,3]$, e indici latini $i,j$etc. per indicare oggetti che variano in $1,3$, $j\in[1,3]$. 
+
+Data una trasformazione di Lorentz da un sistema inerziale ad un altro $f$ questa sarà una funzione di $4$ variabili con $4$ funzioni coordinate. 
+
+\[
+x'^\mu=f(x^\mu)=f(x^0,x^1,x^2,x^3)
+\]
+
+e derivando 
+\[dx'^\mu= \dfrac{\partial f^\mu(x)}{\partial x} dx=
+\dfrac{\partial f^\mu(x)}{\partial x^0} dx^0+\dfrac{\partial f^\mu(x)}{\partial x^1} dx^1+\dfrac{\partial f^\mu(x)}{\partial x^2} dx^2+\dfrac{\partial f^\mu(x)}{\partial x^3} dx^3 = \sum_{\nu=0}^{3} \dfrac{\partial f^\mu (x)}{\partial x^\nu} dx^\nu \]
+
+In relatività le jacobiane delle trasformazioni hanno un ruolo particolarmente importante e le chiameremo $\dfrac{\partial f^\nu}{\partial x^\mu} = \Lambda^{\nu}_{\> \mu}$, inoltre sapendo che lo spazio-tempo è omogeneo possiamo dedurre che le entrate della jacobiana siano costanti in tutto lo spazio-tempo, scriviamo quindi la matrice costante per la trasformazione $f$:
+\[
+J_f = \Lambda = \left( \begin{array}{c c c c}
+\Lambda^0_{\> 0} & \Lambda^{0}_{\> 1} & \Lambda^{0}_{\> 2} & \Lambda^{0}_{\> 3}\\
+\Lambda^{1}_{\> 0} & \Lambda^{1}_{\> 1} & \Lambda^{1}_{\> 2} & \Lambda^{1}_{\> 3} \\
+\Lambda^{2}_{\> 0} & \Lambda^{2}_{\> 1} & \Lambda^{2}_{\> 2} & \Lambda^{2}_{\> 3} \\
+\Lambda^{3}_{\> 0} & \Lambda^{3}_{\> 1} & \Lambda^{3}_{\> 2} & \Lambda^{3}_{\> 3} \\
+\end{array}\right)
+\]
+
+Sapendo che la matrice è costante possiamo integrare $dx'^\mu= \sum_{\nu=0}^{3} \dfrac{\partial f^\mu (x)}{\partial x^\nu} dx^\nu$ ottenendo
+
+\begin{equation}\label{Trasformazione_coordinate_controvarianti}
+x'^\mu = \sum_{\nu=0}^{3} \dfrac{\partial f^\mu (x)}{\partial x^\nu} x^\nu + a^\mu = \sum_{\nu=0}^{3} \Lambda^\mu_{\> \nu} x^\nu + a^\mu
+\end{equation}
+
+In realtà ci accorgiamo ora che il primo passaggio di derivazione di $f$ era superfluo, come abbiamo visto dall'omogeneità dello spazio segue che le trasformazioni tra sistemi inerziali sono lineari e quindi la loro matrice associata coincide con la loro Jacobiana.
+
+\section{Convenzione di Einstein}\label{sezConvenzioneIndici}
+Leggendo un'equazione nel formalismo della relatività ogni qualvolta due indici nello stesso membro sono uguali si intende una sommatoria sul quel dato indice, cioè per esempio $A_ iB_i=A_1B_1+A_2B_2+A_3B_3$
+
+Gli indici sommati in questo modo si diranno muti o contratti. \\
+Potremo rinominare a piacere gli indici muti, cambiare il nome dell'indice di una sommatoria non modifica in alcun modo la sommatoria.
+
+Per esempio usando la notazione di Einstein possiamo riscrivere l'equazione \eqref{Trasformazione_coordinate_controvarianti} come
+
+\begin{equation}\label{Trasformazione_coordinate_controvarianti_Einstein}
+x'^\mu = \Lambda^\mu_{\> \nu} x^\nu + a^\mu
+\end{equation}
+
+La convenzione per gli indici è utile perchè, oltre a rendere il formalismo più snello, permette di passare rapidamente dalla notazione covariante alla notazione matriciale: consideriamo ora due matrici quadrate $A,B \in M_{n\times n}$, potremo usare la convenzione per scrivere l'entrata $i,j$ della matrice data dal prodotto righe per colonne
+\[
+(AB)_{i,j}=A_{ik}B_{kj}
+\]
+C'è un'accortezza da tenere presente nel passaggio da notazione covariante a notazione matriciale: vogliamo che gli indici liberi di riga e colonna siano uguali per ambo i membri dell'equazione e che gli indici contratti siano i ``primi vicini'' tra loro.
+Cioè per esempio 
+\[
+(AB)_{ij}\neq A_{ki}B_{kj}
+\]
+perchè l'indice libero $i$ indica una riga nel primo membro e una colonna nel secondo membro. Questo non significa che la scrittura $A_{ki}B_{kj}$ sia sbagliata nel formalismo covariante o che non sia contraibile, semplicemente non equivale a $(AB)_{ij}$.\\
+Sappiamo ora che l'operazione di trasposizione di una matrice scambia le sue righe e le sue colonne quindi corrisponderà nel formalismo covariante a scambiare gli indici di riga e colonna. Quindi nell'esempio di prima
+\[
+A_{ki}B_{kj}=A^T_{ik}B_{kj}=(A^T B)_{ij}
+\]
+Da questo possiamo derivare una regola generale per il formalismo covariante: ogni qualvolta gli indici di riga e colonna sono scambiati tra i due membri di un'equazione l'oggetto con gli indici (o l'indice) in posizione sbagliata corrisponde ad una matrice trasposta.
+Inoltre quando avremo più di due oggetti per passare alla notazione matriciale dovremo prima riordinarli in modo che gli indici contratti siano i ``primi vicini'' tra loro.
+
+
+Lavoreremo con oggetti con indici sia alti sia bassi, in quei casi considereremo il primo da sinistra verso destra l'indice di riga e il secondo l'indice di colonna (ovviamente oggetti 3 o più indici non avranno una corrispondente matrice e non si potranno portare direttamente in notazione matriciale).
+
+\section{Metrica dello spazio-tempo}\label{sezMetrica}
+
+\begin{definizione}
+Definiamo intervallo spazio-temporale tra due eventi in un sistema di riferimento $S$ la quantità
+\[ds^2= (dx^0)^2-\sum_{i=1}^3 (dx^i)^2
+\]
+\end{definizione}
+
+Possiamo trasformare l'intervallo secondo una trasformazione di Lorentz ottenendo
+\begin{align*} 
+ds'^2 &= (dx'^0)^2-\sum_ {i=1}^3(dx'^i)^2 = (\Lambda^0_{\> \nu} dx^\nu)^2 - \sum_{i=1}^3 (\Lambda^i_{\> \nu} dx^\nu)^2 = 
+\Lambda^0_{\> \mu} dx^\mu \Lambda^0_{\> \nu} dx^\nu - \sum_{i=1}^3 \Lambda^i_{\> \mu} dx^\mu \Lambda^i_{\> \nu} dx^\nu = \\
+&= \sum_{\mu=0}^3 \sum_{\nu=0}^3 \left[ \left( \Lambda^0_{\> \mu} \Lambda^0_{\> \nu} - \sum_{i=1}^3 \Lambda^i_{\> \mu} \Lambda^i_{\> \nu} \right) dx^\mu dx^\nu \right]
+\end{align*}
+
+e definire un oggetto a due indici
+\begin{equation}\label{metrica}
+g_{\mu \nu} \mathrel{\mathop:}= \Lambda^0_{\> \mu} \Lambda^0_{\> \nu} - \sum_{i=1}^3 \Lambda^i_{\> \mu} \Lambda^i_{\> \nu}
+\end{equation}
+
+Allora la trasformazione dell'intervallo si potrà riscrivere come
+\begin{equation} \label{Trasformazione intervallo invariante}
+ds'^2=g_{\mu \nu} dx^\mu dx^\nu
+\end{equation}
+
+La quantità $g_{\mu \nu}$ sarà l'entrata $\mu , \nu$ in una matrice $4x4$ che chiameremo $G$
+\begin{align*}
+G&=\left(\begin{array}{c c c}
+g_{00} & \dots & g_{03} \\
+\vdots & \ddots & \vdots \\
+g_{30} & \dots & g_{33} \\
+\end{array}\right) = \left(
+\begin{array}{ccc}
+\Lambda^0_{\> 0} \Lambda^0_{\> 0} - \sum_{i=1}^3 \Lambda^i_{\> 0} \Lambda^i_{\> 0} & \dots &
+\Lambda^0_{\> 0} \Lambda^0_{\> 3} - \sum_{i=1}^3 \Lambda^i_{\> 0} \Lambda^i_{\> 3} \\
+\vdots & \ddots & \vdots \\
+\Lambda^0_{\> 3} \Lambda^0_{\> 0} - \sum_{i=1}^3 \Lambda^i_{\> 3} \Lambda^i_{\> 0} &
+\dots &
+\Lambda^0_{\> 3} \Lambda^0_{\> 3} - \sum_{i=1}^3 \Lambda^i_{\> 3} \Lambda^i_{\> 3} \\
+\end{array}\right) 
+\end{align*}
+Si vede abbastanza semplicemente che la matrice è simmetrica dato che nessun indice in questa equazione è contratto tutte le quantità sono semplicemente entrate nella matrice $\Lambda$ ed ovviamente la moltiplicazione tra scalari è commutativa
+\[
+g_{\nu\mu}=\Lambda^0_{\> \nu} \Lambda^0_{\> \mu} - \sum_{i=1}^3 \Lambda^i_{\> \nu} \Lambda^i_{\> \mu} = \Lambda^0_{\> \mu} \Lambda^0_{\> \nu} - \sum_{i=1}^3 \Lambda^i_{\> \mu} \Lambda^i_{\> \nu} = g_{\mu \nu}
+\]
+Evidenziamo che la matrice $G$ è costante in tutto lo spazio-tempo e dipende, per adesso, solo dalla trasformazione $\Lambda$ su cui l'abbiamo definita e non dal particolare intervallo che stiamo trasformando. Dimostreremo a breve che la $G$ è in realtà costante e la metrica dello spazio-tempo.
+
+\subsection{Teorema di Poincarè}\label{sezTeoremaPoincare}
+Vogliamo ora dimostrare in modo indipendente da quanto visto nel capitolo introduttivo che l'intervallo $ds^2$ è invariante. 
+
+Consideriamo un raggio di luce visto da un sistema $S$ e calcoliamone un intervallo $ds^2$ che percorre. 
+
+Per definizione di $ds^2$ per un raggio di luce vale
+$ \left|cdt\right| =|\vec{dx}| $ e quindi chiaramente qualunque intervallo preso sulla linea di universo di un raggio di luce sarà nullo $ds^2=0$. 
+Questo, per un raggio di luce, varrà per ogni sistema di riferimento dato che comunque si scelga $S'$ dall'invarianza di $c$ si ha sempre $ \left|cdt'\right| =|\vec{dx}'| $.
+
+Scegliamo ora un particolare raggio di luce che si propaghi esattamente lungo l'asse spaziale $x$ del sistema $S$, cioè che $dx^0=\pm dx^1$ e studiamone singolarmente le due direzioni di propagazione.
+
+Trasformando con la \eqref{Trasformazione intervallo invariante} l'intervallo percorso nel senso positivo dell'asse otteniamo
+\begin{align*}
+0 = ds'^2 &= g_{\mu\nu} dx^\mu d^\nu = g_{00} dx^0 dx^0 + g_{01} dx^0 dx^1 + g_{10} dx^1 dx^0 + g_{11} dx^1 dx^1 = \\
+&= g_{00}\left(dx^0\right)^2+g_{11}\left(dx^1\right)^2 + 2 g_{01} \left( dx^{0} \right)^2 = \left( g_{00} + g_{11} + 2g_{01} \right) (dx^0)^2
+\end{align*}
+Mentre trasformando l'intervallo in senso negativo si ottiene
+\[
+0 = ds'^2 = g_{00}\left(dx^0\right)^2+g_{11}\left(dx^1\right)^2 - 2 g_{01} \left( dx^{0} \right)^2 = \left( g_{00} + g_{11} - 2g_{01} \right) (dx^0)^2
+\]
+
+Quindi possiamo sommare e sottrarre le due equazioni ottenendo
+\begin{equation}
+\left( g_{00}+g_{11} \right) (dx^0)^2=0 \hspace{0.15\linewidth} 2g_{01} \left(dx^0\right)^2=0
+\end{equation}
+
+Questo dovrà valere per ogni intervallo di un raggio di luce che si propaga lungo $x^1$ quindi 
+\[ g_{00}=-g_{11} \hspace{0.15\linewidth} g_{01}=0 \]
+Ricordiamo ancora che la matrice $G$ è indipendente dall'evento che si sta trasformando e quindi questi sono effettivi risultati sulle entrate della matrice e non sono solo limitati alle trasformazioni dei raggi di luce.
+
+Possiamo ripetere questo procedimento per raggi di luce che si propagano esattamente sugli assi spaziale $y$ e $z$ e, per l'omogeneità ed isotropia dello spazio, troveremo 
+
+\[ g_{00}=-g_{11}=-g_{22}=-g_{33} \hspace{0.15\linewidth} g_{01}=g_{02}=g_{03}=0 \]
+
+Cioè la matrice $G$ è della forma
+
+\[
+G=\left(\begin{array}{cccc}
+g_{00} & 0 & 0 & 0 \\
+0 & -g_{00} & g_{12} & g_{13} \\
+0 & g_{21} & -g_{00} & g_{23} \\
+0 & g_{31} & g_{32} & -g_{00} \\
+\end{array}
+\right)
+\]
+
+Consideriamo ora un raggio di luce che si propaghi in una direzione qualunque e trasformiamolo
+
+\begin{align*}
+0= ds'^2 &=  g_{\mu\nu}dx^\mu dx^\nu =\\ &= g_{00}\left((dx^0)^2-(dx^1)^2-(dx^2)^2-(dx^3)^2 \right) + 2g_{12} dx^1dx^2 + 2g_{13} dx^1dx^3  + 2g_{23} dx^2dx^3 = \\
+&=g_{00}ds^2 + 2g_{12} dx^1dx^2 + 2g_{13} dx^1dx^3  + 2g_{23} dx^2dx^3 = \\
+&= 2g_{12} dx^1dx^2 + 2g_{13} dx^1dx^3  + 2g_{23} dx^2dx^3 =0
+\end{align*}
+
+Dato che anche in questo caso il risultato deve valore per qualsiasi intervallo di un fascio di luce e cioè anche per $dx^{1,2,3}=0$ a scelta deduciamo che $g_{12}=g_{13}=g_{32}=0$.
+
+Quindi 
+\[
+G=\left(\begin{array}{cccc}
+g_{00} & 0 & 0 & 0 \\
+0 & -g_{00} & 0 & 0 \\
+0 & 0 & -g_{00} & 0 \\
+0 & 0 & 0 & -g_{00} \\
+\end{array}
+\right)
+\]
+
+Quindi per un qualunque intervallo, non solo per il raggio di luce, trasformato tramite $\Lambda$ vale 
+\[
+ds'^2=g_{\mu\nu}dx^\mu dx^\nu=g_{00}\left( (dx^0)^2 - \sum_{i=1}^{3} (dx^i)^2 \right) = g_{00} ds^2
+\]
+
+Per come l'abbiamo definita la matrice dipende solo dalla trasformazione tra i due sistemi $G=G(\Lambda)$, cioè solo dalla loro velocità relativa\footnotemark{}. Allora  $g_{\mu\nu}=g_{\mu\nu}(| \vec{v} | \, \hat{u_v})$ però se lo spazio è isotropo non potrà dipendere dalla direzione del moto relativo, quindi sarà semplicemente $g_{\mu\nu}=g_{\mu\nu}(| \vec{v} | )$. \\
+Sappiamo però che se $S$ vede $S'$ muoversi con velocità $\vec{v}$ allora $S'$ vede $S$ muoversi con velocità $-\vec{v}$ e, dato che la matrice non dipende dalla direzione del moto, potremo scrivere $ds^2=g_{\mu\nu} ds'^2$, ma allora si avrà
+\[
+ds'^2=g_{00}ds^2=(g_{00})^2ds'^2=\dots=(g_{00})^nds^2=(g_{00})^{n+1}ds'^2
+\]
+e quindi chiaramente $g_{00}=1$. 
+
+\footnotetext{Essendo i sistemi inerziali il moto relativo deve essere un moto uniforme.}
+
+Abbiamo quindi dimostrato che per qualsiasi trasformazione di Lorentz (equiv. di Poincarè) tra sistemi inerziale l'intervallo $ds^2$ è invariante.
+
+Possiamo finalmente di scrivere la matrice $G$
+
+\begin{equation}
+G=\left(\begin{array}{cccc}
+1 & 0 & 0 & 0 \\
+0 & -1 & 0 & 0 \\
+0 & 0 & -1 & 0 \\
+0 & 0 & 0 & -1 \\
+\end{array}
+\right)
+\end{equation}
+
+e dato che abbiamo ricavato che per una qualsiasi trasformazione di Lorentz la matrice sarà indipendente dalla trasformazione di Lorentz abbiamo dimostrato che $G$ ha questa esatta forma per ogni trasformazione tra sistemi inerziali.
+
+\chapter{Formalismo covariante}
+
+
+Come sappiamo il gruppo di Galileo è il gruppo delle trasformazioni che lasciano invariate le leggi della meccanica classica. 
+Gli oggetti della meccanica classica possono essere (ri)definiti in base a come trasformano sotto il gruppo di galieleo, per esempio un vettore trasformerà secondo $\vec{V}'=R\vec{V}$ dove $R$ è la rotazione della trasformazione.
+Il formalismo vettoriale della meccanica classica è covariante a vista per il gruppo di Galileo, cioè per come abbiamo definito i vettori sappiamo già senza bisogno di controllarlo che ogni legge scritta in formalismo vettoriale sarà invariata da una trasformazione nel gruppo di Galileo.
+\[
+\vec{F}=m\vec{a} \longrightarrow \vec{F}'=m\vec{a}'
+\]
+
+Il gruppo di trasformazioni per cui le leggi fisiche sono invariate in relatività speciale è il gruppo di Poincarè, che contiene:
+\begin{itemize}
+\item Traslazioni temporali $\implies 1$ parametro
+\item Traslazioni spaziali $\implies 3$ parametri
+\item Rotazioni spaziali $\implies 3$ parametri
+\item Trasformazioni di Lorentz
+\end{itemize}
+
+Nel formalismo covariante useremo la convenzione per gli indici di Einstein, già spiegata nella sezione \ref{sezConvenzioneIndici}
+
+\begin{definizione}[Indici controvarianti]
+Chiamiamo quadrivettore in coordinate controvarianti un oggetto con $4$ entrate espresse da un indice
+\[
+A^\mu=(A^0,A^1,A^2,A^3)=(A^0,\vec{A})
+\]
+che sotto una trasformazione del gruppo di Poincarè trasformi secondo
+\[
+A'^\mu=\Lambda^\mu_{\> \nu} A^\nu
+\]
+In generale un indice alto si chiamerà indice controvariante.
+\end{definizione}
+
+Come sappiamo nel formalismo vettoriale della meccanica classica la metrica era la delta di Kronecker, l'intervallo tra due punti era
+\[
+\Delta x=\sqrt{\Delta x_i \delta_{i,j} \Delta x_j}
+\]
+e i prodotti scalari tra vettori erano definiti dà
+\[ \vec{v}\cdot\vec{w}=v_i\delta_{ij}w_j\]
+
+Invece in relatività, come dimostrato nelle sezioni \ref{sezMetrica} e \ref{sezTeoremaPoincare}, la metrica è la $g_{\mu\nu}$. Dovremo quindi ridefinire intervalli fra eventi e prodotti scalari tra quadrivettori usando la nuova metrica.
+
+\begin{definizione}[Prodotto scalare]
+Dati due quadrivettori $A,B$ (in coordinate controvarianti $A^\mu,B^\nu$) ne definiamo il prodotto scalare
+\[
+AB=A^\mu g_{\mu\nu} B^\nu = A^0B^0 -A^1B^1 -A^2B^2 - A^3B^3
+\]
+\end{definizione}
+
+Osserviamo che, come era successo per l'intervallo, nel passaggio dalla metrica della meccanica classica al nuovo tensore metrico sono stati introdotti dei segni $-$ nella definizione di prodotto scalare e questo non coincide più col prodotto scalare euclideo.
+
+\begin{definizione}[Indici covarianti]
+Dato un quadrivettore in coordinate controvarianti potremo definirne le coordinate covarianti usando il tensore metrico tramite
+\[
+A_\mu \mathrel{\mathop:}= g_{\mu\nu}A^\nu
+\]
+In generale chiameremo gli indici bassi di un oggetto indici covarianti e li definiamo in modo analogo a quanto fatto per l'indice del quadrivettore.
+\end{definizione}
+
+Dalla definizione segue che se $A^\mu$ è un quadrivettore con coordinate controvarianti $A^\mu=(A^0,A^1,A^2,A^3)$ le sue coordinate covarianti sono $A_\mu=(A_0,A_1,A_2,A_3)$ e numericamente $A_0=A^0$ ma $A_i=-A^i$.
+
+In pratica nel formalismo covariante il tensore metrico covariante ha la proprietà di abbassare gli indici: contraendo un oggetto con indici controvarianti col tensore metrico covariante otterremo un oggetto ``equivalente'' all'oggetto di partenza in cui però l' indice che era contratto viene abbassato e rinominato col nome del secondo indice della metrica.
+
+Questa proprietà del tensore metrico ci permette di scrivere in un'altra forma il prodotto scalare
+\[
+AB=A^\mu g_{\mu\nu} B^\nu = A^\mu B_\mu
+\]
+
+\begin{definizione}
+Definiamo $g^{\mu\nu}$ l'inverso di $g_{\mu\nu}$, cioè
+\[
+g^{\mu\nu}g_{\mu\nu}=g_{\mu\nu}g^{\mu\nu}=\delta^{\mu}_{\> \nu}
+\]
+dove $\delta^{\mu}_{\> \nu}\mathrel{\mathop:}=\begin{cases}1 & \mu=\nu \\ 0 & \mu\neq\nu \end{cases}$ è la delta di Kronecker.
+\end{definizione}
+
+La metrica controvariante permetterà, inversamente a quella covariante, di alzare gli indici\footnotemark{}
+\[
+A^\mu=g^{\mu\nu}A_\nu
+\]
+\footnotetext{Questa proprietà si trova direttamente dalla definizione di indice covariante semplicemente moltiplicando ambo i membri di $A_\mu=g_{\mu\nu}A^\nu$ per la metrica controvariante.}
+
+Avendo introdotto la metrica controvariante possiamo adesso riscrivere ancora in un altro modo equivalente il prodotto scalare
+\begin{equation}\label{prodotto scalare}
+AB=A^\mu g_{\mu\nu} B^\nu = A^\mu B_\mu = A_\nu g^{\mu\nu} B_\mu
+\end{equation}
+
+\begin{definizione}[Scalare]
+Chiamiamo scalare un oggetto che rimane invariato sotto trasformazioni del gruppo di Poincarè
+\[A\longrightarrow A'=A\]
+\end{definizione}
+
+Come succedeva in formalismo vettoriale anche in formalismo covariante il prodotto scalare è uno scalare ed è cioè invariante per trasformazioni di Lorentz.
+
+L' intervallo invariante dovrà rispettare
+\[
+ds'^2 = g_{\mu \nu } dx'^\mu dx'^\nu = g_{\mu\nu} \Lambda^\mu_{\> \rho} dx^\rho \Lambda^\nu_{\> \sigma} dx^\sigma
+\]
+Possiamo riordinare e riscrivere
+\[
+ds'^2= g_{\mu\nu} \Lambda^\mu_{\> \rho}  \Lambda^\nu_{\> \sigma} dx^\rho dx^\sigma
+\]
+Se la trasformazione è di Lorentz l'intervallo è invariante, cioè  
+\[
+ds^2=g_{\mu\nu}dx^\mu dx^\nu=ds'^2=g_{\mu\nu} \Lambda^\mu_{\> \rho}  \Lambda^\nu_{\> \sigma} dx^\rho dx^\sigma
+\] e rinominando gli indici contratti di questa formula troviamo
+\begin{equation}\label{eq Metrica e lambda}
+g_{\mu\nu} \Lambda^\mu_{\> \rho}  \Lambda^\nu_{\> \sigma} = g_{\rho\sigma}
+\end{equation}
+Se poi spostiamo la $g$ in modo che gli indici contratti siano primi vicini avremo il riscontro col formalismo matriciale e, come abbiamo visto nella sezione \ref{sezConvenzioneIndici}, vediamo che in $\Lambda^\mu_{\> \rho} g_{\mu\nu}  \Lambda^\nu_{\> \sigma} = g_{\rho\sigma}$
+la prima matrice $\Lambda$ risulta trasposta poichè ha indice $\rho$ di colonna libero mentre nel secondo membro è un indice di riga.
+ 
+Abbiamo quindi una condizione sulle entrate delle matrici delle trasformazioni di Lorentz: 
+\begin{equation}
+\tilde{\Lambda}G\Lambda=G
+\end{equation}
+e il numero di parametri liberi di una trasformazione di Lorentz è 6.
+
+Ora se trasformiamo un quadrivettore in coordinate covarianti vediamo
+\[
+A'^\mu=g_{\mu\nu}A'\nu=g_{\mu\nu}\Lambda^{\nu}_{\> \rho}A^\rho = g_{\mu\nu}\Lambda^{\nu}_{\> \rho} g^{\rho\sigma}A_\sigma
+\]
+e possiamo definire
+\begin{definizione}
+\[
+\Lambda^{\> \sigma}_{\mu} \mathrel{\mathop:}= g_{\mu\nu}\Lambda^{\nu}_{\> \rho} g^{\rho\sigma}
+\]
+che darà le trasformazioni per le coordinate covarianti
+\[
+A'^\mu=\Lambda^{\> \sigma}_{\mu} A_\sigma
+\]
+\end{definizione}
+
+Ora possiamo provare a contrarre tra loro la matrice per la trasformazione delle coordinate controvarianti e quella per le coordinate covarianti
+\[
+\Lambda^\mu_{\> \nu} \Lambda^{\> \gamma}_{\mu}= \Lambda^{\mu}_{\> \nu} g_{\mu\alpha} \Lambda^{\alpha}_{\> \beta} g^{\beta\gamma}
+\]
+Però come abbiamo visto in \eqref{eq Metrica e lambda} vale $\Lambda^{\mu}_{\> \nu} g_{\mu\alpha} \Lambda^{\alpha}_{\>\beta}=g_{\nu\beta}$ quindi
+
+\begin{equation}
+\Lambda^\mu_{\> \nu} \Lambda^{\> \gamma}_{\mu}= g_{\nu\beta}g^{\beta\gamma}=\delta^{\>\gamma}_{\nu}
+\end{equation}
+
+Notiamo che la prima $\Lambda^{\mu}_{\>\nu}$ dovrà considerarsi trasposta nella notazione matriciale dato che il suo indice libero $\nu$ è un indice di colonna mentre in $\delta_{\nu}^{\>\gamma}$ $\nu$ è un indice di riga. 
+
+Quindi $\Lambda^{\> \nu}_{\mu}$ corrisponderà matricialmente ad una matrice $\tilde{\Lambda}$ che è l'inversa della trasposta della $\Lambda$ di $\Lambda^\mu_{\> \nu}$.
+
+Possiamo ricavarlo in modo più semplice con le matrici
+\[
+G=\Lambda^T G \Lambda \implies G^{-1}G=\mathbb{I}=G^{-1}\Lambda^T G \Lambda\implies G^{-1}\Lambda^T G= \Lambda^{-1}
+\]
+e poi portandolo in formalismo covariante
+\[
+(\Lambda^{-1})^\mu_{\> \nu} = g^{\mu\rho}\Lambda^\sigma_{\> \rho} g_{\sigma\nu}=\Lambda_{\nu}^{\> \mu}
+\]
+dove ancora notiamo che la $\Lambda_{\nu}^{\> \mu}$ corrisponde ad una trasposta perchè i suoi indici di riga e colonna sono scambiati rispetto a quelli di $(\Lambda^{-1})^\mu_{\> \nu}$
+
+\section{Tensori}\label{sezTensori}
+
+\begin{definizione}
+Un tensore di rango $(m,n)$ è un con $m$ indici controvarianti $\mu_1,\dots,\mu_m$ e $n$ indici covarianti $\nu_1,\dots,\nu_n$ 
+\[
+T^{\mu_1\dots\mu_m}_{\>\> \nu_1\dots\nu_n}
+\]
+che sotto trasformazioni di Lorentz trasforma secondo
+\[
+T'^{\mu_1\dots\mu_m}_{\>\> \nu_1\dots\nu_n}=
+\Lambda_{\>\mu_1}^{\rho_1}\dots\Lambda_{\>\mu_m}^{ \rho_m}\tilde{\Lambda}_{ \sigma_1}^{\> \nu_1}\dots\tilde{\Lambda}_{ \sigma_n}^{\> \nu_n}T^{\mu_1\dots\mu_m}_{\>\> \nu_1\dots\nu_n}
+\]
+\end{definizione}
+Possiamo dire che un tensore generalizza quanto abbiamo visto precedentemente per i quadrivettori con coordinate controvarianti e covarianti\footnotemark{}, cioè per gli indici controvarianti
+\[
+g_{\mu_1\rho}T^{\mu_1\dots\mu_m}_{\>\> \nu_1\dots\nu_n}=T^{\mu_2\dots\mu_m}_{\>\>\rho\nu_1\dots\nu_n}
+\]
+e per gli indici covarianti
+\[
+g^{\nu_1\rho}T^{\mu_1\dots\mu_m}_{\>\>\nu_1\dots\nu_n}=T^{\mu_1\dots\mu_m\rho}_{\>\>\nu_2\dots\nu_n}
+\]
+
+\footnotetext{Questa affermazione potrebbe sembrare una richiesta arbitraria, in realtà infatti sono i quadrivettori ad essere specializzazioni dei tensori e non viceversa.}
+
+Qui abbiamo definito tensori del tipo $T_{\>\>\nu}^\mu$ ma potremo averne anche del tipo $T^{\>\>\sigma}_{\rho}$ come per i quadrivettori.
+
+
+Vediamo le operazioni e proprietà che possiamo usare con i tensori:
+\begin{itemize}
+\item Prodotto tensoriale \\
+Dati due tensori, uno di rango $(m,n)$ e l'altro di rango $(k,l)$, il loro prodotto tensoriale sarà un'operazione $(m,n)\times(k,l)\rightarrow (m+k,n+l)$
+\[
+V^{\mu_1\dots\mu_m}_{\>\> \nu_1\dots\nu_n} \times W^{\rho_1\dots\rho_k}_{\>\> \sigma_1\dots\sigma_l} = T^{\mu_1\dots\mu_m\rho_1\dots\rho_k}_{\>\> \nu_1\dots\nu_n\sigma_1\dots\sigma_l}
+\]
+e il risultato sarà ancora un tensore.
+
+\item Contrazione\\
+Dato un tensore, per esempio di rango $(3,2)$, possiamo saturarne 2 indici ottenendo un nuovo tensore di rango $(2,1)$ tramite
+\[
+\delta^{\mu}_{\> \sigma}T^{\mu\nu\lambda}_{\>\> \rho\sigma}=T^{\mu\nu\lambda}_{\>\> \lambda\sigma}\equiv \tilde{T}^{\mu\nu}_{\>\> \sigma}
+\]
+
+\item Simmetria \\
+Un tensore senza indici misti di rango $2$ è simmetrico se, per indici controvarianti
+\[
+F^{\mu\nu}=F^{\nu\mu} \implies F'^{\mu\nu}=F'^{\nu\mu}
+\]
+o per gli indici covarianti
+\[
+G_{\mu\nu}=G_{\nu\mu} \implies G'_{\mu\nu}=G'_{\nu\mu}
+\]
+La simmetria di un tensore senza indici misti implica che tutti i tensori ottenuti con trasformazioni di Lorentz da quel tensore avranno la stessa simmetria, cioè la simmetria di un tensore senza indici misti è covariante (a vista).
+Questa proprietà non si può estendere ai tensori con indici misti: potrebbero esserci particolari tensori $S$ in particolari riferimenti per cui $S^{\rho}_{\>\sigma}=S^{\sigma}_{\>\rho}$ ma questa uguaglianza non verrebbe conservata da una trasformazione di Lorentz.
+Un tensore con più di due indici potrà essere simmetrico per $2$, $3$ o più indici.\\ Un tensore che è simmetrico per tutti i suoi indici si dice completamente simmetrico.
+\item Antisimmetria \\
+Un tensore senza indici misti di rango $2$ è simmetrico se, per indici controvarianti
+\[
+F^{\mu\nu}=-F^{\nu\mu} \implies F'^{\mu\nu}=-F'^{\nu\mu}
+\]
+o per gli indici covarianti
+\[
+G_{\mu\nu}=-G_{\nu\mu} \implies G'_{\mu\nu}=-G'_{\nu\mu}
+\]
+Come per la simmetria questa proprietà non si può generalizzare ai tensori con indici misti.
+Un tensore con più di due indici potrà essere antisimmetrico per $2$, $3$ o più indici: ciascuna permutazione dei suoi indici farà uscire un segno meno. \\
+Un tensore che è antisimmetrico per tutti i suoi indici si dice completamente antisimmetrico.
+\item Contrazione di un tensore simmetrico e di un tensore antisimmetrico\\
+La contrazione di un tensore simmetrico $S^{\mu\nu}=S^{\nu\mu}$ e di un tensore antisimmetrico $F^{\mu\nu}=-F^{\nu\mu}$ darà sempre zero.
+\end{itemize}
+
+
+\begin{proof:}[Dimostriamo l'ultima proprietà]
+Dalla simmetria di $S$ 
+\[
+S^{\mu\nu}F^{\mu\nu}=S^{\nu\mu}F^{\mu\nu}
+\]
+Ma rinominando gli indici contratti $\mu\rightarrow\nu$, $\nu\rightarrow \mu$  e mantenendo l'equazione
+\[
+S^{\nu\mu}F^{\mu\nu}=S^{\mu\nu}F^{\nu\mu}=-S^{\mu\nu}F^{\mu\nu} 
+\]
+e quindi
+\[
+S^{\mu\nu}F^{\mu\nu}=-S^{\mu\nu}F^{\mu\nu}=0 \qedhere 
+\]
+\end{proof:}
+
+\begin{definizione}[Tensori invarianti e pseudo-invarianti]
+Diremo che un tensore è invariante se non è cambiato da una trasformazione di Lorentz e che è pseudo-invariante se può essere cambiato da una trasformazione di Lorentz solo per il segno.
+\end{definizione}
+
+\begin{definizione}[Tensore di Levi-Civita]\label{tensore levi civita}
+Chiamiamo tensore di Levi-Civita il tensore pseudo-invariante 
+\[
+\epsilon^{\mu\nu\rho\sigma}=\begin{cases}
++1 \>\>\>\, \text{se } (\mu\nu\rho\sigma)=(0,1,2,3)\\
+0 \>\>\>\>\>\>\> \text{se due indici sono uguali}\\
+\text{completamente antisimmetrico}\\
+\end{cases}
+\]
+\end{definizione}
+\begin{proof:}[Mostriamo che il tensore di Levi-Civita è pseudo-invariante]
+
+\[
+\epsilon'^{\mu\nu\rho\sigma}=\Lambda^{\mu}_{\> \alpha}\Lambda^{\nu}_{\> \beta}\Lambda^{\rho}_{\> \gamma}\Lambda^{\sigma}_{\> \delta} \epsilon^{\alpha\beta\gamma\delta} = k \epsilon^{\mu\nu\rho\sigma}
+\]
+si dimostra che il fattore $k$ è il determinante di $\Lambda$, però ricordandoci che $\Lambda^T G \Lambda=G$ sappiamo dal teorema di Binet che $\det{\Lambda}=\pm 1$ quindi $\epsilon^{\mu\nu\rho\sigma}$ è pseudo-invariante. \qedhere
+\end{proof:}
+
+\textbf{Contrazione di due tensori di Levi civita!}
+
+Enunciamo, senza dimostrarlo, un teorema di algebra tensoriale piuttosto importante
+
+\begin{teorema}
+Gli unici tensori pseudo-invarianti sono quelli dati da prodotti tensoriali di $g$ e $\epsilon$.
+Cioè se $T^{\mu\nu\rho\sigma}$ è invariante o pseudo-invariante 
+\[
+T^{\mu\nu\rho\sigma} = a \epsilon^{\mu\nu\rho\sigma} + b g^{\mu\nu}g^{\rho\sigma} + c g^{\mu\rho}g^{\nu\sigma} + d g^{\mu\sigma} g^{\nu\rho}
+\]
+\end{teorema}
+
+\subsection{Formalismo covariante nello spazio tridimensionale}
+I tensori si possono usare anche con i vettori tridimensionali della fisica classica.
+
+Per esempio una rotazione può essere considerato un tensore $R^{ij}$ corrispondente alla matrice di rotazione.
+Come abbiamo già visto i vettori tridimensionali sotto le trasformazioni del gruppo di Galileo vengono trasformati con $\vec{v}'=R\vec{v}$, con R la matrice della rotazione. Possiamo riscrivere questa stessa trasformazione come
+\[
+v^{i}=R^i_{\> j} v^j
+\]
+e considerarla come una definizione degli indici controvarianti per i vettori tridimensionali.
+
+Nella meccanica classica la metrica è la $\delta_{ij}$ e possiamo usarla per definire le coordinate covarianti per i vettori tridimensionali
+\[
+v_i=\delta^i_jv^j
+\]
+però vediamo subito che per come sono qui definite le coordinate covarianti sono numericamente uguali alle coordinate controvarianti
+\[
+v_i=(A_1,A_2,A_3) \hspace{0.15\linewidth} v_1=v^1, \, v_2=v^2, \, v_3=v^3
+\]
+e questo ci fa capire perchè non ci siamo mai posti il problema di distinguere coordinate covarianti e controvarianti prima d'ora.\\$ $\\
+
+Anche per i vettori tridimensionali potremo definire il tensore di Levi-Civita 
+\[\epsilon^{ijk}=\begin{cases} 1 \>\>\,\, (ijk)=(123) \\ 0 \>\>\>\> \text{se due indici sono uguali} \\ \text{completamente antisimmetrico} \end{cases} \]
+e potremo usarlo per ridefinire in modo comodo il prodotto vettoriale ed il rotore
+\begin{equation}
+(\vec{v}\times\vec{w})^i=\epsilon^{ijk}v^jw^k \hspace{0.15\linewidth} \left(\vec{\nabla}\times\vec{v}\right)^i=\epsilon^{ijk}\dfrac{\partial}{\partial x^j}v^k=\epsilon^{ijk}\partial_j v^k
+\end{equation}
+Questa ridefinizione permette di dimostrare abbastanza semplicemente le proprietà dei prodotti vettoriale e scalare dei vettori che abbiamo usato in meccanica classica ed in elettromagnetismo, per esempio
+\begin{proposizione}
+$\vec{a}\cdot\left(\vec{b}\times\vec{c}\right)=\vec{b}\cdot\left(\vec{c}\times\vec{a}\right)$
+\end{proposizione}
+\begin{proof:}
+Scriviamo esplicitamente i due membri dell'equazione
+\[
+a^i\delta^i_{\> j}\epsilon^{jlm}b^lc^m \overset{\text{?}}{=} b^i\delta^i_{\>j}\epsilon^{jlm}c^la^m
+\]
+Rinominiamo gli indici muti del secondo membro secondo $m\rightarrow i$, $il\rightarrow m$, $i\rightarrow l$
+\[
+b^i\delta^i_{\>j}\epsilon^{jlm}c^la^m \rightarrow b^l\delta^l_{\>j}\epsilon^{jmi}c^ma^i
+\]
+Dalla $\delta$ trovo
+\[
+\delta^i_{\> j}\epsilon^{jlm}a^ib^lc^m=\epsilon^{jlm}a^jb^lc^m \overset{\text{?}}{=} \delta^l_{\>j}\epsilon^{jmi}a^ib^lc^m=\epsilon^{lmi}a^ib^lc^m
+\]
+Con due permutazioni sugli indici della $\epsilon$ al primo membro trovo
+\[
+\epsilon^{lmj}a^jb^lc^m=\epsilon^{lmi}a^ib^lc^m \qedhere
+\]
+\end{proof:}
+
+
+
+\subparagraph{Attenzione:} quando lavoriamo con i quadrivettori scriveremo spesso $A^\mu=(A^0,\vec{A})$ dove intendiamo che $\vec{A}$ ha $3$ componenti ma dato che non è definito come vettore tridimensionale a sé ma come componente di un quadrivettore dovremo \textbf{sempre} usare la metrica $g_{\mu\nu}$ per lavorarci e quindi $A_1=-A^1$, $A_2=-A^2$, $A_3=-A^3$. Per essere chiari se usiamo la prima componente e le altre tre come oggetti separati, per esempio dichiarando tempo e posizione $t,\vec{x}$ separatamente, potremo usare la metrica tridimensionale, se invece lavoriamo con oggetti quadridimensionali o con le loro componenti dovremo usare la metrica quadridimensionale.
+
+
+
+
+
+\section{Gruppo di simmetria}\label{sezGruppo}
+
+\begin{definizione}[Gruppo di Poincarè]
+Chiamiamo gruppo di Poincarè il gruppo delle trasformazioni dato dal prodotto semidiretto del gruppo delle trasformazioni di Lorentz e dal gruppo delle traslazioni spazio-temporali
+\[
+\mathcal{P}=\left\{ (\Lambda,a) \text{ con } \Lambda\in\mathcal{L},\, a\in\mathbb{R}^4   \right\} \approx O(3,1)\times\mathbb{R}^4
+\]
+con legge di composizione
+\[
+\left(\Lambda_2,a_2\right) \circ \left(\Lambda_1,a_1\right) = \left(\Lambda_2\Lambda_1, a_2+\Lambda_2a_1\right)
+\]
+\end{definizione}
+
+Questa definizione significa ovviamente che le traslazioni spazio-temporali e le trasformazioni di Lorentz sono due sottogruppi di $\mathcal{P}$ che lo formano e, sapendo già che gli intervalli spaziali e temporali sono invariati da traslazioni spazio-temporali, possiamo concentrarci ora sul solo gruppo di Lorentz per ricercare il suo sottogruppo per cui la fisica è simmetrica. \footnote{Le leggi sono già covarianti a vista per tutte le trasformazioni di Lorentz dato che sono scritte in formalismo covariante, ora stiamo cercando di capire per quale sottoinsieme oltre ad essere covarianti sono anche simmetriche. Ripetendo lo stesso esperimento ma girando completamente il riferimento di $180\deg$ le osservazioni sono uguali? E ``riavvolgendo'' all'indietro il tempo sono simmetriche?}
+
+Potremo vedere le rotazioni spaziali come un tipo particolare di trasformazioni del gruppo di Lorentz con matrice
+\[
+\Lambda_R=\left(\begin{array}{c|c}
+1 & 0_3^T \\
+\hline
+0_3 & R \\
+\end{array}\right) \hspace{0.15\linewidth} R^T \mathbb{I}_3 R=\mathbb{I}_3 \implies \Lambda_R^T G \Lambda_R = G
+\]
+
+
+Il gruppo di Lorentz $O(3,1)$ è un gruppo di Lie, cioè è un gruppo particolare che, a spanne, è anche una varietà differenziale. Ha quindi senso chiedersi se il gruppo di Lorentz o se qualche suo sottogruppo è connesso.
+
+Abbiamo visto che da $\Lambda^T g \Lambda=g$ si trova che $\det{\Lambda}=\pm1$ e questo ci fa capire che l'intero gruppo di Lorentz non potrà sicuramente essere connesso: non c'è nessuna trasformazione continua dei parametri di $\Lambda$ che può portare un $\text{det}=-1$ a $\text{det}=+1$.
+
+Dividiamo quindi il gruppo di Lorentz in due sottoinsiemi sconnessi tra loro in base al determinante della trasformazione: $\mathcal{L}^+$ (o anche $SO(3,1)$) e $\mathcal{L}^{-}$
+
+Scrivendo $\Lambda^T g \Lambda=g$ in formalismo covariante $\Lambda^{\rho}_{\> \mu}g_{\mu\nu}\Lambda^{\nu}_{\> \sigma}=g_{\rho\sigma}$ vediamo che la prima entrata di $\Lambda$ sarà
+\[
+\Lambda^{0}_{\> \mu}g_{\mu\nu}\Lambda^{\nu}_{\> 0}=g_{00} \implies 1=\Lambda^{0}_{\> 0}g_{00}\Lambda^{0}_{\> 0}+\Lambda^{0}_{\> 1}g_{11}\Lambda^{1}_{\> 0}+\Lambda^{0}_{\> 2}g_{22}\Lambda^{2}_{\> 0}+\Lambda^{0}_{\> 3}g_{33}\Lambda^{3}_{\> 0}
+\]
+che possiamo riscrivere come
+\[
+\left( \Lambda^0_{\>0} \right)^2 = 1+ \sum_{i}^3 \Lambda^0_{\> i}\Lambda^i_{\> 0} =1+ \sum_{i}^3 \left( \Lambda^i_{\> 0} \right)^2
+\]
+Da cui otteniamo un secondo criterio con cui dividere il gruppo di Lorentz: $\Lambda^0_{\>0} \geq 1$  oppure $\Lambda^0_{\>0} \leq - 1$.
+
+Ancora una volta vediamo subito che, non potendo passare con continuità da un sottoinsieme all'altro, i due sottoinsiemi sono sconnessi tra loro. 
+
+Chiamiamo il primo dei due sottoinsieme $\mathcal{L}_{\uparrow}$ (o anche $O(3,1)_c$), detto sottoinsieme ortocrono, e il secondo $\mathcal{L}_{\downarrow}$, detto sottoinsieme anticrono.
+
+Avremo quindi 4 sottoinsiemi principali, sconnessi fra loro, del gruppo di Lorentz dati dalle intersezioni di queste $4$ condizioni:
+\[
+\begin{array}{cc}
+\mathcal{L}_{\uparrow}^{+} & \mathcal{L}_{\downarrow}^{+}\\
+\mathcal{L}_{\uparrow}^{-} & \mathcal{L}_{\downarrow}^{-}\\
+\end{array}
+\]
+L'unico di questi $4$ sottoinsiemi che è anche un sottogruppo è $\mathcal{L}_{\uparrow}^{+}$, o $SO(3,1)_c$, il cosiddetto gruppo di Lorentz ristretto (infatti chiaramente la trasformazione identità avrà $\det=+1$ e $\mathbb{I}^0_{\> 0}=1$).
+
+La trasformazione che inverte tutte le coordinate spaziali mantenendo invariato il tempo è chiamata trasformazione di parità $P$ ed è l'elemento rappresentativo di $\mathcal{L}_{\uparrow}^{-}$.\\
+La trasformazione che inverte il tempo mantenendo invariato lo spazio è detta inversione temporale ed è l'elemento rappresentativo di $\mathcal{L}_{\downarrow}^{+}$.\\
+La loro composizione $PT$ è in $\mathcal{L}_{\downarrow}^{-}$ e si dimostra che per ottenere uno degli altri tre sottoinsiemi principali basta comporre con l'opportuna trasformazione rappresentativa il gruppo di Lorentz ristretto.
+
+Sperimentalmente l'elettromagnetismo è simmetrico per tutto il gruppo di Lorentz mentre invece l'interazione debole è simmetrica solo per il gruppo di Lorentz ristretto, che quindi è l'unico gruppo di simmetria per la fisica.\footnote{La fisica cioè non è simmetrica né per inversione temporale né per parità! Girando l'apparato di un esperimento anche mantenendo fisse tutte le altre variabili non è detto che il risultato nel nuovo riferimento sia lo stesso e che cioè le osservazioni siano simmetriche.}
+
+\subsection{Trasformazioni del gruppo di Lorentz}
+
+Una trasformazione del gruppo di Lorentz è rappresentata da una matrice $4\time 4$ che quindi avrà 16 entrate. Però le trasformazioni del gruppo di Lorentz non dipenderanno da $16$ parametri indipendenti ma solo da $6$, infatti come abbiamo visto una trasformazioni di Lorentz deve rispettare
+\[
+\Lambda^T g \Lambda = g
+\]
+che darà a 10 equazioni sulle entrate di $\Lambda$.
+
+A cosa corrispondono questi $6$ parametri delle equazioni di Lorentz?
+
+Le rotazioni sono un sottoinsieme, anzi un sottogruppo dato che sono connesse con l ' identità, del gruppo di Lorentz e, come per il gruppo di Galileo, le rotazioni sono determinate da $3$ parametri indipendenti. 
+
+I restanti parametri determineranno il $boost$ della trasformazione, cioè una versione generale di quella trasformazione che nella sezione \ref{sezTrasformazioniLorentz} avevamo studiato lungo il solo asse $x$ e chiamato semplicemente trasformazione di Lorentz.
+
+La trasformazione del gruppo di Lorentz più generale si potrà scrivere come combinazione di una rotazione spaziale e di un boost, $3$ parametri daranno la rotazione e $3$ il boost.
+
+Quindi per $\Lambda\in O(3,1)$ 
+\[
+\Lambda=\left(\begin{array}{c|ccc}
+\gamma & & -\beta\gamma n^T & \\
+\hline
+ & & & \\
+-\beta\gamma n & & \mathbb{I}_3 + (\gamma -1)n n^T& \\
+ & & & \\
+\end{array}\right)
+\left(\begin{array}{c|ccc}
+1 & 0 & 0 & 0 \\
+\hline
+0 & & & \\
+0 & & R & \\
+0 & & & \\
+\end{array}\right)
+\]
+
+Dove $n$ sarà il versore spaziale associato al boost e $R\in M_3$ è una matrice di rotazione.
+
+Per capire meglio questa scrittura generale, nel caso studiato precedentemente il boost avveniva lungo l'asse $x$ e quindi il versore è $n=(1,0,0)^T$ e la rotazione è $R=\mathbb{I}_3$ e quindi ritroviamo
+\[
+\Lambda_{\text{boost,}x} =
+\left(\begin{array}{cccc}
+\gamma & -\beta\gamma & 0 & 0 \\
+-\beta\gamma & \gamma & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{array}\right) \hspace{0.15\linewidth}
+\mathbb{I}_3+(\gamma-1)\left(\begin{array}{c}1 \\ 0 \\ 0 \end{array}\right) \left(\begin{array}{c}1 \\ 0 \\ 0 \end{array}\right)^T=\text{diag}(\gamma,1,1)
+\]
+
+\subsection{Composizione tra due Boost}\label{sezComposizioneBoost}
+
+Abbiamo detto che le rotazioni sono un sottogruppo del gruppo di Lorentz e che la trasformazione più generale si può scrivere come composizione di un boost e di una rotazione spaziale. Ci verrebbe quindi da pensare che anche i boost formino un sottogruppo, ma questo non è vero. 
+
+La composizione tra due Boost darà un boost solo se le due trasformazioni di Lorentz iniziali sono lungo lo stesso asse, altrimenti darà come risultato la composizione di un boost e di una rotazione.
+
+Lo mostriamo per la composizione tra un boost lungo l'asse $x$ a velocità $v_1$ e di uno lungo l'asse $z$ a velocità $v_2$:
+
+\begin{align*}
+\Lambda_1\Lambda_2 &=
+\left(\begin{array}{cccc}
+\gamma_1 & -\beta_1\gamma_1 & 0 & 0 \\
+-\beta_1\gamma_1 & \gamma_1 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{array}\right)
+\left(\begin{array}{cccc}
+\gamma_2 & 0 & 0 & -\beta_2\gamma_2 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+-\beta_2\gamma_2 & 0 & 0 & \gamma_2 \\
+\end{array}\right) = \\ &=
+\left(\begin{array}{cccc}
+\gamma_1\gamma_2 & -\beta_1\gamma_1 & 0 & -\beta_2\gamma_1\gamma_2 \\
+-\beta_1\gamma_1\gamma_2 & \gamma_1 & 0 & \beta_1\beta_2\gamma_1\gamma_2 \\
+0 & 0 & 1 & 0 \\
+-\beta_2\gamma_2 & 0 & 0 & \gamma_2 \\
+\end{array}\right) \\
+(?) &\overset{?}{=} 
+\left(\begin{array}{c|c}
+\gamma &-\beta\gamma n^T\\
+\hline
+-\beta\gamma n & \mathbb{I}_3 + (\gamma -1)n n^T \\
+\end{array}\right)
+\left(\begin{array}{c|c}
+1 & 0_3^T \\
+\hline
+0_3  & R \\
+\end{array}\right)=
+\left(\begin{array}{c|ccc}
+\gamma &  & -\beta\gamma n^T R &  \\
+\hline
+ & & & \\
+-\beta\gamma n & & R+(\gamma -1)n n^T R & \\
+ & & & \\
+\end{array}\right)
+\end{align*}
+
+Ed il passaggio $(?)$ è giustificato se le quantità dell'ultima matrice sono realistiche per un boost composto a rotazione. 
+Se l'uguaglianza è vera dovremo avere, dalla prima colonna
+\[
+\gamma=\gamma_1\gamma_2 \hspace{0.15\linewidth} -\beta\gamma n = \left(\begin{array}{c} -\beta_1\gamma_1\gamma_2 \\ 0 \\ -\beta_2\gamma_2 \end{array}\right)=-\gamma\left(\begin{array}{c} \beta_1 \\ 0 \\ \dfrac{\beta_2}{\gamma_1} \end{array}\right)
+\]
+quindi $\beta n = \left(\begin{array}{ccc}
+\beta_2 & 0 & \dfrac{\beta_1}{\gamma_1}
+\end{array}\right)^T$ e, essendo $n$ un versore, uguagliando i moduli troviamo
+\[
+\beta=\sqrt{\beta_1^2+\dfrac{\beta_2^2}{\gamma_2^2}}=\sqrt{\beta_1^2+\beta_2^2-\beta_1^2\beta_2^2}<1
+\]
+che è proprio il valore di $\beta$ che ci aspettiamo da $\gamma=\gamma_1\gamma_2$.
+Questo ci permetterebbe inoltre di scrivere il versore del boost, che avrà componenti in funzione delle velocità lungo $x$ e $z$.
+
+Dalla seconda colonna avremo poi
+\[
+-\beta\gamma n^T R= \left(\begin{array}{ccc} -\beta_1\gamma_1 & 0 & -\beta_2\gamma_1\gamma_2 \end{array}\right) 
+\]
+ma abbiamo già identificato $\beta\gamma n$ quindi 
+\[
+\left(\begin{array}{ccc}
+-\beta_1\gamma_1\gamma_2 & 0 &-\beta_2\gamma_2 \end{array}\right)R=\left(\begin{array}{ccc} -\beta_1\gamma_1 & 0 & -\beta_2\gamma_1\gamma_2 \end{array}\right) 
+\]
+Questo ci fa vedere che la rotazione lascia invariata la coordinata lungo l'asse $y$, quindi sarà della forma
+\[ R=R(\theta)=
+\left(\begin{array}{ccc}
+\cos{\theta} & 0 & \sin{\theta} \\
+0 & 1 & 0 \\
+-\sin{\theta} & 0 & \cos{\theta} 
+\end{array}\right)
+\]
+e possiamo individuare l'angolo $\theta$ dalle equazioni
+\[
+\begin{cases}
+\beta_1\gamma_1\gamma_2\cos{\theta}-\beta_2\gamma_2\sin{\theta}=\beta_1\gamma_1 \\
+\beta_1\gamma_1\gamma_2\sin{\theta}+\beta_2\gamma_2\cos{\theta}=\beta_2\gamma_1\gamma_2
+\end{cases}
+\]
+ottenendo
+\[
+\cos{\theta}=\dfrac{\gamma_1+\gamma_2}{1+\gamma_1\gamma_2}
+\]
+Quindi finalmente, essendo le quantità trovate in seguito al passaggio $(?)$ valide, vediamo che prodotto delle due trasformazioni di Lorentz ci ha dato non una trasformazione di Lorentz ma il prodotto tra una trasformazione di Lorentz ed una rotazione.
+
+
+
+
+\chapter{Meccanica relativistica}
+Le leggi della meccanica classica non trasformano bene e non sono scritte nel formalismo covariante, dovremo quindi formulare delle nuove leggi in formalismo covariante che esprimano la meccanica. 
+Vogliamo però che queste nuove leggi racchiudano al loro interno, nel cosiddetto limite non relativistico $c\rightarrow +\infty$, le leggi classiche.
+
+In meccanica classica usavamo le leggi orarie $\vec{x}=\vec{x}(t)$ per descrivere la cinematica di un punto materiale, sappiamo però che il tempo in relatività è un variabile e un parametro invariante. 
+
+L'analogo delle orarie in meccanica relativistica sono le \[
+x^\mu=x^\mu(\lambda)\]
+che esprimono le coordinate spazio temporali di un punto materiale lungo la linea di universo tramite un parametro $\lambda$ qualsiasi.
+La meccanica relativistica è \textbf{invariante per riparametrizzazioni} potremo cioè esprimere le leggi $x^\mu(\lambda)$ con un altro parametro invariante qualsiasi $\lambda'=\lambda'(\lambda)$, a patto che la riparametrizzazione sia invertibile, e otterremo la stessa fisica.
+Quale parametro sarà quindi il più utile?
+
+Useremo prevalentemente il tempo proprio $s$ per parametrizzare la meccanica.
+Nel sistema inerziale di \textbf{quiete istantanea} della particella, cioè nel sistema inerziale istantaneamente solidale alla particella, istante per istante avremo $ds=dt=d\tau$.
+
+L'invarianza per riparametrizzazioni si può vedere come
+\[
+\dfrac{ds}{d\lambda}=\sqrt{\dfrac{dx^\mu}{d\lambda}\dfrac{dx_\mu}{d\lambda}} \longrightarrow \dfrac{ds}{d\lambda}'=\sqrt{\dfrac{dx^\mu}{d\lambda}'\dfrac{dx_\mu}{d\lambda}'}
+\] da cui si vede che i membri di destra e sinistra vengono modificati allo stesso modo.
+
+Come sappiamo il tempo proprio è un invariante ed è collegato direttamente al tempo misurato in un sistema inerziale $K$ qualsiasi in modo semplice. Misurando in un sistema qualsiasi troviamo
+\[
+ds^2=c^2\left(dt^2-\dfrac{dx^2}{c^2}\right)=c^2\left(1-\dfrac{v^2}{c^2}\right)dt^2 \implies \dfrac{ds}{dt}=c\sqrt{1-\beta^2}
+\]
+
+Questo ci permetterà di portare le leggi dal formalismo covariante al formalismo vettoriale all'interno di un dato riferimento tramite una semplice riparametrizzazione $s\mapsto \dfrac{c}{\gamma} t$
+
+\section{Quadrivelocità}
+\begin{definizione}
+Chiamiamo quadrivelocità il quadrivettore
+\[
+u^\mu=\dfrac{dx^\mu}{ds}
+\]
+\end{definizione}
+Dalla definizione segue direttamente che la quadrivelocità ha norma $1$
+\[
+\dfrac{ds^2}{d\lambda^2}=\dfrac{dx^\mu}{d\lambda}\dfrac{dx_\mu}{d\lambda} \overset{\lambda=s}{\longrightarrow} 1=\dfrac{ds^2}{ds^2}=u^\mu u_\mu
+\]
+e quindi che non tutte le sue componenti sono indipendenti
+\[
+(u^0)^2-(u^1)^2(u^2)^2-(u^3)^2=1
+\]
+
+
+Come abbiamo detto possiamo, fissato un riferimento $K$, darne un'espressione nel tempo $t$ che sarà
+\begin{equation}
+u^\mu(t)=
+\dfrac{dx^\mu}{dt}\dfrac{dt}{ds}=\dfrac{(cdt,d\vec{x})}{dt}\dfrac{\gamma}{c}=\left(\gamma,\dfrac{\gamma}{c}\vec{v}\right)
+\end{equation}
+da cui possiamo ritrovare 
+\[
+(u^0)^2-(\vec{u})^2=
+\dfrac{1-\dfrac{v^2}{c^2}}{1-\dfrac{v^2}{c^2}}=1
+\]
+
+Vediamo esplicitamente in questo caso cosa sarebbe successo se avessimo provato a definirla direttamente tramite il tempo:
+\[
+\dfrac{dx^\mu}{dt}=\dfrac{(cdt,d\vec{x})}{dt}=\left( c,\dfrac{\vec{v}}{c} \right) \neq u^\mu(t)= \left(\gamma,\dfrac{\gamma}{c}\vec{v}\right)
+\]
+questo non è un quadrivettore e non è la quadrivelocità.
+
+
+\section{Quadriaccelerazione}
+\begin{definizione}
+Chiamiamo quadriaccelerazione il quadrivettore
+\[
+w^\mu=\dfrac{du^\mu}{ds}=\dfrac{d^2x^\mu}{ds^2}
+\]
+\end{definizione}
+è immediato notare che la quadriaccelerazione e la quadrivelocità sono ortogonali per il prodotto scalare dato dalla contrazione $w^\mu u_\mu =0$. Dimostriamolo:
+\[
+u^\mu u_\mu=1\implies \dfrac{u^\mu u_\mu}{ds}=0 \implies w^\mu u_\mu+w_\mu u^\mu =w^\mu u_\mu + w^\nu g_{\nu\mu} u^\mu = w^\mu u_\mu + w^\nu u_\nu = 2 w^\mu u_\mu = 0
+\]
+
+Possiamo poi dare in un sistema $K$ le componenti in funzione del tempo $w^\mu(t)$
+\[
+\dfrac{du^\mu}{dt}\dfrac{dt}{ds}=\dfrac{\left(\gamma,\dfrac{\gamma}{c}\vec{v}\right)}{dt} \dfrac{\gamma}{c} 
+\] 
+e quindi
+\begin{equation}
+w^0=\dfrac{\gamma}{c}\dfrac{\partial \gamma}{\partial t}=\dfrac{1}{2c}\dfrac{\partial \gamma^2}{\partial t}=\dfrac{1}{2c}\left(\dfrac{\partial}{\partial t} \dfrac{1}{1-\dfrac{v^2}{c^2}} \right)= \dfrac{1}{2c} \gamma^4 \dfrac{2\vec{v}}{c^2}\vec{a}=\gamma^4 \dfrac{\vec{v}\cdot\vec{a}}{c^3}
+\end{equation}\begin{equation}\begin{split}
+w^i&=\dfrac{\gamma}{c}\left(\dfrac{\partial}{\partial t} \dfrac{v^i}{\sqrt{1-\dfrac{v^2}{c^2}}} \right) = \dfrac{\gamma}{c} \gamma^2 \left( \dfrac{\partial v^i}{\gamma\partial t} - v^i \dfrac{\partial \sqrt{1-\dfrac{v^2}{c^2}}}{\partial t}  \right)= 
+\dfrac{\gamma^3}{c} \left( \dfrac{a^i}{\gamma} + v^i \dfrac{\gamma}{2} \dfrac{2 v^i}{c^2} a^i \right) \\&= \dfrac{\gamma^2}{c} a^i + \dfrac{\gamma^4}{c^2}v^i \left( \vec{v} \cdot \vec{a} \right)\end{split}
+\end{equation}
+
+\section{Azione, Lagrangiana e Hamiltoniana}\label{sezAzione}
+Per un corpo libero in meccanica classica definivamo azione
+\[
+S=\int_{t_1}^{t_2} L(\vec{x},\vec{v}) dt
+\]
+dove $L(\vec{x},\vec{v})=\dfrac{1}{2}mv^2$ è la lagrangiana del corpo libero. A partire da questo potevamo ricavare il momento tramite
+\[
+\dfrac{\partial}{\partial v_k} L(\vec{x},\vec{v}) = p_k = mv_k \implies \vec{p} = m\vec{v}
+\]
+Potevamo poi usare l'Hamiltoniana per definire l'energia
+\[
+\mathcal{E} = H = p_k v_k - L = mv^2 - \dfrac{mv^2}{2} = \dfrac{mv^2}{2}
+\]
+
+Vogliamo seguire un procedimento simile per definire momento ed energia relativistici.
+Vogliamo che l'azione per un corpo libero relativistico sia un invariante di Lorentz e che si riconduca al caso classico nel limite $\dfrac{v}{c}\rightarrow 0$.
+
+L'invariante di Lorentz più semplice che conosciamo è $s$ quindi proviamo usando l'azione:
+\[
+S:= \alpha \int_{s_1}^{s^2} ds = \alpha \int_{t_1}^{t_2} \dfrac{ds}{dt} dt = \alpha c \int_{t_1}^{t_2} \sqrt{1-\dfrac{v^2}{c^2}} dt
+\]
+se lo espandiamo in serie di potenze di $\dfrac{v^2}{c^2}$ troviamo
+\[
+S=-\alpha c \int_{t_1}^{t_2} \left[ 1-\dfrac{1}{2}\left(\dfrac{v}{c}\right)^2 +o\left( \dfrac{v}{c} \right)^4  \right]\overset{\>\>\> \dfrac{v}{c}\rightarrow 0 \>\>\>}{\longrightarrow} -\alpha c \int_{t_1}^{t_2} dt \dfrac{v^2}{2c^2}
+\]
+ed imponendo ritroviamo l'azione classica nel limite se $\alpha=-mc$.
+Definiamo azione relativistica 
+\begin{equation}
+S=-mc \int_{s^1}^{s^2} ds = -mc^2 \int_{t_1}^{t_2} \dfrac{dt}{\gamma}
+\end{equation}
+e la Lagrangiana relativistica sarà
+\begin{equation}
+L=\dfrac{-mc^2}{\gamma}=-mc^2\sqrt{1-\dfrac{v^2}{c^2}}
+\end{equation}
+Da questo potremo definire il momento relativistico
+\begin{equation}
+p_k=\dfrac{\partial}{\partial v_k}L = m \gamma v_k \hspace{0.15\linewidth} \vec{p} = m\gamma \vec{v}
+\end{equation}
+e l'energia
+\begin{equation}
+\mathcal{E}=p_k v_k - L = mc^2\gamma
+\end{equation}
+
+Energia e momento saranno quindi legati da
+\[
+\mathcal{E} \vec{v}=mc^2\gamma\vec{v}=\vec{p}c^2 \implies \dfrac{\mathcal{E} \vec{v} }{c^2}= \vec{p}
+\]
+
+Notiamo che l'energia e il momento si possono vedere come componenti di un unico quadrivettore
+\begin{equation}
+\dfrac{\mathcal{E}}{c}=mc u^0 \hspace{0.15\linewidth} \vec{p}=mc\vec{u}
+\end{equation}
+
+\section{Quadrimomento}
+\begin{definizione}
+Chiamiamo quadrimomento, o quadrimpulso, il quadrivettore
+\[
+p^\mu=mcu^\mu
+\]
+\end{definizione}
+Le componenti del quadrimomento sono energia e momento $p^\mu=\left( \dfrac{\mathcal{E}}{c},\vec{p} \right)$
+La contrazione del quadrimomento con sé stesso dà le cosiddette condizioni di \textbf{mass shell} 
+\[
+p^\mu p_\mu= m^2c^2 u^\mu u_\mu = m^2 c^2
+\]
+Tramite le condizioni di mass shell possiamo trovare
+\[
+m^2c^2=p^\mu p_\mu = \dfrac{\mathcal{E}^2}{c^2} - p^2 
+\]
+e quindi la definizione esplicita dell'energia relativistica è
+\begin{equation}
+\mathcal{E}=\sqrt{m^2c^4+c^2 p^2}
+\end{equation}
+
+\subsection{Energia a riposo ed energia cinetica}
+Come abbiamo visto l'energia relativistica è definita da
+\[
+\mathcal{E}=mc^2\gamma
+\]
+che esplicitando $\gamma$ si può riscrivere come
+\begin{equation}
+\mathcal{E}=\sqrt{m^2c^4+c^2p^2}
+\end{equation}
+Vediamo quindi che l'energia ha una componente indipendente dal momento del corpo:
+un corpo fermo avrà energia non nulla chiamata \textbf{energia a riposo} \[\mathcal{E}_{riposo}=mc^2\]
+
+Ridefiniamo quindi l'energia cinetica come la differenza tra l'energia totale e l'energia a riposo
+\begin{equation}
+T=\mathcal{E}-\mathcal{E}_{riposo}=mc^2\gamma - mc^2
+\end{equation}
+Espandendo $\gamma$ nel limite $v<<c$ 
+\begin{align*}
+\gamma(\beta) &=\gamma(0)+\left[ \dfrac{\beta}{(1-\beta^2)^\frac{3}{2}}\right|_{\beta=0}\beta +\dfrac{1}{2}\left[ \dfrac{(1-\beta^2)^\frac{3}{2} - \beta\sqrt{1-\beta^2}(-2\beta)}{(1-\beta^2)^3}
+\right|_{\beta=0}\beta^2 +o \\ &= 1 +\dfrac{1}{2}\beta^2 +o(\beta^2) 
+\end{align*}
+da cui ritroviamo l'energia cinetica classica nel limite non relativistico
+\[
+T=mc^2\left(1+\dfrac{v^2}{c^2}-1\right)=\dfrac{1}{2}mv^2
+\]
+{\footnotesize Per velocità non relativistiche non solo l'energia classica è una buona approssimazione ma sarà anche improbabile (a meno di disporre di calcolatori molto precisi) ottenere risultati utilizzabili con la formula della $T$ relativistica }
+\subsection{Particella di massa nulla}
+
+Possiamo usare il quadrimomento per trovare delle informazioni sul moto di particelle di massa nulla.
+Come abbiamo visto il momento relativistico è definito da $\vec{p}=m\vec{v}\gamma$
+quindi con semplici passaggi
+ \[
+\left( 1-\dfrac{v^2}{c^2} \right) p^2 = m^2 c^2 \dfrac{v^2}{c^2} \implies c^2 p^2 -v^2p^2=m^2c^2v^2 \implies c^2p^2=\left( m^2c^2-p^2 \right) v^2
+\]
+e quindi troviamo
+\[
+p^2=\dfrac{v^2}{c^2}(m^2c^2+p^2)\overset{m\rightarrow 0}{\longrightarrow} p^2=p^2\dfrac{v^2}{c^2}
+\]
+e l'uguaglianza nel limite $m=0$ è soddisfatto soltanto per $v=c$.
+
+Dalla definizione di energia relativistica inoltre avremo per $m=0$
+\[
+\mathcal{E}=cp
+\]
+
+\section{Quadriforza}
+\begin{definizione}
+Chiamiamo quadriforza il quadrivettore
+\[
+K^\mu=\dfrac{\partial p^\mu}{\partial s}=\dfrac{\partial}{\partial s}mcu^\mu
+\]
+\end{definizione}
+Dall'ortogonalità tra quadriaccelerazione e quadrivelocità troviamo anche un'ortogonalità tra quadriforza e quadrivelocità, da cui
+\[
+k^\mu u_\mu=0\implies k^0\dfrac{dx^\mu}{ds}-\vec{k}\cdot\vec{u}=0
+\]
+e passando al tempo
+\[
+k^0 \dfrac{dx^0}{ds} - \dfrac{dt}{ds}\vec{F}(t)\cdot \dfrac{dt}{ds} \vec{v}(t)
+\]
+da cui
+\begin{equation}
+k^0(t)=\dfrac{\gamma}{c^2} \vec{F}\cdot \vec{v}
+\end{equation}
+ma per definizione $k^0=\dfrac{\partial \mathcal{E}}{c\partial s}$, quindi troviamo
+\begin{equation}
+\dfrac{\partial}{\partial t}\dfrac{\mathcal{E}}{c} = \vec{F}\cdot\vec{v}
+\end{equation}
+
+\subsection{Particella libera}
+Per una particella libera classicamente ci aspettiamo che velocità e momento siano costanti e quindi poniamo come equazione della particella libera
+\[
+\dfrac{d u^\mu}{d s}=\dfrac{d^2 x^\mu}{d s^2}=0
+\]
+La legge oraria si otterrà dà
+\begin{align*}
+0=\delta S &= -mc \delta\int_{s_1}^{s_2} ds = -mc\delta\int_{s_1}^{s_2}  (dx_\mu dx^\mu)^{\sfrac{1}{2}} = \\
+&= -mc\int_{s_1}^{s_2} \dfrac{1}{2}\dfrac{2dx^\mu \delta dx_\mu}{\sqrt{dx^\mu dx_\mu}} = -mc\int_{s_1}^{s_2} \dfrac{dx^\mu}{ds}\, d\delta x_\mu = \\
+& = -mc \left[ \int_{s_1}^{s_2} d_s\left( \dfrac{dx^\mu}{ds} \delta x_\mu\right) -\int_{s_1}^{s_2} d_s\left( \dfrac{dx^\mu}{ds} \right) \delta x_\mu \right] = \\
+&= -mc\left.\dfrac{dx^\mu}{ds}\delta x_\mu \right|_{s_1}^{s_2} + mc \int_{s_1}^{s_2} \dfrac{du^\mu}{ds} \delta x_\mu =  mc \int_{s_1}^{s_2} \dfrac{du^\mu}{ds} \delta x_\mu 
+\end{align*}
+che dà proprio $\dfrac{d u^\mu}{ds}=0$.
+
+\chapter{Decadimenti}
+Chiamiamo decadimento un processo in cui una particella $P$ si trasforma in altre particelle secondo una
+\[
+P\rightarrow 1+2+...
+\]
+Un decadimento è un evento probabilistico che segue Poisson, per un insieme di $N(t)$ particelle la probabilità del decadimento sarà direttamente proporzionale al numero di particelle e quindi 
+\[
+\dfrac{d N(t)}{dt}=\lambda N(t) \qquad \quad N(t)=N_0e^{-\lambda t}
+\]
+$\lambda$ sarà la costante del decadimento e $\tau=\sfrac{1}{\lambda}$ il tempo di vita medio della particella.
+Il tempo di dimezzamento dell'insieme sarà dato dà
+\[
+N(t)=\dfrac{N(0)}{2} \implies t=\tau\log{2}
+\]
+
+Nello studio dei decadimenti useremo l'elettronvolt come unità di misura dell'energia\[[\mathcal{E}]=eV\approx 1.6\times 10^{-19}J\] e come unità di misura di massa e momento useremo \[ [m]=\dfrac{eV}{c^2} \text{ e } [\left|\vec{p}\right|]=\dfrac{eV}{c} \]
+
+Inoltre lavoreremo ponendo $c\equiv 1$.
+
+Avendo posto $c=1$ avremo $\beta=\dfrac{|\vec{p}|}{\mathcal{E}}$.
+
+Indicheremo con un indice $*$ le grandezze misurate nel sistema di riferimento del centro di massa del decadimento.
+
+Nel sistema del centro di massa chiaramente la particella che decade $P$ avrà momento iniziale nullo e quindi tutta la sua energia sarà data dalla sua massa 
+\[
+\mathcal{E}^*_{tot}=M
+\]
+Ricordando la relazione $\mathcal{E}=\sqrt{m^2+p^2}$ ed usando la conservazione dell'energia nel sistema del centro di massa troviamo
+\begin{equation}
+M=\sum_i^n \mathcal{E}_i^*=\sum_i^n \sqrt{m_1^2+|\vec{p}_i^*|^2}
+\end{equation}
+e quindi la condizione per il decadimento sarà
+\[
+M\geq\sum_i^n m_i
+\]
+dove l'uguaglianza corrisponde al caso limite detto del \textbf{decadimento in soglia} in cui tutti i prodotti sono fermi nel sistema di riferimento del centro di massa.
+
+\section{Decadimento a 2 corpi}
+
+Studiamo in modo più specifico i decadimenti $M\rightarrow m_1 + m_2$.
+Nel sistema del centro di massa il momento totale dovrà essere nullo quindi $\vec{p}_1^*+\vec{p}_2^*=0$ e quindi chiamiamo $p*=|\vec{p}_1^*|= |\vec{p}_2^*|$.
+
+Inoltre con la conservazione dell'energia
+\[
+M=\mathcal{E}_1^*+\mathcal{E}_2^*=\sqrt{m_1^2+p^{*2}}+\sqrt{m_2^2+p^{*2}}
+\]
+e quindi l'unica incognita rimanente è $p*$ e possiamo esprimerla come
+\[
+p^{*2}=\mathcal{E}_1^{*2}-m_1^2=\mathcal{E}_2^{*2}-m_2
+\]
+Sappiamo che
+\[
+\mathcal{E}_1^{*2}-\mathcal{E}_2^{*2}=\left( \mathcal{E}_1^* - \mathcal{E}_2^* \right)\left( \mathcal{E}_1^* + \mathcal{E}_2^* \right)=m_1^2 - m_2^2 \qquad \quad \mathcal{E}_1^* +\mathcal{E}_2^* = M
+\]
+e quindi
+\begin{equation}
+\mathcal{E}_1^*-\mathcal{E}_2^*=\dfrac{m_1^2-m_2^2}{M}
+\end{equation}
+e sommando e sottraendo la $M=\mathcal{E}_1^*+\mathcal{E}_2^*$ a questa equazione otteniamo
+\begin{gather}
+\mathcal{E}_\alpha^*=\dfrac{M^2+m_\alpha^2-m_\beta^2}{2M} \qquad \quad \alpha,\beta=1,2
+\end{gather}
+ora usando $p^{*2}=\mathcal{E}_1^{*2}-m_1^2$ abbiamo
+\begin{equation}
+p^*=\dfrac{\sqrt{(M^2+m_1^2-m_2^2)^2-4M^2m_1^2}}{2M}=\dfrac{\sqrt{ M^4 + (m_1^2-m_2^2)^2 -2M^2(m_1^2+m_2^2)}}{2M}
+\end{equation}
+
+In questo modo abbiamo ricavato ogni quantità del decadimento in funzione delle condizioni iniziali eccetto l'angolo di uscita dei prodotti.
+Nel sistema del centro di massa per la conservazione del momento i prodotti avranno la stessa direzione ma verso opposto cioè, assumendo che il sistema di riferimento sia stato selezionato in modo che il decadimento sia nel piano $(x,z)$ e che la particella iniziale fosse diretta lungo l'asse $z$, avremo
+\[
+p_1^\mu=\left(\begin{array}{cccc}
+\mathcal{E}_1^* & p^*\sin{\theta^*} & 0 & p^*\cos{\theta^*}
+\end{array}\right) \qquad \quad
+p_2^\mu=\left(\begin{array}{cccc}
+\mathcal{E}_1^* & -p^*\sin{\theta^*} & 0 & -p^*\cos{\theta^*}
+\end{array}\right)
+\]
+Nel sistema del laboratorio invece avremo 4 variabili in $p_{1x},p_{1z},p_{2x},p_{2z}$ da cui  potremo ricavare le energie $\mathcal{E}_{1,2}$.
+
+Possiamo passare da $K^*$ a $K$ con un boost all'indietro, cioè una trasformazione di Lorentz di matrice
+\[
+\Lambda=\left(\begin{array}{cccc}
+\gamma & 0 & 0 & \beta\gamma \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+\beta\gamma & 0 & 0 &1
+\end{array}\right)
+\]
+
+e quindi 
+
+\begin{gather*}
+p_{1x}=p_1\sin{\theta_1}=p^*\sin{\theta^*} \qquad
+p_{1z}=p_1\cos{\theta_1}=\gamma(\beta\mathcal{E}_1^*+p^*\cos{\theta^*}) \\
+p_{2x}=p_2\sin{\theta_2}=-p^*\sin{\theta^*} \qquad
+p_{2z}=p_2\cos{\theta_2}=\gamma(\beta\mathcal{E}_2^*-p^*\cos{\theta^*})
+\end{gather*}
+e da queste ricaviamo
+\begin{equation}
+\tan{\theta_\alpha}=\dfrac{\sin{\theta^*}}{\gamma\left( \dfrac{\beta}{\beta_\alpha^*} + \cos{\theta^*} \right)} \qquad\quad \beta_\alpha^*=\dfrac{\mathcal{E}_\alpha^*}{p^*}
+\end{equation}
+
+\subsection{Luogo dei momenti}
+
+Nel sistema del centro di massa il luogo geometrico dei $(p_{1x},p_{1z})=p^*(\sin{\theta^*},\cos{\theta^*})$ è un circonferenza, nella trasformazione al sistema del laboratorio questa verrà deformata tramite
+\[
+\begin{cases}
+p^*\sin{\theta^*}=p_{1x} \\
+p^*\cos{\theta^*}=\dfrac{p_{1z}-\beta\gamma\mathcal{E}_1^*}{\gamma}
+\end{cases}
+\implies
+\begin{cases}
+p^*\sin{\theta^*}=p_{1x}\\
+p^{*2}=p_{1x}^2+\dfrac{\left(p_{1z} -\beta\gamma\mathcal{E}_1^*\right)^2}{\gamma^2}
+\end{cases}
+\]
+e l'equazione del luogo corrispondente sarà
+\begin{equation}
+\left( \dfrac{p_{1x}}{p^*} \right)^2 + \left( \dfrac{p_{1z}-\beta\gamma\mathcal{E}_1^*}{\gamma p^*} \right)^2 =1
+\end{equation}
+Questa equazione descrive un' ellisse nel piano $(p_{1x},p_{1z})$ e i possibili momenti della particella saranno dati dai suoi punti, li potremo quindi rappresentare tramite vettori nell'origine che puntano su di essa.
+
+L'ellisse avrà centro in $(0,\beta\gamma\mathcal{E}_1^*)$ e semiassi $s_x=p^*$, $s_z=\gamma p^*$, avremo quindi due casi generali per i possibili valori delle componenti del momento:
+\begin{enumerate}[i.]
+\item Se $\beta\gamma\mathcal{E}_1^*<\gamma p^*$ \begin{minipage}[H]{0.6\linewidth}l'ellisse conterrà l'origine e non ci saranno limitazioni sull'angolo di uscita della particella.
+\end{minipage}\begin{minipage}[H]{0.3\linewidth}\flushright
+\includegraphics[width=\linewidth]{img/ellisseDecadimento1.png}
+\end{minipage}
+\item Se $\beta\gamma\mathcal{E}_1^*>\gamma p^*$ \begin{minipage}[H]{0.55\linewidth} l'ellisse si troverà davanti all'origine, la particella potrà essere emessa solo in avanti ed il modulo dell'angolo di uscita avrà un massimo
+\end{minipage}\begin{minipage}[H]{0.35\linewidth}\flushright
+\includegraphics[width=\linewidth]{img/ellisseDecadimento2.png}
+\end{minipage}
+\end{enumerate}
+Questo ragionamento vale, con ovvi cambiamenti all'equazione dell'ellisse per entrambe le particelle e la condizione ottenuta dall'ellisse per l'emissione in avanti si può riscrivere come $1>\dfrac{\beta_\alpha^*}{\beta}$.
+
+Per trovare l'angolo massimo per la particella emessa in avanti massimizziamo la formula per la tangente dell'angolo
+\begin{align*}
+0=\dfrac{d \tan{\theta_\alpha}}{d\theta^*} &=
+\dfrac{ 1+\dfrac{\beta}{\beta^*_\alpha}\cos{\theta^*} }
+{ \gamma\left( \cos{\theta^*}+\dfrac{\beta}{\beta_\alpha^*} \right)^2} \implies \cos{\theta^*}=-\dfrac{\beta_\alpha^*}{\beta}
+\end{align*}
+Questa è compatibile con l'emissione in avanti per $-1\leq\cos{\theta^*}\leq-\dfrac{\beta_\alpha^*}{\beta}$ cioè per $\beta>\beta_\alpha^*$.
+
+Quindi troviamo
+\[
+\tan{\theta_{\alpha,max}}=\dfrac{\beta_\alpha^*}{\gamma \sqrt{\beta^2-\beta_\alpha^{*2}}}
+\]
+\begin{equation}
+\sin{\theta_{\alpha,max}}=\dfrac{p^*}{\beta\gamma m_\alpha}
+\end{equation}
+
+%
+%\subsection{Angolo tra i prodotti}
+%
+%Vogliamo ricavare l'angolo tra i due prodotti o almeno il massimo angolo possibile tra i prodotti. Dalla conservazione del momento
+%\[
+%\left.p^\mu_P\right.^2=M^2=(p_1^\mu+p_2^\mu)^2=m_1^2+p_1^2-p_1^2+m_2^2+p_2^2-p^2_2+2p_1^\mu p_2^\mu=m_1^2+m_2^2+2p_1^\mu p_2^\mu
+%\]
+%Ma $p_1^\mu p_2^\mu=\mathcal{E}_1\mathcal{E}_2-\vec{p}_1\cdot\vec{p}_2$ quindi chiamando $\theta_{1,2}$ l'angolo fra i due prodotti
+%\[
+%m_1^2+m_2^2+2\mathcal{E}_1\mathcal{E}_2 - 2p_1 p_2\cos{\theta_{1,2}}=M^2
+%\]
+%e quindi
+%\begin{equation}
+%\cos{\theta_{1,2}}=\dfrac{m_1^2+m_2^2+2\mathcal{E}_1\mathcal{E}_2-M^2}{2p_1p_2}
+%\end{equation}
+%Usando $1-\cos{\theta}=\sin^2{\sfrac{\theta}{2}}$ 
+%\[
+%\sin{\dfrac{\theta_{1,2}}{2}}=\sqrt{\dfrac{M^2+2p_1p_2-m_1^2-m_2^2-2\mathcal{E}_1\mathcal{E}_2}{2p_1p_2}}
+%\]
+
+\subsection{Energie dei prodotti}
+A partire da energia e momento delle particelle nel sistema del centro di massa possiamo ricavare con un boost all'indietro l'energia nel sistema del laboratorio
+
+\[
+\mathcal{E}_1=\gamma(\mathcal{E}_1^*+\beta p^*\cos{\theta^*})
+\]
+Dato che $\theta^*$ può variare in $[0,2\pi]$ avremo un massimo per $\mathcal{E}_1$ in $\cos{\theta^*}=1$ e un minimo in $\cos{\theta^*}=-1$. Dato che nel sistema del centro di massa le particelle sono emesse simmetricamente quindi il massimo per l'energia nel sistema del laboratorio corrisponderà al minimo corrisponderà al minimo per l'altra e viceversa.
+\[
+\gamma(\mathcal{E}_2^*-\beta p^*)\leq \mathcal{E}_2 \leq \gamma (\mathcal{E}_2^* + p^* )
+\]
+
+Con quale probabilità sono distribuite le energie possibili delle particelle?
+
+Assumendo ancora che gli angoli di emissione nel sistema del laboratorio siano tutti equiprobabili definiamo la frazione di particelle emesse in un angolo solido $d\Omega$ 
+\[
+d\chi =\dfrac{d\Omega}{4\pi} \quad \text{ che rispetterà } \quad \int_{\Omega}d\chi=1
+\]
+
+In coordinate polari sferiche del sistema del centro di massa $d\Omega=\sin{\theta^*}d\theta^*d\varphi^*$, allora dato che il decadimento è simmetrico per $\varphi^*$
+\[
+d\hat{\chi}=\dfrac{1}{2}\sin{\theta^*}d\theta^*=\dfrac{1}{2}\left| d cos{\theta^*} \right|
+\]
+quindi $d\hat{\chi}(\theta^*)$ sarà la frazione di particelle emesse fra $\theta^*$ e $\theta^*+d\theta^*$.
+
+Da $\mathcal{E}_1(\theta^*)=\gamma(\mathcal{E}_1^*+\beta p^*\cos{\theta^*})$ troviamo $d\mathcal{E}_1=\gamma\beta p^*\, d \cos{\theta^*}$ e quindi vale
+\[
+\left|d \cos{\theta^*}\right|= \dfrac{d \mathcal{E}_1}{\gamma\beta p^*}
+\]
+e quindi $d\hat{\chi}=\dfrac{d \mathcal{E}_1}{2\gamma\beta p^*}$.
+
+Quindi a partire dalla probabilità sull'angolo di emissione possiamo definire la probabilità sull'energia della particella (in modo analogo per entrambe le particelle)
+\begin{equation}
+P(\mathcal{E}_\alpha)=\dfrac{d\hat{\chi}}{d\mathcal{E}_\alpha}=\dfrac{1}{2 |\beta| \gamma p^*}
+\end{equation}
+La probabilità è costante nell'energia quindi la distribuzione di probabilità sull'energia è uniforme.
+
+Vediamo che la probabilità è normalizzata
+\[
+\int_{\mathcal{E}_{\alpha,min}}^{\mathcal{E}_{\alpha,max}} d\mathcal{E}_\alpha = \dfrac{\mathcal{E}_{\alpha,max}-\mathcal{E}_{\alpha,min}}{2|\beta|\gamma p^*}=\dfrac{\gamma\mathcal{E}_\alpha^*+\gamma|\beta| p^* - \gamma{E}_\alpha^* -\gamma|\beta| p^* }{2|\beta|\gamma p^*}=1
+\]
+
+
+\chapter{Urti}
+
+Un urto è un processo $P_1 + P_2 \rightarrow P_3 + P_4 + \dots$.
+Gli urti si possono dividere in \begin{itemize}
+\item Urti elastici $P_1+P_2\rightarrow P_1' + P_2'$ \hspace*{\fill}\begin{minipage}[H]{0.6\linewidth} in cui le particelle finali sono uguali alle particelle iniziali\end{minipage}
+\item Urti anaelastici \hspace*{\fill} \begin{minipage}[H]{0.6\linewidth} in cui le particelle finali sono diverse\end{minipage}
+\end{itemize}
+e in  \begin{itemize}
+\item Urti esclusivi  \hspace*{\fill}\begin{minipage}[H]{0.6\linewidth} in cui lo stato finale è completamente ricostruibile da un rilevatore
+\end{minipage}
+\item Urti inclusivi \hspace*{\fill} \begin{minipage}[H]{0.6\linewidth} in cui lo stato finale rimarrà sempre in parte o completamente inosservabile\end{minipage}
+\end{itemize}
+
+Nello studio degli urti assumeremo che il sistema sia isolato, in modo da poter usare la conservazione del quadrimomento totale, e porremo come nei decadimenti $c\equiv 1$.
+
+Nel sistema del centro di massa prima dell'urto quindi si ha $\sum_i^n\vec{p}_i^*=0$ e in ogni sistema di riferimento valgono le mass-shell $p_i^\mu p_{i\mu}=m_i^2$.
+
+Teniamo per convenzione $\vec{p}_{tot}=(0,0,p_{tot})$ dove $p_{tot}>0$.
+
+Passando dal sistema del centro di massa al sistema del laboratorio
+\[
+\mathcal{E}_{tot} = \gamma( \mathcal{E}_{tot}^* + \beta \, 0 ) = \gamma \mathcal{E}_{tot}^* \qquad \quad p_{tot} = \gamma( \beta \mathcal{E}_{tot}^* + 0 ) = \gamma \beta \mathcal{E}^*_{tot}
+\]
+e quindi la velocità del centro di massa nel sistema del centro di massa
+\[
+\beta=\dfrac{p_{tot}}{\mathcal{E}_{tot}}
+\]
+Chiameremo massa invariante del sistema 
+\[
+M^2=p_{tot\mu}\, p_{tot}^\mu=p_{tot\mu}^*\, p_{tot}^{*\mu}=\mathcal{E}_{tot}^{*2} \qquad \quad M=\mathcal{E}_{tot}^*
+\]
+e da questa ricaviamo
+\[
+\mathcal{E}_{tot}=M\gamma
+\]
+La condizione per l'urto è data da
+\[
+M=\sum_{i=3}^n\mathcal{E}^*_{i}=\sum_{i=3}^n \sqrt{m_i^2+p_i^{*2}}\geq\sum_{i=3}^n m_i=\mathcal{E}_{tot,min}^*
+\]
+e l'uguaglianza si avrà quando la reazione avviene in soglia.
+
+\section{Urto a due particelle}
+
+In un urto a due corpi $P_1+P_2\rightarrow P_3+P_4$ abbiamo in totale $16$ variabili dai quadrimomenti. Dalle mass-shell per le $4$ particelle abbiamo $4$ condizioni sulle variabili e dalla conservazione delle componenti del quadrimomento totale ne abbiamo altre $4$. Quindi rimangono $4$ variabili libere. Dalla scelta del sistema di riferimento tramite trasformazioni del gruppo di Lorentz avremo altre $6$ condizioni e quindi rimangono $2$ variabili libere.
+
+\paragraph{Nel sistema del centro di massa avremo}
+Inizialmente avremo
+\[
+p_1^{*\mu}=(\mathcal{E}_1,0,0,p^*) \qquad p_2^{*\mu}=(\mathcal{E}_2,0,0-p^*)
+\]
+e dopo l'urto
+\[
+p^{*\mu}_3=(\mathcal{E}_3^*,p'^*\sin{\theta^*},0,p'^*\cos{\theta^*}) \qquad
+p^{*\mu}_4=(\mathcal{E}_3^*,-p'^*\sin{\theta^*},0,-p'^*\cos{\theta^*})
+\]
+e le variabili saranno solo $\theta^*$ e $p^*$, le energie saranno date dalle masse.
+
+\paragraph{Nel sistema del laboratorio}
+A meno di trasformazioni di Lorentz possiamo considerare $P_2$ ferma e quindi inizialmente avremo
+\[
+p_1^\mu=(\mathcal{E}_1,0,0,p_1) \qquad  p_2^\mu=(m_2,0,0,0)
+\]
+e dopo l'urto
+\[
+p^\mu_3=(\mathcal{E}_3,p_3\sin{\theta},0,p_3\cos{\theta}) \qquad
+p^\mu_4=(\mathcal{E}_4,-p_4\sin{\varphi},0,-p_4\cos{\varphi})
+\]
+Le energie saranno date dalle mass-shell e resteranno come incognite $p_1$, $p_3$, $p_4$, $\theta$ e $\varphi$.
+
+Imponendo le conservazioni
+\[
+\begin{cases}
+\mathcal{E}_1+m_2=\mathcal{E}_3+\mathcal{E}_4 \\
+p_3\sin{\theta} = -p_4\sin{\varphi} \\
+p_3\cos{\theta}+p_4\cos{\varphi}=p_1
+\end{cases}
+\]
+rimangono quindi solo $2$ variabili libere.
+
+\subsection{Variabili di Mandelstam}
+Chiamiamo variabili di Mandelstam tre invarianti costruiti con i quadrimomenti delle particelle:
+\begin{gather}
+s:=(p_1^\mu+p_2^\mu)^2 =(p_3^\mu+p_4^\mu)^2=M^2 \\
+t:=(p_1^\mu-p_3^\mu)^2=(p_2^\mu-p_4^\mu)^2 \\
+u:=(p_1^\mu-p_4^\mu)^2=(p_2^\mu-p_3^\mu)^2
+\end{gather}
+Abbiamo detto che un urto a due particelle ha solo due variabili indipendenti e infatti
+\begin{align*}
+s+t+u &= (p_1^\mu+p_2^\mu)^2+(p_1^\mu-p_3^\mu)^2+(p_1^\mu-p_4^\mu)^2=\\
+&=(p_1^\mu)^2+(p_2^\mu)^2+2p_1^\mu p_2^\mu+(p_1^\mu)^2+(p_3^\mu)^2-2p_1^\mu p_3^\mu + (p_1^\mu)^2+(p_4^\mu)^2-2p_1^\mu p_4^\mu =\\
+&=3(p_1^\mu)^2 + (p_2^\mu)^2 + (p_3^\mu)^2 + (p_4^\mu)^2 +2p_1^\mu \left( p_2^\mu-p_3^\mu-p_4^\mu \right)=\\
+&=(p_1^\mu)^2 + (p_2^\mu)^2 + (p_3^\mu)^2 + (p_4^\mu)^2 +2p_1^\mu \left( p_1^\mu + p_2^\mu-p_3^\mu-p_4^\mu \right)=\\
+&=M^2=s
+\end{align*}
+
+Sappiamo che $M=\sqrt{s}=\mathcal{E}_{tot,min}^*$ e avendo scelto $p_2^\mu = \left( m_2, 0, 0, 0 \right)$ si avrà
+\begin{align*}
+s&=(p_1^\mu)^2+(p_2^\mu)^2+2p_1^\mu p_2^\mu = \mathcal{E}_1^2 - p_1^2 + m_2^2 +2p_1^\mu p_2^\mu=\\
+&=m_1^2+m_2^2+2\mathcal{E}_1 m_2
+\end{align*}
+quindi
+\begin{equation}
+M^2=m_1^2+m_2^2+2\mathcal{E}_1m_2
+\end{equation}
+
+Quando la reazione avviene in soglia $M^2=m_3^2+m_4^2$ e quindi l'energia della particella $P_1$ per cui la reazione avviene in soglia è 
+\[
+\mathcal{E}_{1,soglia}=\dfrac{m_3^2+m_4^2-m_1^2-m_2^2}{2m_2}
+\]
+
+\subsection{Urti elastici}
+
+Negli urti elastici le particelle finali sono le stesse iniziali e quindi avremo $\mathcal{E}_1^{*}+\mathcal{E}_2^*=\mathcal{E}_1'^{*}+\mathcal{E}_2'^{*}$ ed essendo nel sistema del centro di massa $|p_1^*|=|p_2^*|=p^*$ che quindi implica $p^*=p'^{*}$. Quindi, partendo dal sistema di riferimento ``comodo'' in cui la particelle $1$ è diretta lungo l'asse $z$ e la particella $2$ e ferma
+\[
+p^{\mu *}=\left(\mathcal{E}_1^*,0,0,p^*\right) \qquad p'^{\mu*}=\left(\mathcal{E}_1^*,p^*\sin{\theta^*},0,p^*\cos{\theta^*} \right)
+\] 
+
+Usando le variabile s di Mandelstam:
+\begin{align*}
+s=\left(\mathcal{E}_1^*+\mathcal{E}_2^*\right)^2 &= m_1^2+m_2^2+2p^{*2}+2\mathcal{E}_1^*\mathcal{E}_2^* \\
+\left(\mathcal{E}_1+\mathcal{E}_2\right)^2&= m_1^2+m_2^2+2\mathcal{E}_1m_2
+\end{align*}
+e imponendo l'invarianza
+\begin{align*}
+2p^{*2}+2\sqrt{m_1^2+p^{*2} }\sqrt{m_2^2+p^{*2}} = 2\mathcal{E}_1m_2 \\ 
+(m_1^2+p^{*2} )(m_2^2+p^{*2}) = (\mathcal{E}_1m_2 - p^{*2} )^2 \\
+m_1^2m_2^2 + (m_1^2+m_2^2)p^{*2} = \mathcal{E}_1^2m_2^2 -2\mathcal{E}_1m_2p^{*2}
+\end{align*}
+da cui troviamo
+\begin{equation}\label{eqMomentoUrtoElastico}
+p^*=\dfrac{(\mathcal{E}_1^2-m_1^2)m_2^2}{m_1^2+m_2^2+2\mathcal{E}_1m_2}
+\end{equation}
+
+Mentre con la variabile $t$:
+ \begin{align*}
+t=\left( p_1^{\mu*}-p_1'^{\mu*} \right)^2 &= m_1^2+m_1^2-2p_1^{\mu*}p_1'^{\mu*} =
+ 2m_1^2 -2\left( \mathcal{E}_1^{*2}-p^{*2}\cos{\theta^*} \right) =\\ &= 2p^{*2}(1 -\cos{\theta^*} )= \\
+ \left( p_2^{\mu}-p_2'^{\mu} \right)^2 &= 2m_2^2 -2p_2^{\mu}p_2'^{\mu}=2m_2^2-2m_2\mathcal{E}_2'
+\end{align*}
+e con $\mathcal{E}_1+m_2=\mathcal{E}_1'+\mathcal{E}_2'$ troviamo
+\begin{equation}
+\mathcal{E}_1'-\mathcal{E}_1=-\dfrac{p^*}{m_2}(1-\cos{\theta^*})
+\end{equation}
+
+Se ora variamo l'angolo $\theta^*\in[0,2\pi]$ possiamo ricavare valore massimo e minimo per $\mathcal{E}_1'$:\begin{itemize} \item per $\theta^*=0$ avremo il massimo $\mathcal{E}_1'=\mathcal{E}_1$ \item per $\theta^*=\pi$ avremo il minimo $\mathcal{E}_1'=\mathcal{E}_1-2\dfrac{p^*}{m_2}$.
+\end{itemize}
+ed usando la \eqref{eqMomentoUrtoElastico} 
+\[
+\mathcal{E}_{1,min}'=\dfrac{2m_1^2m_2+\mathcal{E}_1(m_1^2+m_2^2)}{m_1^2+m_2^2+2\mathcal{E}_1m_2}
+\]
+
+Considerando solo la parte cinetica dell'energia $T=\mathcal{E}-m$ e quindi $T_1'=\mathcal{E}_1'-m_1$ avremo
+\[
+\dfrac{T_{1,min}}'{T_{1,iniziale}}=\dfrac{(m_1-m_2)^2}{m_1^2+m_2^2+2\mathcal{E}_1m_2}
+\]
+\begin{itemize}
+\item Per $m_1>>m_2$ non c'è cessione di energia $\sfrac{T_{1,min}'}{T_{1,in}}\approx 1$ 
+\item Per $m_1=m_2$ può esserci anche cessione totale di energia $\sfrac{T_{1,min}'}{T_{1,in}}=0$
+\item Per $m_1<<m_2$ il rapporto dipende da $\sfrac{\mathcal{E}_1}{m_2}$ secondo  $\sfrac{T_{1,min}'}{T_{1,in}}=\dfrac{m_2^2}{m_2^2+2\mathcal{E}_1m_2}$ e per $\mathcal{E}_1>>m_2$ può esserci cessione totale di energia.
+\end{itemize}
+
+\paragraph{Luogo geometrico degli impulsi}
+Come per i decadimenti possiamo studiare il luogo geometrico degli impulsi $\vec{p}_\alpha'$.
+\[
+\begin{cases} p_{1x}'=p^*\sin{\theta^*} \\ p_{1z}'=\gamma\left( \beta\mathcal{E}_1^*+p^*\cos{\theta^*} \right)
+\end{cases} \qquad \left(\dfrac{P_{1x}'}{p^*}\right)^2+\left(\dfrac{p_{1z}'-\beta\gamma\mathcal{E}_1^*}{\gamma p^*}\right)^2 =1
+\] 
+che sarà un ellisse di centro $(0,\beta\gamma\mathcal{E}_1^*)$ e semiassi $s_x=p^*$ $s_z=\gamma p^*$.
+
+Quindi per $\beta<\beta_1^*$ tutti gli angoli di emissione della particella $1$ saranno permessi metre per $\beta>\beta_1^*$ la particella $1$ sarà emessa soltanto in avanti e ci sarà un angolo massimo.
+
+In particolare $\beta>\beta_1^*$ corrisponde a $\beta>\dfrac{\beta\gamma m_2}{\sqrt{m_1^2+\beta^2\gamma^2m_2^2}}$ cioè a $m_1>m_2$.
+
+In un urto di questo tipo nel sistema in cui la particella $2$ è inizialmente ferma invece questa sarà sempre emessa solo in avanti con angolo massimo $\theta_2=\sfrac{\pi}{2}$.
+
+
+
+
+
+
+
+
+\chapter{Elettromagnetismo}
+Come possiamo descrivere il campo elettromagnetico in formalismo covariante?
+
+I due campi $\vec{E}$,$\vec{B}$ hanno in totale $6$ componenti ma come sappiamo trasformando da un sistema di riferimento ad un altro i due campi si mischiano quindi possiamo supporre che facciano parte di uno stesso oggetto.
+
+Tratteremo l'elettromagnetismo quasi completamente nel sistema di Gauss in cui campo elettrico e campo magnetico hanno la stessa unità di misura. Nel sistema di Gauss però la carica elettrica è una grandezza derivata 
+\[
+F_{Cou}=\dfrac{q_1q_2}{r^2} \qquad [q]=[m]^{\sfrac{1}{2}} [l]^{\sfrac{3}{2}} [t]^{-1} \qquad \left.\dfrac{1}{4\pi\epsilon_0}\right._{SI}=\left. 1 \right._{Gauss}
+\]
+quindi ci saranno alcune ``traduzioni'' da fare per passare da un sistema all'altro.
+Cominciamo vedendo le equazioni di Maxwell nel sistema di Gauss
+
+\begin{table}[H]
+\begin{minipage}[H]{0.45\linewidth}
+\centering
+\begin{align} \label{eqRotoreElettricoGauss}
+\nabla\times\vec{E}+\dfrac{1}{c}\dfrac{\partial \vec{B}}{\partial t}=0  \\
+\nabla \cdot \vec{E}=\rho \label{eqDivergenzaElettricoGauss}
+\end{align}
+\end{minipage}
+\begin{minipage}[H]{0.45\linewidth}
+\centering
+\begin{align} \label{eqDivergenzaMagneticoGauss}
+\nabla \cdot \vec{B}= 0 \\
+\nabla\times\vec{B} - \dfrac{1}{c} \dfrac{\partial \vec{E}}{\partial t} =\mu_0\vec{j} \label{eqRotoreMagneticoGauss}
+\end{align}
+\end{minipage}
+\end{table}
+
+
+
+\begin{definizione}[Tensore elettromagnetico]
+Definiamo tensore elettromagnetico $F^{\mu\nu}$, tensore a due indici antisimmetrico, con componenti
+\[
+F^{i0}=E^i \quad F^{0i}=-E^i \hspace{0.15\linewidth} F^{ij}= - \epsilon^{ijk} B^k \quad F^{ji}= - \epsilon^{jik} B^k = - F^{ij}
+\]
+
+\begin{equation}
+F^{\mu\nu}=\left( \begin{array}{cccc}
+0 & -E^1 & -E^2 & -E^3 \\
+E^1 & 0 & -B^3 & B^2 \\
+E^2 & B^3 & 0 & -B^1 \\
+E^3 & -B^2 & B^1 & 0 \\
+\end{array}\right)
+\end{equation}
+\end{definizione}
+
+Questo tensore ci permette subito di vedere una cosa che aveva richiesto parecchi calcoli precedentemente: trasformandoci da un riferimento inerziale ad un altro in moto tra loro i campi del primo si mischieranno, tramite la trasformazione del tensore $\Lambda_\mu^\rho \Lambda_\nu^\sigma F^{\mu\nu}=F'^{\rho\sigma                   }$.
+
+\begin{definizione}[Quadricorrente]
+Chiamiamo quadricorrente il quadrivettore definito da
+\[
+J^\mu= \left( c\rho,\vec{j} \right)
+\]
+\end{definizione}
+
+La quadricorrente è un quadrivettore e si può definire equivalentemente in forma covariante a vista, lo vedremo nel dettaglio alla sezione \ref{sezQuadricorrente}
+
+\subsection{Campo elettromagnetico}
+Come già sappiamo le due equazioni \eqref{eqRotoreElettricoGauss} e \eqref{eqDivergenzaElettricoGauss} permettono di descrivere i due campi in termini di due potenziale:
+\[
+\nabla\cdot\vec{B}=0 \implies \vec{B}=\nabla\times\vec{A}
+\]
+
+per una funzione $\vec{A}(t,\vec{x})$. Poi usando il rotore del campo elettrico
+\[
+\nabla\times\vec{E}+\dfrac{1}{c}\dfrac{\partial\vec{B}}{\partial t}=\nabla\times\left(\vec{E}+\dfrac{1}{c}\dfrac{\partial}{\partial t}\vec{A} \right)
+\]
+e quindi ponendo $-\nabla\varphi=\vec{E}+\dfrac{\partial}{c\partial t}\vec{A}$ avremo
+\[
+\nabla\times(\nabla\varphi)=0 \implies \vec{E}=-\nabla\varphi-\dfrac{1}{c}\dfrac{\partial}{\partial t}\vec{A}
+\]
+Questi due potenziali, vettore e scalare, ci daranno un modo equivalente per descrivere i campi elettromagnetici. 
+
+L'espressione tramite potenziali dell'elettromagnetismo però è ridondante, infatti se definiamo le \textbf{trasformazioni di Gauge}
+\begin{equation}
+\begin{cases}
+\vec{A}'=\vec{A} + \nabla\chi \\
+\varphi '=\varphi -\dfrac{1}{c}\dfrac{\partial}{\partial t}\chi
+\end{cases}
+\end{equation}
+troviamo subito che i campi elettrico e magnetico saranno invariati sotto trasformazioni di Gauge e che quindi esistono più potenziali possibili per descrivere gli stessi campi.
+
+Possiamo usare le trasformazioni e l'invarianza di Gauge per definire un quadrivettore: se poniamo
+\[
+A^\mu=\left(\varphi,\vec{A}\right)
+\]
+possiamo riscrivere le equazioni di Gauge in forma covariante con
+\begin{equation} \label{eqTrasformazioniGaugeCovarianti}
+A'^\mu=A^\mu -\partial^\mu\chi \implies
+\begin{cases}
+\varphi '=\varphi -\dfrac{1}{c}\dfrac{\partial}{\partial t}\chi \\
+\vec{A}'=\vec{A} + \nabla\chi
+\end{cases}
+\end{equation}
+ed essendo $\partial^\mu\chi$ un quadrivettore in coordinate contravarianti capiamo che anche $A^\mu$ è un quadrivettore.
+
+Chiameremo $A^\mu$ \textbf{campo elettromagnetico}.
+
+Potremo usare questo nuovo quadrivettore per definire un oggetto invariante sotto le \ref{eqTrasformazioniGaugeCovarianti} semplicemente tramite
+\[
+F^{\mu\nu}=\partial^\mu A^\nu - \partial^\nu A^\mu
+\]
+questo tensore è completamente antisimmetrico e quindi avrà solo $6$ componenti indipendenti, che saranno anche invarianti di Gauge. Questo ci fa pensare che queste componenti siano i campi elettrico e magnetico ed infatti
+\begin{align*}
+& F^{i0}=\partial^i A^0 - \partial^0 A^i = -\dfrac{\partial}{\partial x^i}\varphi - \dfrac{\partial}{\partial x^0}A^i=E^i \implies F^{0i}=-E^i \\
+& F^{12}=-\dfrac{\partial}{\partial x^1}A^2 -\dfrac{\partial}{\partial x^2}A^1 = -\left( \nabla\times\vec{A} \right)^3 =-B^3 \\
+& F^{ij}=\epsilon^{ijk}B_k
+\end{align*}
+
+Questa definizione in termini di campo elettromagnetico non è ``necessaria'' ma forse la definizione del tensore data direttamente in termini dei campi può sembrare un po' arbitraria. 
+
+Nella sezione \ref{sezQuadripotenziale} riotterremo la descrizione in termini di quadripontenziale a partire dal tensore definito in termini dei campi mostrando che le due descrizioni sono equivalenti.
+\subsection{Trasformazioni di Lorentz dei campi}
+
+Il tensore elettromagnetico sotto trasformazioni di Lorentz $x'^\mu=\Lambda^\mu_{\>\nu}x^\nu$ trasforma come $F'=\Lambda F \Lambda^T$ 
+\[
+F'^{\mu\nu}(x'^\mu)=\Lambda^\mu_{\>\rho} \Lambda^\nu_{\>\sigma} F^{\rho\sigma}(x^\mu) = 
+\Lambda^\mu_{\>\rho} \Lambda^\nu_{\>\sigma} F^{\rho\sigma}(\left.\Lambda^{-1}\right.^\mu_{\>\nu}x'^\mu)
+\]
+Quindi, per esempio, per un boost $\Lambda=\left(\begin{array}{cccc}\gamma & -\beta\gamma & 0 & 0 \\ -\beta\gamma & \gamma & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1\end{array}\right)$
+il tensore trasformato sarà
+
+\begin{equation}
+F'^{\mu\nu}=\left(\begin{array}{cccc}
+0 & -E^1 & -\gamma(E^2-\beta B^3) & -\gamma (E^3+\beta B^2) \\
+E^1 & 0 & -\gamma(B^3-\beta E^2) & \gamma (B^2+\beta E^3) \\
+\gamma(E^2-\beta B^3) & \gamma (B^3-\beta E^2) & 0 & -B^1 \\
+\gamma(E^3+\beta E^2) & -\gamma(B^2+\beta E^3) & B^1 & 0 
+\end{array}\right)
+\end{equation}
+\par
+e quindi i campi elettrico e magnetico saranno ``mischiati''\par
+\begin{minipage}[H]{0.45\linewidth}
+\begin{itemize}[label=$\cdot$]
+\item $E'^1=E^1$ 
+\item $E'^2=\gamma(E^2-\beta B^3)$
+\item $E'^3=\gamma(E^3+\beta E^2)$
+\end{itemize}
+\end{minipage}
+\begin{minipage}[H]{0.45\linewidth}
+\begin{itemize}[label=$\cdot$]
+\item $B'^1=B^1$ 
+\item $B'^2=\gamma(B^2+\beta E^3)$
+\item $B'^3=\gamma(B^3-\beta E^2)$
+\end{itemize}
+\end{minipage}
+
+
+\section{Equazioni di Maxwell e forza di Lorentz}
+\begin{table}[H]
+\begin{itemize}
+\item Le leggi omogenee $\nabla \cdot \vec{B} =0$ e $\nabla\times\vec{E}=-\dfrac{\partial\vec{B}}{c\partial t}$ diventano\begin{importante}
+\begin{equation}\label{eqIdentità Bianchi}
+\epsilon^{\mu\nu\rho\sigma}\partial_\nu F_{\rho\sigma}=0
+\end{equation}\end{importante}
+\item Le leggi contenenti le sorgenti $\nabla\cdot\vec{E}=\rho$ e $\nabla\times\vec{B}=\dfrac{\partial \vec{E}}{c \partial t} +\vec{j}$ diventano
+\begin{importante}\begin{equation}
+\partial_\mu F^{\mu\nu}=J^\nu
+\end{equation}\end{importante}
+\item La forza di Lorentz $\vec{F}=q\left(\vec{E}+\dfrac{\vec{v}}{c}\times\vec{B}\right)$ e la legge di potenza $\dfrac{d \mathcal{E}}{dt}=q\vec{E}\cdot\vec{v}$  diventano\begin{importante}
+\begin{equation}\label{eqForzaLorentz}
+\dfrac{\partial p^\mu}{\partial s}=K^\mu = \dfrac{q}{c} F^{\mu\nu} u_\nu
+\end{equation}\end{importante}
+\end{itemize}
+\end{table}
+Verifichiamo una per una le traduzioni delle equazioni da formalismo covariante alla loro forma differenziale usuale:
+
+\begin{proofT}[Divergenza del campo magnetico]
+Data $\epsilon^{\mu\nu\rho\sigma}\partial_\nu F_{\rho\sigma}=0$ poniamo $\mu=0$ e vediamo che \\ $\epsilon^{0\nu\rho\sigma}\partial_\nu F_{\rho\sigma}=0$ si può semplificare in $\epsilon^{ijk}\partial_i F_{jk}=0$
+Quindi usando $F_{jk}=-\epsilon_{jkl}B_l$ avremo
+\[
+-\epsilon^{ijk}\partial_i \epsilon_{jkl}B_k=0 \implies -\epsilon^{ijk}\epsilon_{ljk}\partial_i B_l=0 \implies -2\delta_{\> l}^{i}\partial_i B_l=0 
+\footnote{Il fattore $2$ è uscito dalla contrazione dei due tensori di Levi-Civita, si veda la sezione \ref{sezTensori}}\]
+che è $\nabla\cdot\vec{B}=0$. \qedhere
+\end{proofT}
+
+\begin{proofT}[Rotore del campo elettrico]
+Data $\epsilon^{\mu\nu\rho\sigma}\partial_\nu F_{\rho\sigma}=0$ poniamo $\mu=i$. Allora uno degli altri indici dovrà essere $0$ perchè il termine sopravviva mentre gli altri potranno variare in $[1,3]$, quindi otterremo\footnotemark
+\[
+\epsilon^{i\nu\rho\sigma}\partial_\nu F_{\rho\sigma}=0 \implies
+\epsilon^{i0jk}\partial_0 F_{jk} + 
+\epsilon^{ij0k}\partial_j F_{0k} +
+\epsilon^{ijk0}\partial_j F_{k0} = 0
+\]
+\footnotetext{L'ordine con cui inseriamo gli indici $j$ e $k$ è indifferente perchè essendo sempre contratti si potrebbero sempre rinominare termine a termine uno nell'altro.}
+
+Quindi con semplici passaggi
+\begin{align*}
+0 = \epsilon^{i\nu\rho\sigma}\partial_\nu F_{\rho\sigma} & = 
+-\epsilon^{0ijk}\partial_0 F_{jk} +
+\epsilon^{0ijk}\partial_j F_{0k} 
+-\epsilon^{0ijk}\partial_j F_{k0} 
+\\
+& =\epsilon^{ijk}\partial_0 \epsilon_{jkl}B_l 
+-\epsilon^{ijk}\partial_j E_k 
+-\epsilon^{ijk}\partial_j E_k 
+\\
+& =2\delta^{i}_{\> l}\partial_0 B_l  
+-2\epsilon^{ijk}\partial_j E_k \\
+& = 2\partial_0 B_i -2 \left( \nabla\times\vec{E} \right)^i
+\end{align*}
+e quindi $\nabla\times\vec{E}=\dfrac{\partial \vec{B}}{c \partial t}$
+\end{proofT}
+
+
+\begin{proofT}[Divergenza del campo elettrico]
+Data $\partial_\mu F^{\mu\nu}=J^\nu$ poniamo $\nu=0$, allora per come è definito il tensore sopravviveranno solo i termini $\mu=i$ quindi
+\[
+\partial_i F^{i0}=\rho
+\]
+che significa proprio $\nabla\cdot\vec{E}=\rho$. \qedhere
+\end{proofT}
+
+\begin{proofT}[Rotore del campo magnetico]
+Data $\partial_\mu F^{\mu\nu}=J^\nu$ poniamo $\nu=i$. Allora 
+\begin{align*}
+J^i=j^i=\partial_\mu F^{\mu i} & = \partial_0 F^{0i} + \partial_j F^{ji} \\
+& = - \partial_0 E^i - \partial_j \epsilon^{jik}B^k \\
+& = -\partial_0E^i + \left(\nabla\times\vec{B}\right)^i
+\end{align*}
+che è $\nabla\times\vec{B}=\dfrac{\partial \vec{E}}{c\partial t} + \vec{j} $. \qedhere
+\end{proofT}
+
+\begin{proofT}[Legge di potenza]
+Data $\dfrac{\partial p^\mu}{\partial s}= \dfrac{q}{c} F^{\mu\nu} u_\nu$ poniamo $\mu=0$, allora sopravviveranno soltanto i $\nu=i$ e quindi
+\begin{align*}
+\dfrac{\partial p^0}{\partial s}=\dfrac{\partial\mathcal{E}}{c\partial s}=\dfrac{\gamma}{c^2}\dfrac{d\mathcal{E}}{dt} &=\dfrac{q}{c}F^{0i}u_i=\dfrac{q}{c}E^i \dfrac{\gamma}{c}v_i
+\end{align*}
+che è $\dfrac{d\mathcal{E}}{dt}=\vec{E}\cdot\vec{v}$\qedhere
+\end{proofT}
+
+\begin{proofT}[Forza di Lorentz]
+Data $\dfrac{\partial p^\mu}{\partial s}= \dfrac{q}{c} F^{\mu\nu} u_\nu$ poniamo $\mu=i$. Il secondo indice $\nu$ si potrà quindi dividere in $0$ e $i$ e 
+\begin{align*}
+\dfrac{\partial p^i}{\partial s}=\dfrac{\gamma}{c}\dfrac{\partial p^i}{\partial t}&=\dfrac{q}{c}F^{i0}u_0+\dfrac{q}{c}F^{ij}u_j \\ 
+& = \dfrac{q}{c}\left( E^i\gamma-\epsilon^{ijk}B^k u_j \right) 
+ = \dfrac{q}{c}\left( E^i\gamma+\epsilon^{ijk}B^k\dfrac{\gamma}{c} v^j \right) \\
+& =\dfrac{\gamma}{c}q\left( \vec{E} + \dfrac{\vec{v}}{c}\times\vec{B} \right)^i \qedhere
+\end{align*}
+
+\end{proofT}
+
+\section{Invarianti elettromagnetici}
+A partire dal tensore elettromagnetico possiamo, con le normali proprietà dei tensori, costruire due invarianti di Lorentz. Il primo si ottiene semplicemente contraendo il tensore con se stesso
+\begin{equation}
+F^{\mu\nu}F_{\mu\nu}=2(\vec{B}^2-\vec{E}^2)
+\end{equation}
+ed il secondo si ottiene invece contraendo due tensori elettromagnetici con lo pseudo tensore di Levi-Civita
+\begin{equation}
+\epsilon_{\mu\nu\rho\sigma}F^{\mu\nu}F^{\rho\sigma}=8\vec{B}\cdot \vec{E}
+\end{equation}
+
+Potremo usare questi due invarianti per semplificare notevolmente lo studio dei problemi aventi campi elettrici e magnetici. Considerando campi costanti ed uniformi avremo soltanto $4$ situazioni possibili.
+\begin{enumerate}[i.]
+\item $\vec{E}\cdot\vec{B}=0$ e $\vec{B}^2-\vec{E}^2<0$\par
+Siano $\vec{E}=E \hat{u_y}$ e $\vec{B}=B\hat{u_z}$. Tramite un boost lungo l'asse $x$ troviamo
+\[
+\vec{E}'=(0,\gamma(E-\beta B),0) \qquad \vec{B}'=(0,0, \gamma(B-\beta E))
+\]
+e dato che $\sfrac{B}{E}<1$ esisterà un boost con $\beta=\sfrac{B}{E}$ per cui $\vec{B}'=0$.
+\item $\vec{E}\cdot\vec{B}=0$ e $\vec{B}^2-\vec{E}^2>0$\par
+Siano $\vec{E}=E \hat{u_y}$ e $\vec{B}=B\hat{u_z}$. Tramite un boost lungo l'asse $x$ con $\beta=\sfrac{E}{B}$ troviamo $\vec{E}'=0$ e $\vec{B}'=(0,0, \gamma(B-\beta E))$.
+\item $\vec{E}\cdot\vec{B}=0$ e $\vec{B}^2-\vec{E}^2=0$
+\item $\vec{E}\cdot\vec{B}\neq0$\par Siano $\vec{E},\vec{B} \in (y,z)$ allora esisterà un boost lungo l'asse $x$ per cui $\vec{E}'$ e $\vec{B}'$ sono paralleli. Non lo dimostriamo perchè il conto è un po' lungo e non interessante.
+\end{enumerate}
+
+
+\subsection{Moto in un elettromagnetico costante ed uniforme}
+Per studiare un moto con campi elettrico e magnetico costanti ed uniformi ma non uguali in modulo potremo sempre ricondurci ad una delle situazioni ``facili'' tramite un boost quindi studiamo in particolare soltanto i moti nei campi singoli.
+
+\paragraph{Consideriamo una particella carica in moto immersa in un campo elettrico $\vec{E}$ costante ed uniforme con campo magnetico nullo}
+
+In meccanica classica questo moto sarebbe parabolico con forza sulla particella $\dfrac{d\vec{p}}{dt}=e\vec{E}$.
+
+Siano $\vec{E}=E\hat{u_x}$ e $\vec{p}_0=(p_{0x},p_{0y},0)$.
+
+La forza di Lorentz relativistica è $\dfrac{\partial p^\mu}{\partial s}=\dfrac{q}{c}F^{\mu\nu}u_\nu$ quindi in componenti 
+
+\[
+\dfrac{\partial \mathcal{E}}{c^2 \partial t}\gamma=\dfrac{q}{c}F^{0\nu}u_\nu 
+\qquad\quad
+\dfrac{\partial \vec{p}}{c\partial t}\gamma=\dfrac{q}{c}F^{i\nu}u_\nu=\dfrac{q}{c}E^i \gamma
+\]
+da cui
+\begin{gather}
+\dfrac{\partial \mathcal{E}}{\partial t}=q\vec{E}\cdot\vec{v}\\
+\dfrac{\partial \vec{p}}{\partial t}=q\vec{E}
+\end{gather}
+dove ricordiamo che $\vec{p}=mc\vec{u}=m\gamma\vec{v}$.
+Nella sezione \ref{sezAzione} abbiamo visto che $\dfrac{\vec{p}}{\mathcal{E}}c^2=\vec{v}$ e quindi 
+\[
+v_x(t)=\dfrac{c^2 p_x(t) }{\mathcal{E}}=c^2\dfrac{p_{0x}+qEt}{\sqrt{\mathcal{E}_0^2+(qEt)^2c^2}} \qquad\quad
+v_y(t)=c^2\dfrac{p_{0y}}{\sqrt{\mathcal{E}_0^2+(qEt)^2c^2}}
+\]
+Ora scegliamo l'origine degli assi in modo che $p_{0x}=0$ e $p_{x}(t)=qEt$ e chiamiamo $\alpha=\dfrac{qE}{\mathcal{E}_0}$
+\[
+v_x(t)=\dfrac{c^2\alpha t}{\sqrt{1+ (c\alpha t)^2}} \qquad\quad
+v_y(t)=\dfrac{c^2p_{0y}}{\mathcal{E}_0\sqrt{1+(c\alpha t)^2}}
+\]
+ed integrando
+\begin{gather*}
+x(t)=\dfrac{1}{\alpha}\sqrt{1+(c\alpha t)^2}+k \qquad \quad x(0)=0\implies k=-\dfrac{1}{\alpha} \\
+y(t)=\dfrac{c^2p_{0y}}{\mathcal{E}_0\alpha}\>\text{arcsinh}{(\alpha c t)}
+\end{gather*}
+Possiamo eliminare il parametro $t$ per ricavare l'equazione della traiettoria
+\begin{equation}
+x(y)=\dfrac{\mathcal{E}_0}{qE}\left[\cosh{\left(\dfrac{qE}{cp_{0y}}y\right)}-1\right]
+\end{equation}
+questa traiettoria è chiamata \textbf{equazione catenaria} ed è significativamente diversa dall'equazione cartesiana del moto parabolico \[x=\dfrac{1}{2}\dfrac{qEm}{p_{0y}^2}y^2\] che ci aspetteremmo classicamente. 
+Se però espandiamo per $c\rightarrow \infty$ nel limite non relativistico ritroviamo la previsione classica.
+
+\paragraph{Consideriamo una carica in moto immersa in un campo magnetico $\vec{B}$ uniforme e costante ed uniforme}
+
+In meccanica classica questo sarebbe un moto ad energia costante in cui il campo ruota il vettore velocità senza però cambiarne il modulo.
+
+Dalla forza di Lorentz relativistica troviamo
+\begin{gather}
+\dfrac{\partial \mathcal{E}}{\partial t}=0 \\
+\dfrac{\partial \vec{p}}{\partial t}=\dfrac{q}{c}\epsilon^{ijk}B^k v_j=\dfrac{q}{c}\vec{v}\times \vec{B}
+\end{gather}
+Siano $\vec{p}_0=(p_{0x},p_{0y},p_{0z})$ e $\vec{B}=B\hat{u_z}$.
+Usando $\vec{p}=\dfrac{\mathcal{E}\vec{v}}{c^2}$, $\dfrac{\partial \vec{v}}{\partial t}=\dfrac{cq}{\mathcal{E}}\vec{v}\times \vec{B}$ e $\omega:=\dfrac{cqB}{\mathcal{E}}$
+\[
+\dfrac{v_x(t)}{\partial t}=\omega v_y \qquad \quad
+\dfrac{v_y(t)}{\partial t}=-\omega v_x 
+\]
+Definiamo $\xi=v_x+iv_y$ con $\xi_0=v_{0x}+iv_{0y}$ e allora $\dfrac{\partial \xi}{\partial t}=\omega(v_y-iv_x)=-i\omega\xi$. Possiamo integrare facilmente \[\xi(t)=\xi_0 e^{-i\omega t}=|\xi_0|e^{-i\omega t +i\alpha}\]
+da cui 
+\[
+v_x(t)=|\xi_0|\cos{(\omega t-\alpha)}\qquad\quad
+v_y(t)=-|\xi_0|\sin{(\omega t-\alpha)}
+\]
+e quindi il moto avrà legge oraria
+\begin{gather}
+x(t)-x_0=\dfrac{\sqrt{v_{0x}^2+v_{0y}^2}}{\omega}\sin{(\omega t-\alpha)}\\
+y(t)-y_0=\dfrac{\sqrt{v_{0x}^2+v_{0y}^2}}{\omega}\cos{(\omega t-\alpha)}\\
+z(t)-z_0=v_{0z}t
+\end{gather}
+e sarà una spirale con proiezione circolare di raggio $R=\dfrac{\sqrt{v_{0x}^2+v_{0y}^2}}{\omega}$ sul piano $(x,y)$  e frequenza $\omega=\dfrac{cqB}{\mathcal{E}}$.
+\begin{equation}
+R=\dfrac{\sqrt{v_{0x}^2+v_{0y}^2}\mathcal{E}}{cqB}=c\dfrac{\sqrt{p_{0x}^2+p_{0y}^2}}{qB}
+\end{equation}
+\section{Identità di Bianchi}
+
+
+La $\epsilon^{\mu\nu\rho\sigma}\partial_\nu F_{\rho\sigma}=0$ è chiamata \textbf{Identità di Bianchi} e si può riscrivere in modo equivalente come
+\begin{equation}\label{eqIdentità Bianchi 2}
+\partial_\mu F_{\nu\rho} + \partial_\nu F_{\rho\mu} + \partial_\rho F_{\mu\nu}=0
+\end{equation}
+
+ 
+\begin{proofT}[Equivalenza fra le due forme]
+\begin{itemize}
+\item Partendo da $\partial_\mu F_{\nu\rho} + \partial_\nu F_{\rho\mu} + \partial_\rho F_{\mu\nu}=0$ moltiplichiamo ambo i membri per $\epsilon^{\lambda\mu\nu\rho}$ 
+\[
+\epsilon^{\lambda\mu\nu\rho}\partial_\mu F_{\nu\rho} + 
+\epsilon^{\lambda\mu\nu\rho}\partial_\nu F_{\rho\mu} + 
+\epsilon^{\lambda\mu\nu\rho}\partial_\rho F_{\mu\nu} =0
+\]
+Teniamo il primo addendo così com'è e guardiamo al secondo: rinominiamo gli indici contratti del secondo addendo secondo $\nu\rightarrow\mu$, $\rho\rightarrow\nu$ e $\mu\rightarrow\rho$ ottenendo:
+\[
+\epsilon^{\lambda\mu\nu\rho}\partial_\nu F_{\rho\mu} \rightarrow 
+\epsilon^{\lambda\rho\mu\nu}\partial_\mu F_{\nu\rho}
+\]
+possiamo poi permutare due volte indici del tensore di Levi-Civita trovando che il secondo addendo è uguale al primo
+\[
+\epsilon^{\lambda\rho\mu\nu}\partial_\mu F_{\nu\rho}=
+\epsilon^{\lambda\mu\nu\rho}\partial_\mu F_{\nu\rho}
+\]
+e quindi l'identità iniziale diventa
+\[
+2\epsilon^{\lambda\mu\nu\rho}\partial_\mu F_{\nu\rho} + 
+\epsilon^{\lambda\mu\nu\rho}\partial_\rho F_{\mu\nu} =0
+\]
+Possiamo ripetere lo stesso procedimento per il terzo addendo ottenendo
+\[
+3\epsilon^{\lambda\mu\nu\rho}\partial_\mu F_{\nu\rho} =0
+\]
+che equivale alla forma \ref{eqIdentità Bianchi} dell'identità di bianchi.
+\item Partendo da $\epsilon^{\mu\nu\rho\sigma}\partial_\nu F_{\rho\sigma}=0$ esplicitiamo l'effetto della $\epsilon$ ottenendo una sommatoria di $3$ indici in $4$ valori di cui sopravvivono soltanto i termini in cui tutti gli indici sono diversi, quindi $6$ termini con $3$ indici, e troviamo
+\[
+\partial_\nu F_{\rho\sigma} - \partial_\nu F_{\sigma\rho} + \partial_\rho F_{\sigma\nu} - \partial_\rho F_{\nu\sigma} + \partial_\sigma F_{\nu\rho} -\partial_\sigma F_{\rho\nu}=0
+\]
+(se questo passaggio non è chiaro si può svolgere la sommatoria con valori espliciti per gli indici e verificare che alla fine il risultato sia equivalente)
+Usando l'antisimmetria di $F_{\mu\nu}$ troviamo
+\[2\partial_\nu F_{\rho\sigma}+2\partial_\rho F_{\sigma\nu}+2\partial_\sigma F_{\nu\rho}=0
+\]
+che equivale alla forma \ref{eqIdentità Bianchi 2}. \qedhere
+\end{itemize}
+\end{proofT}
+
+
+\subsection{Quadripotenziale}\label{sezQuadripotenziale}
+C'è un modo semplice e sistematico in realtà per risolvere l'identità di Bianchi: esprimere il tensore elettromagnetico con il quadripotenziale
+\begin{equation}\label{TensoreDaQuadripotenziale}
+F_{\mu\nu}=\partial_\mu A_\nu -\partial_\nu A_\mu
+\end{equation}
+per uno specifico quadrivettore $A_\mu$ chiamato appunto quadripotenziale.
+
+Si vede abbastanza facilmente che un tensore definito da \eqref{TensoreDaQuadripotenziale} risolve l'identità di Bianchi 
+\[
+\epsilon^{\sigma\rho\mu\nu}\partial_\rho F_{\mu\nu}=\epsilon^{\sigma\rho\mu\nu}\partial_\rho \left( \partial_\mu A_\nu -\partial_\nu A_\mu \right) = 
+\epsilon^{\sigma\rho\mu\nu}  \partial_\rho \partial_\mu A_\nu - \epsilon^{\sigma\rho\mu\nu}  \partial_\rho \partial_\nu A_\mu 
+\]
+e rinominando gli indici contratti del secondo termine $\mu\rightarrow\nu$ e $\nu\rightarrow\mu$ e usando l'antisimmetria del tensore di Levi-Civita troviamo
+\[
+\epsilon^{\sigma\rho\mu\nu}\partial_\rho F_{\mu\nu}=
+2\epsilon^{\sigma\rho\mu\nu}  \partial_\rho \partial_\mu A_\nu
+\]
+dove però abbiamo una contrazione degli indici $\rho$ e $\mu$ del tensore di Levi-Civita con le due derivate però la $\epsilon$ è antisimmetrica in $\rho\mu$ mentre le derivate sono simmetriche quindi la contrazione darà
+\[
+2\epsilon^{\sigma\rho\mu\nu}  \partial_\rho \partial_\mu A_\nu=0\]
+
+Il viceversa è un risultato importante che non dimostriamo: il \textbf{Lemma di Poincarè} afferma che ogni tensore doppio che soddisfi la \eqref{eqIdentità Bianchi} si può scrivere in termini di un quadripotenziale. 
+
+Il lemma di Poincarè è un risultato locale però, essendo $\mathbb{R}^4$ contraibile, di solito non dovremo preoccuparcene.
+
+Dalla \eqref{TensoreDaQuadripotenziale} vediamo che la descrizione del campo elettromagnetico in termini di quadripotenziale è ridondante: potenziali diversi daranno la stessa fisica per \textbf{l'invarianza di Gauge}
+\begin{equation}\label{InvarianzaGauge}
+A_\mu \rightarrow A'_\mu=A_\mu+\partial_\mu\phi \implies F_{\mu\nu}\rightarrow F'_{\mu\nu}=\partial_\mu A_\nu - \partial_nu A_\mu =F_{\mu\nu}
+\end{equation}
+
+
+\section{Legge di continuità e distribuzioni}
+
+La seconda delle equazioni di Maxwell covarianti $\partial_\nu F^{\mu\nu}=J^\nu$ corrisponde ad una condizione sulla quadricorrente: infatti se deriviamo membro a membro con $\partial_\nu\partial_\mu F^{\mu\nu}=\partial_\nu J^\nu $ avremo al primo membro una contrazione tra un tensore simmetrico ed un antisimmetrico e quindi
+\begin{equation}
+\partial_\nu J^\nu =0
+\end{equation}
+Questa è una legge di conservazione che se esplicitata ci ridarà l'equazione di continuità
+\[
+\partial_0 c\rho + \partial_i J^i = \dfrac{\partial \rho}{\partial t} + \nabla\cdot\vec{j}=0
+\]
+
+
+La quadricorrente è un campo quadrivettoriale $J^\mu(x)$ a valori nelle distribuzioni infatti se consideriamo la corrente più semplice, una carica in moto, avremo come densità di carica e densità di corrente
+
+\begin{table}[H]
+\begin{minipage}{0.45\linewidth}
+\begin{equation}
+\rho(\vec{x})=q\delta^3\left(\vec{x}-\vec{x}(t)\right) \label{densitàCaricaPuntiforme}
+\end{equation}
+\end{minipage}
+\begin{minipage}{0.45\linewidth}
+\begin{equation}
+\vec{j}(\vec{x})=qc\vec{v}(t)\delta^3\left(\vec{x}-\vec{x}(t)\right)
+\end{equation}
+\end{minipage}
+\end{table}
+
+\subsection{Carica puntiforme ferma}
+Verifichiamo se una carica puntiforme ferma la cui densità di carica sia espressa da \ref{densitàCaricaPuntiforme} risolva $\nabla\times\vec{E}=0$ e $\nabla\cdot\vec{E}=\rho(x)$.
+
+Il campo elettrico sarà 
+\begin{equation}
+\vec{E}=\dfrac{q}{4\pi r^3} \vec{r}=\dfrac{-q}{4\pi}\nabla\left(\dfrac{1}{r}\right)
+\end{equation}
+e $E_j=\dfrac{q}{4\pi}\dfrac{x_j}{x^3}$.
+
+Trattiamo prima come se il campo fosse una funzione e non una distribuzione, quindi:
+\begin{itemize}
+\item Cominciamo derivando $\partial_iE^j$ per trovare il rotore
+\begin{align*}
+\partial_i E^j&=\dfrac{q}{4\pi}\left(\dfrac{1}{x^3}\partial_ix_j +x_j\partial_i\dfrac{1}{x^3}   \right)
+ = \dfrac{q}{4\pi}\left(\dfrac{1}{x^3}\delta_{ij} +x_j\partial_i\dfrac{1}{(x_ix^i)^\frac{3}{2}}   \right) \\
+& = \dfrac{q}{4\pi}\left(\dfrac{1}{x^3}\delta_{ij} -x_j\dfrac{3(x_ix^i)^\frac{1}{2}(x^i+x_i)}{2(x_ix^i)^3}  \right) 
+ = \dfrac{q}{4\pi}\left(\dfrac{1}{x^3}\delta_{ij} -\dfrac{3x_jx_i}{x^5} \right) \\
+& = \dfrac{q}{4\pi x^3}\left(\delta_{ij} -\dfrac{3x_ix_j}{x^2} \right)
+\end{align*}
+e quindi $\epsilon^{kij}\partial_i E_j=0$ che significa $\nabla\times\vec{E}=0$.
+\item Vediamo $\partial_iE^i$ per la divergenza
+\begin{align*}
+\partial_i E^i & = \dfrac{q}{4\pi}\left(\dfrac{1}{x^3}\partial_ix_i +x_i\partial_i\dfrac{1}{x^3}   \right) = 
+ \dfrac{q}{4\pi}\left(\dfrac{1}{x^3}3 -x_j\dfrac{3(x_ix^i)^\frac{1}{2}(x^i+x_i)}{2(x_ix^i)^3}  \right) \\
+& = \dfrac{q}{4\pi}\left(\dfrac{1}{x^3}3 -x_i\dfrac{3x_i}{x^5}  \right) = 
+\dfrac{q}{4\pi x^3}\left(3 -3 \right)=0
+\end{align*}
+e quindi $\nabla\cdot\vec{E}\,(x)=0$. Questo va bene per $r\neq 0$ mentre per $r=0$ il risultato ottenuto con le funzioni non sarà attendibile e infatti non va bene.
+\end{itemize}
+
+Ora rifacciamo per la distribuzione:
+\begin{itemize}
+\item Per la derivata di una distribuzione $\partial_i E^j$ vale $\left\langle \partial_i E^j | \varphi \right\rangle = -\left\langle E^j | \partial_i\varphi \right\rangle$
+\begin{align*}
+\int d^3x \> \partial_i E^j \varphi(\vec{x}) &= - \int d^3x \> E^j \partial_i\varphi(\vec{x}) = -\dfrac{q}{4\pi}\int d^3x \> \dfrac{x^j}{x^3} \partial_i\varphi{x}
+\end{align*}
+$E^j\partial_i\varphi$ andrà come $\dfrac{1}{x^2}$ mentre $\partial_iE^j$ andava come $\dfrac{1}{x^3}$ e non era neanche integrabile. Dato che ora l'ultima funzione integranda è effettivamente integrabile possiamo mandare a limite attorno allo zero
+\begin{equation}\label{derDistribuzionalePerRotoreElettrico}
+-\dfrac{q}{4\pi}\int d^3x \> \dfrac{x^j}{x^3} \partial_i\varphi{x} =  -\dfrac{q}{4\pi} \lim_{\epsilon\rightarrow 0} \int_{\left|x\right|>\epsilon} d^3x \> \dfrac{x^j}{x^3} \partial_i\varphi(x)
+\end{equation}
+Ora dalla derivazione con la catena formalmente
+\begin{align*}
+- \int_{\left|x\right|>\epsilon} d^3x \> E^j \partial_i\varphi(\vec{x}) = - \int_{\left|x\right|>\epsilon} d^3x \> \partial_i\left(  E^j \varphi(\vec{x})\right) + \int_{\left|x\right|>\epsilon} d^3x \> E^j \partial_i\varphi(\vec{x}) 
+\end{align*}
+Quindi mettendo esplicitamente la distribuzione $E_j$ la \ref{derDistribuzionalePerRotoreElettrico} diventa
+\[
+-\dfrac{q}{4\pi} \lim_{\epsilon\rightarrow 0} \int_{\left|x\right|>\epsilon} d^3x \> \partial_i \left(\dfrac{x^j}{x^3}\varphi(x)\right) + 
+\dfrac{q}{4\pi} \lim_{\epsilon\rightarrow 0} \int_{\left|x\right|>\epsilon} d^3x \> \partial_i \left( \delta^{ij}-\dfrac{3x^ix^j}{x^2} \right) \dfrac{\varphi(x)}{x^3} 
+\]
+Il primo integrale possiamo risolverlo col teorema della divergenza\footnotemark          ottenendo \footnotetext{La divergenza di solito non la scriviamo così però sapendo che gli indici non sono contratti basta sommare i risultati per $i\in[1,3]$ per avere la divergenza di un $e_j$ e poi sommare su $j$ per avere la divergenza di $\vec{E}$.}
+\[
+-\dfrac{q}{4\pi} \lim_{\epsilon\rightarrow 0} \int_{\left|x\right|>\epsilon} d^3x \> \partial_i \left(\dfrac{x^j}{x^3}\varphi(x)\right) = \dfrac{q}{4\pi} \lim_{\epsilon\rightarrow 0} \int_{\left|x\right|=\epsilon} \dfrac{x^j}{\epsilon^3}\varphi(x) \> d\Sigma^i = \dfrac{q}{4\pi} \lim_{\epsilon\rightarrow 0} \int_{\left|x\right|=\epsilon} \dfrac{n^j}{\epsilon^2}\varphi(x) \> d\Sigma^i 
+\]
+e il $d\Sigma^i$ sarà dato da
+\[
+d\Sigma^i=n^id\Omega \epsilon^2 \hspace{0.15\linewidth} n^i=\dfrac{x^i}{x}
+\]
+Il cambio di segno c'è stato perchè il versore $n^i$ punta verso l'esterno mentre il versore uscente dal volume $\left|x\right|>\epsilon$ punto verso l'interno.
+Possiamo quindi finalmente riscrivere la \ref{derDistribuzionalePerRotoreElettrico} come
+\begin{equation}\label{derDistribuzionalePerRotoreElettrico2}
+\dfrac{q}{4\pi} \lim_{\epsilon\rightarrow 0} \int_{\left|x\right|=\epsilon} n^in^j\varphi(x) \> d\Omega 
++ 
+\dfrac{q}{4\pi} \lim_{\epsilon\rightarrow 0} \int_{\left|x\right|>\epsilon} d^3x \> \partial_i \left( \delta^{ij}-\dfrac{3x^ix^j}{x^2} \right) \dfrac{\varphi(x)}{x^3} 
+\end{equation}
+Se ora moltiplichiamo per $\epsilon^{ijk}$ la \ref{derDistribuzionalePerRotoreElettrico2} ci definisce l'effetto della distribuzione rotore di $E_j$, ma contraendo $\epsilon^{ijk}$ con $n^in^j$, $\delta_{ij}$ e $x^ix^j$, tutti simmetrici, questa sarà nulla.
+Quindi $\nabla\times\vec{E}=0$.
+\item La divergenza $\nabla\cdot\vec{E}$ si definirà allo stesso modo del rotore quindi ponendo $j=i$ nella \ref{derDistribuzionalePerRotoreElettrico2} troviamo
+\begin{align*}
+& \dfrac{q}{4\pi} \lim_{\epsilon\rightarrow 0} \int_{\left|x\right|=\epsilon} n^in^i\varphi(x) \> d\Omega 
++ 
+\dfrac{q}{4\pi} \lim_{\epsilon\rightarrow 0} \int_{\left|x\right|>\epsilon} d^3x \> \partial_i \left( 3-\dfrac{3x^ix^i}{x^2} \right) \dfrac{\varphi(x)}{x^3} \\
+& =
+\dfrac{q}{4\pi} \lim_{\epsilon\rightarrow 0} \int_{\left|x\right|=\epsilon}\varphi(x) \> d\Omega = \dfrac{q}{4\pi}\varphi(0) \int d\Omega = q\varphi(0) \\
+& =  \int d^3x q\delta^{3}(x)\varphi
+\end{align*}
+che significa $\nabla\cdot\vec{E}=q\delta^3(x)$ che è proprio la densità di carica distribuzionale per la carica puntiforme!
+\end{itemize}
+
+\subsection{Cenni sulla teoria delle distribuzioni}
+Le distribuzioni sono funzionali lineari continui nello spazio delle funzioni di prova. 
+Una distribuzione $F$ si definisce dal suo effetto 
+\[
+\int F(x)\varphi(x) d^nx= \left\langle F | \varphi \right\rangle \hspace{0.15\linewidth} \forall \varphi \in \mathcal{S}
+\]
+Per definizione la derivata di una definizione è a sua volta una distribuzione, per trovare quanto valga possiamo risolvere per parti l'integrale formale di definizione otteendo
+\[
+\int \partial_\mu F(x) \varphi(x) d^nx= -\int F(x) \partial_\mu\varphi(x) d^nx
+\]
+
+La delta di Dirac $\delta(x)$ è una distribuzione singolare definita da
+\[
+\left\langle \delta(x) | f \right\rangle =f(0) \hspace{0.15\linewidth} \forall f\in\mathcal{S}
+\]
+potremo poi comporre la delta con una funzione $f\in\mathcal{S}(\mathbb{R})$ tramite
+\[
+\delta\left(f(x)\right) = \sum_n \dfrac{\delta(x_n)}{\left| f'(x_n) \right|}
+\] 
+dove gli $x_n$ sono gli zeri di $f$.
+Il prodotto tra una delta e una funzione è
+\[
+f(x)\delta(x-a)=f(a)\delta(x-a)
+\]
+mentre il prodotto tra due delta non è ben definito.
+Potremo definire una delta multidimensionale $\delta^n(x-a)$, con $x,a\in\mathbb{R}^n$, come prodotto di delta 
+\[
+\delta^{(n)}(x-a)=\delta\left(x^0-a^0\right)\delta\left(x^1-a^1\right)\dots\,\delta\left(x^{n-1}-a^{n-1}\right)
+\]
+
+
+
+\section{Quadricorrente}\label{sezQuadricorrente}
+Abbiamo definito la quadricorrente come $J^\mu=(c\rho,\vec{j})$ questa scrittura però non è covariante a vista e quindi dovremo dimostrare che questo sia un quadrivettore.
+
+Consideriamo una sorgente con simmetria sferica
+\[
+J^0=c\rho(\left|\vec{x}\right|) \hspace{0.15\linewidth}
+\vec{j}=j(t,\left|\vec{x}\right|) \dfrac{\vec{x}}{r}
+\]
+
+Se ora assumiamo che la sorgente sia contenuta in una sfera di raggio $r_0$ ferma, anche nullo per una singola carica puntiforme, il \textit{Teorema di Birkhoff} ci assicura che il campo  generato sarà quello Coulombiano
+\[
+\vec{E}=\dfrac{Q}{4\pi}\dfrac{\vec{x}}{r^3} \hspace{0.15\linewidth} \vec{B}=0
+\]
+dove $Q=\int \rho d^3x$
+
+Per una carica puntiforme in moto la quadricorrente sarà
+\begin{equation}
+J^\mu (t,\vec{x})=cq\left( \delta^3(\vec{x}-\vec{x})(t) , \vec{v}(t)\delta^3(\vec{x}-\vec{x})(t) \right)
+\end{equation}
+
+La quadricorrente della carica puntiforme con linea di universo $z^\mu(\lambda)$ si può riscrivere in forma covariante come
+\begin{equation}
+J^\mu(x^\mu)=cq \int \dfrac{d z^\mu(\lambda)}{d\lambda}\delta^{4}\left( x^\nu-z^\nu(\lambda) \right) d\lambda
+\end{equation}
+
+\begin{proof:}[Verifichiamo che le due forme siano equivalenti]
+Parametrizzando col tempo proprio
+\[
+cq \int \dfrac{d z^\mu}{ds}\delta^{4}(x^\nu-z^\nu(s)) ds = cq \int \dfrac{d z^\mu}{dz^0}\delta^{4} \left( x^\nu-z^\nu(z^0) \right) dz^0
+\]
+e quindi per $\mu=0$:
+\begin{align*}
+J^0 & = cq \int \dfrac{d z^0}{dz^0} \> \delta\left( x^0-z^0(z^0) \right) \delta^{3}\left( \vec{x}-\vec{z}(z^0) \right) dz^0
+\\&= cq \delta^{3}\left( \vec{x}-\vec{z}(z^0) \right) =\rho(\vec{x},t)
+\end{align*}
+Per $\mu=i$:
+\begin{align*}
+J^i & = cq \int \dfrac{d z^i(z^0)}{dz^0} \> \delta\left( x^0-z^0(z^0) \right) \delta^{3}\left( \vec{x}-\vec{z}(z^0) \right) dz^0
+\\ & = cq v^i(z^0) \delta^{3}\left( \vec{x}-\vec{z}(z^0) \right) = cq v^i(t) \delta^{3}\left( \vec{x}-\vec{z}(t) \right) \\ & = j^i(\vec{x},t) \qedhere
+\end{align*}
+\end{proof:}
+
+
+\chapter{Tensore Energia-Impulso}
+
+
+\chapter{Teorema di Noether}
+
+
+
+\end{document}

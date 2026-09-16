@@ -1,0 +1,2238 @@
+\documentclass[11pt,a4paper,twoside]{book}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc} 
+\usepackage{amsmath, amsthm, amsfonts, amssymb, xfrac}
+\usepackage{arydshln} %Linea dotted in array
+\usepackage[italian]{babel}
+\usepackage{titling} %Funzioni per modificare maketitle
+\usepackage{titlesec} %Ridefinizione semplice di titoli 
+\usepackage{float} %Comando H per posizione di float
+\usepackage[left=2.5cm, right=2cm, top=2cm, bottom=2cm]{geometry} %Gestione margini pagina
+\usepackage{perpage} %Permette di resettare una numerazione per pagina
+\usepackage{calligra}
+\usepackage{fancyhdr} %Lo uso per avere titolo e autore running
+\usepackage[hidelinks]{hyperref} %lo uso per avere l'indice cliccabiile
+\usepackage{graphicx, wrapfig} %Immagini
+\usepackage[shortlabels]{enumitem} %Enumerate con diversi label, l'argomento mi permette di usare (a) al posto di label=(\alph*) etc
+\usepackage{ulem}
+
+\MakePerPage{footnote} %Resetta la numerazione delle footnote per pagina
+
+%Autore-------------------------------------------
+\author{Marco Accerenzi}
+\date{}
+\title{Appunti di fisica matematica}
+
+
+%Titleformat-----------------------------------------------
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\titleformat{\section}{\huge\bfseries\boldmath}{{\Large \thesection}}{0.5em}{}
+\titleformat{\subsection}{\Large\bfseries\boldmath}{{\large \thesubsection}}{0.5em}{}
+\titleformat{\subsubsection}{\large\bfseries\boldmath}{{}}{0}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries}{{}}{0}{}
+
+%Pagestyle pagine normali--------------------------------
+\pagestyle{fancy} %Serve per poter modificare le pagine con fancyhdr facilmente
+\renewcommand{\sectionmark}[1]{ \markright{#1}{} }
+
+\lhead[]{\small Marco Accerenzi}  %Autore a sinistra nelle pagine dispari
+\chead[\small \rightmark]{} %Capitolo al centro nelle pagine pari
+\rhead[]{\small Appunti di Istituzioni di Metodi Matematici} %Titolo a destra nelle pagine dispari
+\fancyfoot[LE,RO]{\large\thepage} %Numero pagina grande a sinistra in basso nelle pagine dispari
+\fancyfoot[C]{}
+\renewcommand{\headrulewidth}{0.25pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+%Modifica pagestyle pagine speciali-------------------------------------------
+\fancypagestyle{plain}{%Ridefinisco il pagestyle della prima pagina dei chapter
+\fancyhf{} %Toglie tutti i footer ed header
+\fancyfoot[LO,RE]{\thepage} 
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+}
+
+%Tcolorbox per i teoremi, esempi ed esercizi---------------------------
+\usepackage[skins, breakable, theorems]{tcolorbox}
+
+%Box per proposizione
+\newtcbtheorem[number within=section]{Teorema}{Teorema}{
+	enhanced,
+	boxrule=0pt,frame hidden,
+	borderline west={2.5pt}{0pt}{black},
+	colback=yellow!1!white,
+	sharp corners,
+	coltitle=black,
+	attach title to upper={\noindent},
+	fonttitle=\bfseries\large,
+}{thm}
+
+%Box per proposizione
+\newtcbtheorem[use counter from=Teorema]{Proposizione}{Proposizione}{
+	enhanced,
+	boxrule=0pt,frame hidden,
+	borderline west={2.5pt}{0pt}{black},
+	colback=yellow!1!white,
+	sharp corners,
+	coltitle=black,
+	attach title to upper={\noindent},
+	fonttitle=\bfseries\large,
+}{thm}
+
+%Box per Definizione
+\newtcbtheorem[use counter from=Teorema]{Definizione}{Definizione}{
+enhanced,
+	boxrule=0pt,frame hidden,
+	borderline west={2.5pt}{0pt}{black},
+	colback=yellow!1!white,
+	sharp corners,
+	coltitle=black,
+	attach title to upper={\noindent},
+	fonttitle=\bfseries\large,
+}{defi}
+
+%Box per Lemma
+\newtcbtheorem[use counter from=Teorema]{Lemma}{Lemma}{
+enhanced,
+	boxrule=0pt,frame hidden,
+	borderline west={2.5pt}{0pt}{black},
+	colback=yellow!1!white,
+	sharp corners,
+	coltitle=black,
+	attach title to upper={\noindent},
+	fonttitle=\bfseries\large,
+}{lemm}
+
+%Box per Corollario
+\newtcbtheorem[use counter from=Teorema]{Corollario}{Corollario}{
+enhanced,
+	boxrule=0pt,frame hidden,
+	borderline west={2.5pt}{0pt}{black},
+	colback=yellow!1!white,
+	sharp corners,
+	coltitle=black,
+	attach title to upper={\noindent},
+	fonttitle=\bfseries\large,
+}{Cor}
+
+
+
+%Ambienti per proposizione, definizione, lemma e corollario
+\newenvironment{teorema}[1][\empty]{\begin{Teorema}{
+\ifx\empty#1\relax\else\mdseries\itshape#1\\\fi
+}{}}{\end{Teorema}}
+\newenvironment{proposizione}[1][\empty]{\begin{Proposizione}{
+\ifx\empty#1\relax\else\mdseries\itshape#1\\\fi
+}{}}{\end{Proposizione}}  
+\newenvironment{definizione}[1][\empty]{\begin{Definizione}{
+\ifx\empty#1\relax\else\mdseries\itshape#1\\\fi
+}{}}{\end{Definizione}}
+\newenvironment{lemma}[1][\empty]{\begin{Lemma}{
+\ifx\empty#1\relax\else\mdseries\itshape#1\\\fi
+}{}}{\end{Lemma}}
+\newenvironment{corollario}[1][\empty]{\begin{Corollario}{
+\ifx\empty#1\relax\else\mdseries\itshape#1\\\fi
+}{}}{\end{Corollario}}
+
+%Box per pezzi generici importanti-------------------------
+\newenvironment{importante}[0]{ 
+  \begin{center}\begin{tcolorbox}[enhanced,
+  before skip=2mm,after skip=3mm,
+  boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
+  colback=yellow!50,
+  colframe=yellow!20!black,
+  sharp corners,arc=3mm,
+  underlay={
+  	\path[fill=red!50!black,draw=none] (interior.south west) rectangle 			node[white]{\Huge\bfseries !} ([xshift=4mm]interior.north west);
+  },
+  drop fuzzy shadow]
+  }{
+ \normalsize \end{tcolorbox}\end{center}
+}
+
+%Box per esempi----------------------
+\newenvironment{esempio}[1][Esempio]{ 
+  \begin{center}\begin{tcolorbox}[
+  title={#1:~},
+  width=0.9\linewidth,
+  flush right,
+  enhanced jigsaw, 
+  colback=white, 
+  frame hidden, 
+  sharpish corners, arc=3mm,
+  borderline west = {1pt}{0pt}{gray},
+  borderline south = {1pt}{0pt}{gray},
+  coltitle=black, 
+  fonttitle=\small\bfseries, 
+  attach title to upper, 
+  breakable,
+  top=2.5pt, bottom=0.3pt]\small
+  }{
+ \normalsize \end{tcolorbox}\end{center}
+}
+
+%Box per osservazioni----------------------
+\newenvironment{osservazione}[1][Osservazione]{ 
+  \begin{center}\begin{tcolorbox}[
+  title={#1:~},
+  width=0.9\linewidth,
+  flush right,
+  enhanced jigsaw, 
+  colback=white, 
+  frame hidden, 
+  sharpish corners, arc=3mm,
+  borderline west = {1pt}{0pt}{gray},
+  borderline south = {1pt}{0pt}{gray},
+  coltitle=black, 
+  fonttitle=\small\bfseries, 
+  attach title to upper, 
+  breakable,
+  top=2.5pt, bottom=0.3pt]\small
+  }{
+ \normalsize \end{tcolorbox}\end{center}
+}
+
+%Ambiente proof con riga a sinistra---------------------------
+\newenvironment{dimo}[1][\proofname]{
+	\begin{tcolorbox}[
+	breakable, 
+	enhanced, 
+	interior hidden, 
+	frame hidden, 
+	borderline west = {1pt}{0pt}{gray}, 
+	top=0pt, bottom=0pt, left=0pt]
+\begin{proof}[#1:~]
+}
+{
+\end{proof}
+\end{tcolorbox}
+}
+
+%Stili teorema per soluzione esercizi--------------------------------------
+\newtheoremstyle{esss}{\topsep}{\topsep}{\normalfont}{0pt}{\bfseries}{}{ }{\thmname{#1}\thmnumber{ #2}\thmnote{ #3}}
+\theoremstyle{esss}
+
+\newtheorem{esercizio}{Esercizio}[section]
+
+\newtheoremstyle{dotless}{\topsep}{\topsep}{\normalfont}{0pt}{\bfseries}{}{ }{\thmname{#1}\thmnumber{ #2}\thmnote{ #3}}
+\theoremstyle{dotless}
+
+\newtheorem*{ris}{}
+\newenvironment{risoluzione}[1][]{  
+  \begin{ris}[\bfseries Risoluzione #1]$ $\\
+  }{
+  \end{ris}
+}
+
+%Miste------------------------------------------------------------------
+\numberwithin{equation}{section} %Numerazione equazione per sezione
+\renewcommand{\thefootnote}{\fnsymbol{footnote}} 
+\hypersetup{linktoc=all}
+\newcommand{\sectionbreak}{\clearpage}
+
+%Indice--------------------------------------------------------
+\usepackage{tocloft}
+\renewcommand{\cftpartfont}{\large\bfseries}
+\renewcommand{\cftsecfont}{\bfseries}
+
+
+%Inizio------------------------------------------------------------------------------
+
+\begin{document}
+\frontmatter
+
+
+%Copertina----------------------------------------------------------------------
+\begin{titlepage}
+	\begin{center}
+
+	\begin{center}
+		\centering
+		Anno accademico 2019-2020\par
+		\vspace{.05\textheight}
+	\end{center}	
+
+		\vspace{.1\textheight}
+		{\LARGE\scshape \textsc{Marco Accerenzi}\par}
+		\vspace{.1\textheight}
+		\textsc{}\par
+		\vspace{.05\textheight}
+		{\Huge \textsc{Metodi matematici}\par}
+		\vspace{.05\textheight}
+		{\large Riassunto degli appunti\par}
+		\vfill
+		{\centering\large
+hhh
+  }
+  \vspace{2cm} 
+\end{center}
+\end{titlepage}
+\thispagestyle{plain}
+%----------------------------------------------------------------------------------
+
+\setcounter{page}{1}
+\tableofcontents\clearpage\thispagestyle{plain}
+
+%Parte 1-----------------------------------------------------------------
+\pagestyle{fancy}
+
+\cleardoublepage
+\mainmatter\setcounter{page}{1}
+\addcontentsline{toc}{part}{Analisi Complessa}
+\thispagestyle{plain}
+	\begin{center}
+		\vspace{.1\textheight}
+		{\LARGE\scshape \textsc{Prima parte}\par}
+		\vspace{.1\textheight}
+		\textsc{}\par
+		\vspace{.05\textheight}
+		{\Huge \textsc{Analisi Complessa}\par}
+		\vfill
+
+\end{center}
+\fancyfoot[C]{\small Analisi Complessa}
+%------------------------------------------------------------------
+
+
+\section{Funzioni complesse}
+\pagestyle{fancy}
+Come sappiamo i numeri complessi $z\in\mathbb{C}$ si possono esprimere come
+\[
+z=x+iy \qquad x,y\in\mathbb{R}
+\]
+in modo univoco, questo permette di identificare $\mathbb{C}$ con $\mathbb{R}^2$ tramite la biiezione $z\leftrightarrow \vec{x}=(x,y)$.
+La topologia, cioè ``l`insieme degli aperti'', di $\mathbb{R}^2$ e di $\mathbb{C}$ sarà la stessa 
+\[
+I=\{|z|=\sqrt{x^2+y^2}<R\}\subseteq\mathbb{C} \leftrightarrow I=\{|\vec{x}|<R\}\subseteq\mathbb{R}^2
+\]
+Questo ci permetterà anche di identificare le funzioni complesse di variabile complessa $\mathbb{C}\rightarrow\mathbb{C}$ con campi vettoriali $\mathbb{R}^2\rightarrow\mathbb{R}^2$.
+
+Sia $D\subseteq\mathbb{C}$ un aperto e $f:D\rightarrow\mathbb{C}$ una funzione $z\mapsto f(z)$ allora potremo usare l'identificazione $f\mapsto\vec{U}=(u,v):D\rightarrow\mathbb{R}^2$ per riscrivere $f$ come
+\[
+f(x,y)=u(x,y)+iv(x,y)
+\]
+Non faremo differenze nell'indicare l'insieme $D\subseteq\mathbb{C}$ e il suo corrispettivo in $\mathbb{R}^2$ (che sostanzialmente coincidono).
+
+Ricordiamo che numero complesso $z$ ha anche una scrittura polare
+\[
+z=|z|e^{i\theta} \qquad 0\leq\theta<2\pi
+\]
+e che per $z=x+iy\in\mathbb{C}$ se ne definisce il complesso coniugato $\overline{z}=x-iy$.
+
+Le parti reali ed immaginaria di un numero si possono scrivere come 
+\[
+x=\dfrac{z+\overline{z}}{2} \qquad y=\dfrac{z-\overline{z}}{2i}
+\]
+
+\begin{esempio}
+Per $f(z)=\dfrac{z+\overline{z}}{2}$ vediamo che $f(z)=x$ e quindi $u_f(x,y)=x$ e $v_f(x,y)=0$, invece per $g(z)=z\overline{z}$ avremo $z\overline{z}=x^2+y^2\in\mathbb{R}$ e quindi $u_g(x,y)=x^2+y^2$ e $v_g(x,y)=0$.
+\end{esempio}
+
+
+\begin{definizione}
+Una funzione complessa di variabile complessa $f:D\rightarrow\mathbb{C}$ si dice
+\begin{enumerate}[i.]
+\item Continua in $z\in D$ se vale
+\begin{equation}\label{derivComplessa}
+\lim_{h\rightarrow 0} f(z+h)=f(z) \qquad h\in\mathbb{C}
+\end{equation}
+\item Olomorfa (o analitica) in $z\in D$ se esiste finito il limite 
+\begin{equation}\label{derivComplessa}
+\lim_{h\rightarrow 0} \dfrac{f(z+h)-f(z)}{h}
+\end{equation}
+Chiameremo questo limite, se esiste, la derivata complessa di $f$ che indicheremo con $f'(z)$ o $\dfrac{df}{dz}$.\\
+\item Antiolomorfa in $z\in D$ se esiste finito il limite
+\[
+\lim_{h\rightarrow 0} \dfrac{f(z+h)-f(z)}{\overline{h}}
+\]
+\end{enumerate}
+$f$ si dice olomorfa (o antiolomorfa) in un aperto $E\subseteq D$ se è olomorfa (o antiolomorfa) in ogni punto $z\in E$.
+\end{definizione}
+
+Sottolineiamo che i limiti di questa definizione sono complessi, pensandoli nel piano reale sono cioè limiti bidimensionali che devono esistere in ogni direzione.
+
+Dalla definizione è chiaro che una funzione $f(z)$ è olomorfa se e solo se la funzione $\overline{f(z)}$ è antiolomorfa.
+
+La condizione di olomorfia \eqref{derivComplessa} equivale a chiedere che esista un $\alpha\in\mathbb{C}$ per cui
+\[
+f(z+h)-f(z)-\alpha h = o(|h|)
+\]
+dove $\alpha$ sarà la $f'$ calcolata in $z$.
+
+
+\begin{importante}
+Se $f$ è olomorfa in $z$ allora è anche continua in $z$.
+\end{importante}
+
+\begin{teorema}
+Per $D\subseteq\mathbb{C}$ aperto una funzione $f:D\rightarrow\mathbb{C}$ è olomorfa in $z=x+iy\in D$ se e solo se il campo associato $\vec{f}:D\rightarrow\mathbb{R}^2$ è differenziabile in $\vec{x}=(x,y)$ e $\vec{f}=(u,v)$ rispetta le condizioni di Cauchy-Riemann
+\[
+\dfrac{\partial u}{\partial x}=\dfrac{\partial v}{\partial y} \qquad
+\dfrac{\partial u}{\partial y}=-\dfrac{\partial v}{\partial x}
+\]
+\end{teorema}
+
+\begin{dimo}
+Il campo $\vec{f}$ si dice differenziabile in $\vec{x}$ se esiste una matrice $A$ tale che $\vec{f}(\vec{x}+\vec{h})-\vec{f}(\vec{x})-A\vec{h}=o(|\vec{h}|)$ e sappiamo che in tal caso la matrice $A$ è \[
+A=\left(\begin{array}{cc} \partial_x u & \partial_y u \\ \partial_x v & \partial_y v\end{array}\right)
+\] e $\vec{h}=\left( \begin{array}{c}h_1 \\ h_2\end{array}\right)$.
+\begin{itemize}
+\item Se $f$ è olomorfa in $z$ allora $\alpha=f'(z)=a+ib$ e con $h=h_1+ih_2$ si ha $\alpha h=ah_1-bh_2+i(bh_1+ah_2)\equiv \left( \begin{array}{cc}a & -b \\ b & a\end{array}\right) \vec{h}=A h$ con $a=\partial_x u$ e $b= \partial_x v$  
+
+Quindi $f$ olomorfa $\rightarrow$ $\vec{f}=(u,v)$  differenziabile e $\partial_x u=\partial_y v$ e $\partial_y u=-\partial_x v$.
+\item Se valgono le condizioni di Cauchy-Riemann e $\vec{f}$ è differenziabile allora
+\[
+|\vec{f}(\vec{x}+\vec{h})-\vec{f}(\vec{x})-A\vec{h}|=|f(z+h)-f(z)-\alpha h| 
+\]
+con $\alpha=\partial_x u + i\partial_x v=f'(z)$ \qedhere
+\end{itemize}
+\end{dimo}
+
+
+ 
+
+
+Definiamo 
+\[ \partial=\dfrac{\partial_x-i\partial_y}{2} \qquad \overline{\partial}=\dfrac{\partial_x+i\partial_y}{2}
+\]
+che esplicitamente  sono
+\begin{gather*}
+\partial f = \dfrac{\partial_x u - i \partial_y u  +i\partial_x v +\partial_y v }{2} \\
+\overline{\partial} f = \dfrac{\partial_x u + i \partial_y u  +i\partial_x v -\partial_y v }{2}
+\end{gather*}
+dalla dimostrazione del teorema sappiamo che 
+\begin{equation}\label{eqDerivataComplessaEsplicita}
+\partial f =f'=\partial_x u+i\partial_x v
+\end{equation}
+e che le condizioni di Cauchy-Riemann equivalgono a $\overline{\partial}f=0$.
+
+Possiamo interpretare questo come dire che le funzioni olomorfe dipendo solo da $z$ mentre le funzioni antiolomorfe solo da $\overline{z}$.
+
+\begin{osservazione}Per $g=\dfrac{\partial f}{\partial z}$ con $f$ olomorfa vediamo che \[\dfrac{\partial g}{\partial \overline{z}}=\dfrac{\partial }{\partial \overline{z}}\dfrac{\partial f}{\partial z}=\dfrac{\partial }{\partial z}\dfrac{\partial f}{\partial \overline{z}}=0\] e quindi la derivata complessa di una funzione olomorfa è ancora olomorfa e una funzione olomorfa ammette quindi derivate di ogni ordine. Dimostreremo questa proprietà in modo rigoroso più avanti.
+\end{osservazione}
+
+Senza dimostrarle elenchiamo alcune regole per il calcolo delle derivate complesse:\begin{itemize}[label=$\cdot$]
+\item Se $f$ e $g$ sono funzioni olomorfe allora $\partial(f+g)=f'+g'$ e $\partial (fg)=f'g+fg'$
+\item Se $f:D_f\rightarrow E_f$ e $g:D\rightarrow E_g$ sono funzioni olomorfe tali che $f(D_f)\subseteq D_g$ allora $g\circ f$ è olomorfa con $\partial g(f(z))=g'(f(z))\dot f'(z)$
+\item $\partial\left( \sum_{n=0}^N c_n z^n\right)  = \sum_n^N nc_n z^{n-1}$ con dominio di olomorfia $\mathbb{C}$.
+\item Per $f$ olomorfa in $D$ e $f(z)\neq 0$ per $z\in\hat{D}\subseteq D$ la reciproca $F=\sfrac{1}{f}$ è olomorfa in $\hat{D}$ con derivata complessa $F'=-\dfrac{f'}{f^2}$
+\item Se $f$ e $g$ sono funzioni olomorfe allora $\dfrac{f}{g}$ è olomorfa in $D_f\cap D_g\cap\{z:g(z)\neq0\}$ con derivata complessa $\partial \dfrac{f}{g}=\dfrac{gf'-fg'}{g^2}$
+\item $f(z)=e^z$ ha parte reale $u=e^x\cos{y}$ e immaginaria $v=e^x\sin{y}$ e quindi è olomorfa con $f'(z)=e^z$. Analogamente $\partial \sin{z}=\cos{z}$ e $\partial cos{z}=-\sin{z}$
+\item Siano $f$ e $g$ funzioni olomorfe in $D$ con $f(z_0)=g(z_0)=0$ ma con $g'(z_0)\neq0$ per $z_0\in D$ allora $\lim_{z\rightarrow z_0} \dfrac{f(z)}{g(z)}=\lim_{z\rightarrow z_0} \dfrac{f'(z)}{g'(z)}$
+\end{itemize}
+
+\subsection{Trasformazioni conformi}
+
+\begin{definizione}
+Una mappa $\mathbb{R}^2\rightarrow\mathbb{R}^2$ si dice una trasformazione conforme se preserva tutti gli angoli
+\end{definizione}
+
+Le funzioni olomorfe hanno un'interpretazione geometrica come mappe $\mathbb{R}^2\rightarrow\mathbb{R}^2$ che preservano gli angoli, chiamate trasformazioni conformi.
+
+
+Un numero complesso $z$ individua una direzione nel piano $\mathbb{R}^2$ ovvero per $z=\rho e^{i\theta}$ l'angolo $\theta$ è l'angolo tra le ascisse e la direzione di $z$.
+
+La tangente ad una curva $z(t)=x(t)+iy(t)$ in $z_0=z(t_0)$ è un vettore $v(t_0)=\left|\dfrac{dz}{dt}\right|_{t=t_0}$ 
+
+
+\begin{proposizione}
+Una funzione olomorfa rappresenta una trasformazione conforme.
+\end{proposizione}
+\begin{dimo}
+Consideriamo l'angolo tra due curve $\gamma_1:t\mapsto z_1(t)$ e $\gamma_2:t\mapsto z_2(t)$ in un punto $z_1(0)=a$.
+Le curve avranno vettori tangenti dati da
+\[
+V_1=\left.\dfrac{ dz_1}{dt}\right|_{t=0}
+\]
+Applicando una funzione olomorfa $f(z)$ i trasformati dei vettori tangenti saranno
+\[
+V_1^*=\left.\dfrac{d}{dt} f(z_1(t))\right|_{t=0}=f'(a)V_1 \qquad V_2^2=f'(a)V_2
+\]
+$f'(a)=\rho e^{i\theta}$ cioè entrambi i vettori tangenti sono ruotati dalla $f$ di uno stesso $\theta$ e l'angolo compreso è invariato. \qedhere
+\end{dimo}
+
+\begin{esempio}
+\begin{itemize}[label=$\cdot$]
+\item $f(z)=a+bz$ è una {\bfseries similitudine}
+\item $f(z)=\dfrac{R^2}{\overline{z}}$ è ``un' inversione rispetto al cerchio di raggio $R$'', manda la famiglia di cerchi e rette in se stessa.
+\end{itemize}
+\end{esempio}
+
+\begin{proposizione}
+Una mappa $z\mapsto f(z)$ è conforme se e solo se $f$ è olomorfa o antiolomorfa.
+\end{proposizione}
+
+\begin{teorema}[Gourat]
+Se $f:D\rightarrow\mathbb{C}$ è olomorfa in $z\in D$ allora $f'(z)$ è continua.
+\end{teorema}
+\begin{corollario}
+$f$ è olomorfa in $D$ $\iff$ $\vec{f}$ è $C^1$ e soddisfa le CCR.
+\end{corollario}
+
+\section{Integrali curvilinei di funzioni complesse}
+
+Diamo alcune definizioni già note sulle curve
+
+\begin{definizione}
+Una curva $[a,b]\rightarrow\mathbb{C}$ complessa $z(s)=x(s)+iy(s)$ si dice
+\begin{itemize}
+\item $C^1$ a tratti se $x(s)$ e $y(s)$ sono $C^1$.
+\item semplice se $z(s_1)\neq z(s_2)$ per $ s_1\neq s_2$ esclusi gli estremi.
+\item chiusa se $z(a)=z(b)$.
+\end{itemize}
+La curva inversa di $\gamma(s):=z(s)$ è $-\gamma:{-b,-a}\rightarrow\mathbb{C}$ con $z(s)=z^I(-s)$
+\end{definizione}
+
+Da qui in avanti considereremo soltanto curve $C^1$ a tratti e semplici.
+
+L'integrale curvilineo di una funzione complessa di variabile complessa $f:D\rightarrow\mathbb{C}$ lungo una curva $\gamma\subset D$ è
+\begin{align*}
+\int_\gamma f(z)dz &= \int_a^b f(z(s))z'(s) ds= \int_a^b [u(z(s) +iv(z(s))] \cdot [x'(s)+y'(s)] ds =\\
+&=\int_a^b \left[ u(z(s)) x'(s) -v(z(s))y'(s) \right] ds + i\int_a^b \left[u(z(s))y'(s)+v(z(s))x'(s) \right] ds
+\end{align*}
+
+e quindi definendo le due forme differenziali
+\[
+\phi_1=udx-vdy \qquad \phi_2=udy+vdx
+\]
+l'integrale è
+\[
+\int_\gamma f dx = \int_\gamma \phi_1 +i\int_\gamma \phi_2
+\]
+
+L'integrale è indipendente dalla parametrizzazione di $\gamma$, per $z(s)\rightarrow \tilde{z}(s)=z(\alpha(s))$ si avrà $z'(s)ds\rightarrow \tilde{z}'(s)ds=\dfrac{d}{ds} z(\alpha(s)) \,ds=\dfrac{dz}{d\alpha}\dfrac{d\alpha}{ds}ds=dz$
+
+Ricordiamo inoltre che:\begin{itemize}[label=$\cdot$]
+\item $\int_{-\gamma}f dz=-\int_\gamma f dz$
+\item $\int_{\gamma_1+\gamma_2}fdz=\int_{\gamma_1}fdz+\int_{\gamma_2}fdz$
+\item {\bfseries Disuguaglianza di Darboux} 
+\[
+\left| \int_\gamma f(z) dz \right|\leq \left| f(z)\right| |dz| \leq \max_{z\in\gamma}{|f|} \cdot L(\gamma)
+\]
+\end{itemize}
+
+\subsection{Teorema di Cauchy}
+
+Per una curva chiusa $\gamma\subset D$ semplice vale il \textit{teorema della curva di Jordan}
+Il \textit{teorema della curva di Jordan} dice che $\mathbb{R}^2\setminus\gamma$ consiste di due insiemi aperti connessi: uno interno a $\gamma$, che chiameremo $S$ nel seguito, limitato  e uno esterno, che chiamiamo $E$, illimitato. Inoltre $\partial S =\gamma=\partial E$ e $S$ sarà contraibile.
+
+L'orientazione canonica di una $\gamma$ chiusa semplice sarà quella antioraria.
+
+\begin{definizione}
+Una curva chiusa $\gamma\subset D$ si dice contraibile in $D$ (o nullomotopa in $D$) se può essere deformata con continuità in $D$ ad un punto di $D$.
+\end{definizione}
+Questo equivale a dire che ''l'interno'' di una curva contraibile in $D$ è tutto contenuto in $D$, senza buchi.
+
+
+Un aperto $D$ si dice semplicemente connesso se è connesso e se ogni curva chiusa $\gamma\subset D$ è contraibile in $D$.
+\par
+Semplicemente connesso e contraibile sono la stessa cosa in $\mathbb{R}^2$ ma non sono proprietà diverse in dimensione maggiore.
+\begin{definizione}
+Una 1-forma $\phi=\phi^x dx + \phi^y dy$ si dice \begin{enumerate}[i.]\item chiusa se $\partial_x \phi^y=\partial_y\phi^x$
+\item esatta se $\phi=d\Lambda$ per una qualche $\Lambda:\mathbb{R}^2\rightarrow\mathbb{R}$ differenziabile. 
+\end{enumerate}
+\end{definizione}
+Gli integrali delle forme esatte lungo una curva per la definizione di curva esatta dipendono solo dagli estremi della curva e quindi l'integrale lungo una curva chiusa di una 1-forma esatta è sempre nullo.
+
+Una 1-forma esatta e $C^1$ sarà anche chiusa per il teorema di Schwarz.
+\begin{teorema}[Teorema di Cauchy]
+Sia $f:D\rightarrow\mathbb{C}$ olomorfa e $\gamma$ chiusa contraibile in $D$. Allora
+\[
+\oint_\gamma f(z) dz =0
+\]
+\end{teorema}
+\begin{dimo}
+Per 
+\[
+\int_\gamma f dz = \int_\gamma \phi_1 + i\int_\gamma \phi_2 \qquad \phi_1 = u dx - vdy\quad\phi_2=udy+vdx
+\]
+le $\phi_{1,2}$ sono chiuse se e solo se $\vec{f}$ rispetta le CCR.
+Quindi se $f$ è olomorfa $\vec{f}$ è $C^1$ e sono verificate le CCR. Inoltre 
+$\gamma=\partial S$ con $S$ contraibile quindi $\exists \hat{S}\subset D$ contraibile con $\gamma\subset \hat{S}$.
+Per il \textit{Lemma di Poincarè} ogni 1-forma $C^2$ chiusa in $D$ contraibile è anche esatta. 
+Quindi $\phi_{1,2}$ sono esatte e l'integrale è nullo. \qedhere
+\end{dimo}
+\begin{corollario}
+Se una $\gamma=\gamma_1-\gamma_2$ è contraibile in $D\subset\mathbb{C}$ e $f:D\rightarrow\mathbb{C}$ è olomorfa allora
+\[
+\int_{\gamma_1} f(z) dz = \int_{\gamma_2} f(z) dz
+\]
+\end{corollario}
+Quindi per calcolare l'integrale lungo una curva di una funzione olomorfa potremo deformare a piacere il cammino di integrazione nel dominio di olomorfia con sicurezza di ottenere lo stesso risultato.
+
+\begin{corollario}
+Sia $f$ olomorfa in $D$ e siano $\gamma_{1,2}\subset D$ due curve chiuse in $D$ tali che $\gamma_1=\partial S_1$ e $\gamma_2=\partial S_2$ con $S_2\subset S_1$\footnotemark. Allora se $S_1\setminus S_2\subset D$ 
+\[
+\oint_{\gamma_1} f(z)dz = \oint_{\gamma_2} f(z) dz
+\] 
+\end{corollario}
+\footnotetext{Questo significa che potrebbero esserci punti di non olomorfia all'interno di $S_2$ e che quindi non si può applicare il teorema di Cauchy}
+\begin{dimo}
+$f$ è olomorfa in $A=S_1\setminus S_2$ che che contraibile e quindi $\partial A=\gamma_1+\Gamma-\gamma_2-\Gamma:=\gamma$ è una curva chiusa contraibili in $D$. Da questo segue che $\oint_\gamma f(z)dz=0=\oint_{\gamma_1}f\,dz-\oint_{\gamma_2}f\,dz=0$ \qedhere
+\end{dimo}
+
+\begin{esempio}
+Per $f(z)=(z-a)^n$ con $n\in\mathbb{Z}$ $f$ è olomorfa in $\mathbb{C}\setminus\{a\}$ per ogni $n$. Calcoliamo $\oint_{\gamma}f(z)\,dz$. \begin{enumerate}[i.]
+\item Se $\gamma$ non circonda $a$ dal teorema di Cauchy $\oint_{\gamma}f(z)\,dz=0$
+\item Se $\gamma$ circonda $a$ (una sola volta) possiamo considerare la curva equivalente in $\mathbb{C}\setminus\{a\}$ data da $C_R(a)$ in cui $z=a+Re^{i\theta}$. Allora
+\[
+\oint_{C_R(a)}(z-a)^n \, dz= \oint_0^{2\pi} R^n e^{in\theta} iRe^{i\theta} d\theta=\begin{cases} \int_0^{2\pi} R^{n+1}i e^{i\theta(n+1)} d\theta=0 & n\neq -1 \\ \int_0^{2\pi} i d\theta =2\pi i & n=-1 \end{cases}
+\]
+\end{enumerate}
+\end{esempio}
+
+\subsection{Formula fondamentale del calcolo integrale}
+
+\begin{teorema}[Teorema fondamentale del calcolo]
+Data una funzione $f$ olomorfa in $D$ contraibile e uno $z_0\in D$ esiste un'unica funzione olomorfa $F$ tale che $F'(z)=f(z)$ e questa è
+\[
+F(z)-F(z_0)=\int_{\underset{\gamma}{z_0}}^z f(w) \, dw
+\]
+con $\gamma$ una curva arbitraria in $D$.
+\end{teorema}
+
+\begin{dimo}
+$f(z) \,dz=\phi_1+i\phi_2$ dove $\begin{cases} \phi_1=udx-vdy \\ \phi_2=udy-vdx\end{cases}$ sono forme di classe $C^1$. 
+L'olomorfia di $f$ implica che $\phi_1$ e $\phi_2$ siano forme chiuse in $D$ contraibile e quindi forme esatte
+\[
+\exists U,V:D\rightarrow\mathbb{C} : \phi_1=dU \quad \phi_2=dV
+\]
+Sia ora $F=U+iV$. Allora dato $f$ è contianua e che $\partial_x U=u=\partial_y V$ e $ \partial_x V=v=-\partial_y U$ $F$ è olomorfa in $D$.
+
+Dalla \eqref{eqDerivataComplessaEsplicita} troviamo $F'=\partial_x F= u+iv=f$ e infine 
+
+\[
+\int_{z_0,\gamma}^z f\, dz=\int_a^b F'(z(s)) \dfrac{dz}{ds} ds = \int_a^b \dfrac{d}{ds} F(z(s))ds=F(z)-F(z_0) \qedhere
+\]
+
+\end{dimo}
+
+
+
+
+\subsection{Formula di Cauchy}
+
+Chiameremo $L^p(\mathbb{R}^D$ l'insieme $\{f:\mathbb{R}^D\rightarrow\mathbb{C}:\int_{\mathbb{R}^D} |f(\vec{x})|^p d^D x<\infty\}$.
+
+Ricordiamo il teorema della convergenza dominata: per una successione $f_n(\vec{x})\in L^1$ $\forall n$ tale che esista il limite puntuale $\lim_{n\rightarrow\infty}f_n(\vec{x})=f(\vec{x})$ quasi ovunque e che esista una $g(\vec{x})\in L^1$ tale che $|f(\vec{x})|\leq g(\vec{x})$ $\forall n$ allora $f(\vec{x})\in L^1$ e ``posso portare il limite nell'intgrale'' cioè \[ \lim_{n}\int f_{n}d^D x=\int \lim_n f_n d^Dx = \int f d^D x\]  
+
+
+
+\begin{teorema}[Formula di Cauchy]
+Sia $f:D\rightarrow\mathbb{C}$ olomorfa in $D$ e $\gamma\subset D$ contraibile in $D$ e chiusa con $\gamma=\partial S$. Allora
+\begin{equation}
+\dfrac{1}{2\pi i}\oint_\gamma \dfrac{f(w)}{w-z}\, dw = \begin{cases} f(z) & \text{se } z\in S \\ 0 & z\not\in S \end{cases}
+\end{equation}
+\end{teorema}
+La $\dfrac{f(w)}{w-z}$ è olomorfa in $D\setminus\{z\}$ quindi se $z\in S$ $\gamma$ non è contraibile nel suo dominio di olomorfia.
+\begin{dimo}
+Ovviamente se $z\not\in S$ la funzione integranda è olomorfa in $S$, $\gamma$ è contraibile nel dominio di olomorfia e per il teorema di Cauchy l'integrale è nullo.
+
+
+Sia $z\in S$. $\gamma$ è equivalente in $D$ ad un circonferenza centrata in $z$ di raggio $R$ sufficientemente piccolo da essere contenuta in $S$.
+\begin{align*}
+\oint_\gamma \dfrac{f(w)}{w-z} dw&=\oint_{C_R} \dfrac{f(w)}{w-z} dw=\oint_{C_R} \dfrac{f(w)-f(z)}{w-z} dw+\oint_{C_R} \dfrac{f(z)}{w-z} dw=\\
+&= \int_{0}^{2\pi} \dfrac{f(w)-f(z)}{Re^{i\theta}} Rie^{i\theta}\,d\theta+f(z)2\pi i=\int_{0}^{2\pi} \left(f(w)-f(z)\right) i\,d\theta + f(z)2\pi i
+\end{align*}
+Queste uguaglianze sono indipendenti da $R$ a patto che sia abbastanza piccolo quindi posso anche prenderle al limite $R\rightarrow0$. Vediamo che
+\[
+\left| \oint_{C_R} \dfrac{f(w)}{w-z} dw \right| = \int_{0}^{2\pi} \left|f(w)-f(z)\right| \,d\theta \leq  \sup_{w\in C_R}\left| f(w)-f(z) \right| 2\pi \underset{R\rightarrow 0}{\longrightarrow} 0
+\]
+quindi 
+\[
+\oint_\gamma \dfrac{f(w)}{w-z} dw = 2\pi i f(z) \qedhere
+\]
+\end{dimo}
+
+\begin{corollario}
+Una funzione olomorfa in $D\subset\mathbb{C}$ ammette derivate di ogni ordine in $D$. Se $\gamma$ è chiusa e contraibile in $D$ contente $z$ allora
+\[
+f^{(n)}(z)=\dfrac{n!}{2\pi i} \oint_\gamma \dfrac{f(w)}{(w-z)^{n+1}} \, dw
+\]
+\end{corollario}
+\begin{dimo}
+
+\end{dimo}
+
+\begin{teorema}[Teorema di Morera]
+Per $f:D\rightarrow\mathbb{C}$ continua con $\oint_\gamma f(z) dz =0 $ $ \forall \gamma\subset D$ contraibile in $D$ . Allora $f$ è olomorfa in $D$.
+\end{teorema}
+\begin{dimo}
+\end{dimo}
+
+\section{Funzioni armoniche}
+\begin{definizione}
+Una funzione $\phi:\mathbb{R}^2\rightarrow\mathbb{R}$ di classe $C^1$ si dice armonica se soddisfa
+\[
+\nabla^2\phi=\left( \dfrac{\partial^2}{\partial x^2} + \dfrac{\partial^2}{\partial y^2} \right) \phi =0
+\]
+\end{definizione}
+Ancora usando la biiezione tra $\mathbb{R}^2$ e $\mathbb{C}$ vediamo che una funzione armonica così definita equivale ad una funzione armonica complessa.
+\begin{proposizione}
+La più generale funzione armonica complessa è somma di una funzione olomorfa e di una funzione antiolomorfa
+\[
+\phi=F(z)+G(\overline{z})
+\]
+\end{proposizione}
+\begin{dimo}
+\end{dimo}
+
+Da questo segue che le funzioni armoniche sono $C^\infty$ e che per $f=u+iv$ olomorfa $u$ e $v$ sono sempre armoniche.
+
+\section{Teorema di Liouville}
+\begin{teorema}[Teorema della media]
+Sia $f:D\rightarrow\mathbb{C}$ olomorfa e $B\subset D$ un disco centrato in $z$ di raggio $R$ con $\gamma=\partial B$. Allora $f(z)$ è la media di $f$ sulla $\gamma$ cioè
+\[
+f(z) = \dfrac{1}{2\pi}\int_0^{2\pi} f(z+Re^{i\theta}) d\theta 
+\]
+\end{teorema}
+\begin{dimo}
+Dalla formula di Cauchy \[ f(z)=\dfrac{1}{2\pi i} \oint_{\gamma} \dfrac{f(w)}{w-z}\,dw=\dfrac{1}{2\pi i} \int_0^{2\pi} \dfrac{f(z+Re^{i\theta})}{Re^{i\theta}}Rie^{i\theta} \,d\theta \qedhere \]
+\end{dimo}
+
+\begin{teorema}[Principio del massimo modulo]
+Sia $f:D\rightarrow\mathbb{C}$ olomorfa su $D$ aperto. Se $f$ non è costante in $D$ allora non esiste nessun massimo relativo di $|f|$ in $D$ ovvero nessun $z_m\in D$ tc $|f(z)|\leq|f(z_m)|$ $\forall z in I_{z_0}$. 
+\end{teorema}
+\begin{dimo}
+Sia per assurdo $|f(z)|\leq|f(z_0)|$ $\forall |z-z_0|<R$. Sia poi $r<R$ e $f(z_0)=\dfrac{1}{2\pi} \int_0^{2\pi} f(z_0+re^{i\theta}) s\theta$.
+Allora \begin{align*}
+|f(z_0)|\leq\int_0^{2\pi} |f(z_0+re^{i\theta})|d\theta\leq|f(z_0)|&\implies |f(z_0)|=\int_0^{2\pi} |f(z_0+re^{i\theta})|d\theta \\ &\implies \int_0^{2\pi} \left[ |f(z_0)|-|f(z_0+re^{i\theta})| \right] \, d\theta=0 \quad \forall r<R
+\end{align*}
+Ma quindi $|f(z)|=|f(z_0)|$ $\forall |z-z_0|<R$ che è assurdo, quindi $f$ non ha massimo assoluto in $D$.
+
+Se la funzione non può avere massimo assoluto in un qualunque aperto in cui è olomorfa non potrà avere neanche massimi relativi dato che un massimo relativo è assoluto in un intorno aperto sufficientemente piccolo. \qedhere
+\end{dimo}
+
+\begin{corollario}
+Sia $f$ è olomorfa in $D$ e continua in $\overline{D}$. Allora se $f$ non è costante in $D$ il massimo di $|f(z)|$ è sul bordo e 
+\[
+|f(z)|<M \quad \forall z\in  D
+\]
+\end{corollario}
+
+Se $f(z)\neq 0$ $\forall z\in D$ la sua reciproca sarà olomorfa in $D$ e potremo applicare ad essa il principio del massimo modulo, quindi se $f$ non si annulla anche i suoi minimi assoluti saranno sulla frontiera.
+
+\begin{definizione} Una $f:\mathbb{C}\rightarrow\mathbb{C}$ si dice intera se è olomorfa su tutto $\mathbb{C}$
+\end{definizione}
+
+\begin{teorema}[Teorema di Liouville]
+Data $f(z)$ una funzione intera che, per $a\geq0$ $b> 0$ e $n\in\mathbb{N}$ , sia $f(z)\leq a|z|^n+b$ $\forall z$. Allora $f(z)$ è un polinomio di grado al più $n$.
+\end{teorema}
+\begin{dimo}
+Con la formula per le derivate dal corollario alla formula di Cauchy
+\[
+f^{(n+1)}(z)=\dfrac{(n+1)!}{2\pi i} \oint_{C_R} \dfrac{f(w)}{(w-z)^{n+2}} dw
+\]
+dove $C_R$ è un cerchio di raggio $R$ qualsiasi (perchè $f$ è intera) e quindi $w=z+Re^{i\theta}$ e $w-z=Re^{i\theta}$. Quindi
+\begin{align*}
+0 \leq \left| f^{(n+1)}(z)\right| & < \left| \dfrac{(n+1)!}{2\pi i} \right| \oint_{C_R} \left|\dfrac{f(w)}{(w-z)^{n+2}} \right| dw = \dfrac{(n+1)!}{2\pi i}\int_0^{2\pi} \dfrac{\left|f(w)\right|}{\left|Re^{i\theta}\right|^{n+2}} \left| iRe^{i\theta} \right| d\theta = \\
+& \leq \dfrac{(n+1)!}{2\pi i}\int_0^{2\pi} \dfrac{\left|f(w)\right|}{R^{n+1}} d\theta \leq  
+\dfrac{(n+1)!}{2R\pi i}\int_0^{2\pi} \dfrac{a \left|w \right|^n +b}{R^{n}} d\theta \leq \\ & \leq \dfrac{(n+1)!}{2R\pi i}\int_0^{2\pi} \dfrac{a \left|z+ R \right|^n +b}{R^{n}} d\theta  \underset{R\rightarrow \infty}{\longrightarrow} 0
+\end{align*}
+e $|f^{(n+1)}(z)|=0\implies f^{(n+1)}(z)=0$ e quini $f(z)$ è un polinomio di grado $\leq n$. \qedhere
+\end{dimo}
+
+In particolare se si trova $f(z)\leq a$ $\forall z$ allora $f(z)$ sarà una costante in $\mathbb{C}$.
+
+In realtà nella dimostrazione di questo teorema usiamo $f(z)<a|z|^n+b$ per $|z|>R$ con $R$ fissato, per funzioni intere però richiedere che la disuguaglianza valga in un intorno di infinito o in tutto $\mathbb{C}$ è uguale per il principio del massimo.
+
+\begin{teorema}[Teorema fondamentale dell'algebra]
+Un polinomio $P_n(z)$ di ordine $n$ ha almeno $1$ zero $a\in\mathbb{C}$ 
+\[
+P_N(z)=(z-a)G_{N-1}(z) \qquad G_{N-1}(z)\text{ è un polinomio di ordine } N-1
+\]
+\end{teorema}
+\begin{dimo}
+Sia per assurdo $P_N(z)\neq 0$ in ogni $z\in\mathbb{C}$. Allora la sua reciproca $f(z)=\dfrac{1}{P_N(z)}$ è intera.
+Inoltre chiaramente $f(z)\underset{|z|\rightarrow \infty}{\longrightarrow} 0$ quindi $|f(z)|<M$ in tutto un intorno $|z|>R$ per un qualche $R$ fissato. Ma allora $f(z)$ dovrebbe essere costante per il teorema di Liouville, che è assurdo.
+Quindi $P_N(z)$ ha almeno uno zero.
+\end{dimo}
+\begin{corollario}
+Ogni polinomio $P_N(z)$ di ordine $N$ ha $N$ radici complesse 
+\[
+P_N(z)=k (z-a_1) \dots (z-a_N)
+\]
+\end{corollario}
+\begin{dimo}
+$P_N=c_N z^N +\dots + c_1 z + c_0$ ha almeno uno zero $a_1\in\mathbb{C}$ e $z=(z-a_1)+a_1$ quindi
+\begin{align*}
+P_N(z) &=c_N [(z-a_1)+a_1]^N +c_{N-1} [(z-a_1)+a_1]^{N-1}+\dots + c_1 [(z-a_1)+a_1] + c_0 \\ &= C_N (z-a_1)^N + \tilde{c}_{N_1} (z-a_1)^{N-1} + \dots \tilde{c}_0
+\end{align*}
+con $P_N(a_1)=0 \implies \tilde{c}_0=0$. Possiamo raccogliere  $C_N(z-a_1)$ ottenendo
+\begin{align*}
+P_N(z) &= C_N (z-a_1) \left(d_n (z-a_1)^N + d_{N-1} (z-a_1)^{N-1} + \dots d_1 \right) = \\ & = C_N (z-a_1) \left(\tilde{d}_{N-1} z^{N-1} + \tilde{d}
+_{N-2} z^{N-2} + \dots \tilde{d}_0 \right)= c_N (z-a_1) G_{N-1}(z)
+\end{align*}
+dove $G_{N-1}$ è un polinomio di grado $N-1$ che avrà uno zero in $a_2$. Posso quindi ripetere il procedimento altre $N-1$ trovando
+\[
+P_N(z)=k (z-a_1)(z-a_2)\dots (z-a_N) \qedhere
+\]
+\end{dimo}
+\section{Rappresentazione per serie}
+
+\begin{definizione}
+Sia $\{f_n(z)\}$ una successione di funzioni $D\rightarrow\mathbb{C}$\begin{itemize}[label=$\cdot$]
+\item $f_n$ converge puntualmente ad una $f:D\rightarrow\mathbb{C}$ su $D$ se $\forall z\in D$ $\lim_{n\rightarrow\infty}|f_n(z)-f(z)|=0$
+\item $f_n$ converge uniformamente ad una $f:D\rightarrow\mathbb{C}$ su $D$ se 
+\[
+\forall \epsilon>0 \> \exists N : \sup_{z\in D} |f_n(z)-f(z)| <\epsilon \quad \forall n>N
+\]
+\item Si dice che $f_n$ è una successione uniformemente di Cauchy in $D$ se
+\[
+\forall \epsilon>0 \>\exists N : \sup_{z\in D}|f_n(z)-f_m(z)|<\epsilon \quad \forall n,m>N
+\]
+\end{itemize}
+\end{definizione}
+
+Ricordiamo dei risultati già noti in generale nel contesto delle funzioni complesse di variabile complessa.
+
+\begin{teorema} Sia $f_n:D\rightarrow\mathbb{C}$ una successione di funzioni con $D\subseteq\mathbb{C}$\begin{itemize}[label=$\cdot$]
+\item  $f_n$ è uniformemente di Cauchy in $D$ se e solo se è uniformemente convergente in $D$.
+\item Se le $f_n$ sono continue uniformemente convergenti in $D$ a $f$. Allora $f$ è continua in $D$.
+\item Se le $f_n$ convergono uniformemente a una $f$ in $A$ e $\int_A f_n<\infty$ allora $lim_n \int_A f_n = \int_A \lim_n f_n =\int_A f$. In particolare questo vale anche per $A:=\gamma$ una curva.
+\end{itemize}
+\end{teorema}
+
+\begin{definizione}Data una successione di funzioni $f_n$ consideriamo la serie $\sum_{n}f_n$ :
+\begin{itemize}[i.]
+\item Si dice che la serie $\sum_{n=0}^\infty f_n(z)$ converge ad una funzione $F(z)$, puntualmente o uniformemente, se la successione delle $s_n(z)=\sum_{m=0}^n f_m(z)$ converge a $F(z)$, rispettivamente puntualmente o uniformemente.
+\item Si dice che la serie $\sum_{n=0}^\infty f_n(z)$ è assolutamente convergente, puntualmente o uniformemente, se $\sum_{n=0}^\infty |f_n(z)|$ converge, puntualmente o uniformemente. In tal caso anche $\sum_n f_n$ è convergente.
+\end{itemize}
+\end{definizione}
+
+\begin{teorema}[Teorema di Weierstrass]
+Sia $f_n:A\rightarrow\mathbb{C}$ una successione di funzioni olomorfe in $A$ compatto e continue su $A$ e $\partial A=\gamma$ dove $\gamma$ è $C^1$ a tratti. Sia inoltre $\sum_n f_n$ convergente uniformemente su $R$. Allora:\begin{enumerate}[i.]
+\item $\sum_n f_n$ converge uniformemte su $A$
+\item $f=\sum_n^\infty f_n$ è olomorfa all'interno di $A$
+\item $f^{(k)}(z)=\sum_n^\infty f_n^{(k)} (z)$ $\forall k\geq 0$
+\end{enumerate}
+\end{teorema}
+
+\begin{dimo}~\begin{enumerate}[i.] 
+\item Per $n,m>N$ dato che $\sum_n f_n$ è di Cauchy si ha \[|s_n(z)-s_m(z)|_{z\in A}=\left|\sum_{p=m}^n f_p(z)\right|_{z\in A}\overset{\text{max. modulo}}{\leq} \left|\sum_{p=m}^n f_p(z)\right|_{z_0\in \gamma}<\epsilon\]
+
+Quindi $s_n(z)$ è uniformemente di Cauchy in $A$ e dunque è uniformemente convergente in $A$ e $f$ è continua.
+
+\item Sia $\Gamma$ contraibile all'interno di $A$, allora $\oint_\Gamma f\, dz=\oint_\Gamma\sum_n^\infty f_n \, dz=\sum_m^\infty \oint_{\Gamma} f_n\,dz=0$ perchè le $f_n$ sono olomorfe, quindi per il teorema di Morera $f$ è olomorfa in $A$.
+
+\item Sia $z$  un punto interno ad $A$ e $\Gamma$ un cerchio centrato in $z$ di raggio $R$ sufficentemente piccolo da essere contenuto in $A$. Allora
+\[g_n(w):=\dfrac{f_n(w)}{(w-z)^k}\overunderset{\text{unif.}}{w\in\Gamma}{\longrightarrow}\dfrac{f(w)}{(w-z)^k}
+\]
+quindi dall'espressione per le derivate dalla formula di Cauchy troviamo
+\[
+f^{(k)}(z)=\dfrac{k!}{2\pi i} \oint_{\Gamma}\dfrac{f(w)}{(w-z)^{k+1}}\, dw =\overset{\text{conv. unif.}}{=}\sum_{n=0}^\infty \dfrac{k!}{2\pi i} \oint_{\Gamma} \dfrac{f_n(w)}{(w-z)^{k+1}}\,dw=\sum_{n=0}^\infty f_n^{(k)}(z) \quad \text{puntualmente} \qedhere
+\]
+\end{enumerate}
+\end{dimo}
+
+\subsection{Serie di potenze}
+
+Ricordiamo il già noto criterio di Weierstrass: se in un disco si ha $\sup_{|w|<\rho} |c_n w^n|\leq a_n$ con $\sum_n^\infty a_n<\infty$ allora la serie $\sum_n^\infty c_n w^n$ converge uniformemente nel disco.
+
+Ovviamente se una serie $\sum_n c_n w^n$ diverge per un $w=b$ allora divergerà anche per ogni $w>b$.
+
+\begin{teorema}[Teorema di Abel]
+Se la serie di potenze $\sum_{n=0}^\infty c_n(z-a)^n$ converge per un $z_0\neq a$ allora converge assolutamente uniformemente su ogni disco chiuso di raggio $|z-a|\leq \rho <|z_0-a|$.
+\end{teorema}
+
+
+\begin{dimo}
+Poniamo $w=z-a$ e  $w_0=z_0-a$, vogliamo mostrare che se $\sum_n^\infty c_nw_0^n$ converge anche $\sum_n^\infty |c_n w^n|$ converge uniformemente su $|w|\leq\rho<|w_0|$.
+
+
+Dalla convergenza di $\sum_n c_n w_0^n$ segue che $\lim_n c_nw_0^n=0$ e $|c_nw_0^n|<M$ $\forall n$ quindi \[\sup_{|w|<\rho}|c_n w^n|=\sup_{|w|<\rho} |c_n w_0^n| |\dfrac{w^n}{w_0^n}| \leq M \dfrac{\rho^n}{|w_0^n|}\] con $\rho<|w_0|$ quindi possiamo applicare il criterio di Weierstrass con $a_n=M \dfrac{\rho^n}{|w_0^n|}$ che dà $\sum_n a_n= M \sum_n \dfrac{\rho^n}{|w_0^n|}< \infty$. \qedhere
+\end{dimo}
+
+Mettendo insieme queste cose definiamo il raggio di convergenza per una serie di potenze:
+
+\begin{definizione}[Raggio di convergenza]
+Per una serie di potenze  $\sum_n c_n (z-a)^n$ chiamiamo $R$ raggio di convergenza se la serie converge uniformemente per $|z-a|\leq R$ e diverge per $|z-a|>R$. 
+Sono possibili come valori del raggio di convergenza anche $0$ e $\infty$.
+\end{definizione}
+
+Dal teorema di Weierstrass segue che $f(z)=\sum_n^\infty c_n (z-a)^n$ è olomorfa per $|z-a|\leq \rho < R$ dove $R$ è il suo raggio di convergenza.
+
+Ricordiamo brevemente $3$ criteri per ricavare il raggio di convergenza:\begin{itemize}[label=$\cdot$]
+\item Criterio del rapporto: Se esiste il limite $\lim_{n}\dfrac{c_n}{c_{n+1}}$ esso coincide col raggio di convergenza
+\item Criterio della radice: Se esiste il limite $\lim_{n}\dfrac{1}{\sqrt[n]{|c_n|}}$ esso coincide col raggio di convergenza
+\item Criterio di Cauchy-Hadamard: Il raggio di convergenza è $R=\dfrac{1}{\limsup_n \sqrt[n]{|c_n|}}$. 
+\end{itemize}
+
+\subsection*{Serie di Taylor}
+
+Sia $f$ olomorfa in $D$ e $\forall z_0\in D$ sia $\eta:=\inf_{w\in \partial D}|w-z_0|$. Allora per ogni $z_0$ la serie di Taylor 
+\begin{equation}
+\sum_{n=0}^\infty \dfrac{1}{n!} f^{(n)}(z_0)\,(z-z_0)^n
+\end{equation}
+converge uniformemente a $f(z)$ su ogni disco chiuso centrato in $z_0$ di raggio $\rho$ con $|z-z_0|\leq \rho<\eta$.
+
+\begin{dimo}
+Grazie al teorema di Abel ci basterà provare la convergenza puntuale in un qualsiasi $z$ con $|z-z_0|\leq r<\eta$. 
+
+Fissiamo $z$ e scegliamo una circonferenza $\gamma$ centrata in $z_0$ di raggio $|z-z_0|<L<\eta$ qualsiasi, allora dalla formula di Cauchy
+\[
+f(z)=\dfrac{1}{2\pi i}\oint_\gamma \dfrac{f(w)}{w-z}\, dw
+\]
+e usando $|w-z_0|=L$ possiamo espandere \[g(w):=\dfrac{f(w)}{w-z}=\dfrac{f(w)}{w-z_0+z_0-z}=\dfrac{f(w)}{w-z_0}\dfrac{1}{1-\dfrac{z-z_0}{w-z_0}}=\dfrac{f(w)}{w-z_0}\sum_{n=0}^\infty \left(\dfrac{z-z_0}{w-z_0}\right)^n\]
+dove nell'ultimo passaggio abbiamo riconosciuto una serie geometrica, uniformemente convergente su $\gamma$ per il criterio di Weierstrass con \[a_n=\dfrac{M}{L}\left(\dfrac{|z-z_0|}{L}\right)^n\]
+quindi possiamo portarne il segno di serie fuori dall'integrale nella formula di Cauchy ottenendo
+
+\begin{align*}
+f(z) &=\dfrac{1}{2\pi i} \oint_\gamma \dfrac{f(w)}{w-z_0} \sum_{n=0}^\infty \left(\dfrac{z-z_0}{w-z_0}\right)^n\, dw =
+\dfrac{1}{2\pi i} \sum_{n=0}^\infty \oint_\gamma \dfrac{f(w)}{w-z_0} \left(\dfrac{z-z_0}{w-z_0}\right)^n\, dw =\\
+&= \dfrac{1}{2\pi i} \sum_n^\infty (z-z_0)^n \oint_\gamma \dfrac{f(w)}{(w-z_0)^{n+1}} = \quad \text{e dal corollario alla formula di Cauchy} \\ 
+&= \sum_n^\infty \dfrac{(z-z_0)^n}{n!}  f^{(n)}(z_0)  \qedhere
+\end{align*}
+
+\end{dimo}
+
+
+\begin{itemize}[label=$\cdot$]
+\item Lo sviluppo in serie $f(z)=\sum_n^\infty  c_n (z-a)^n$ è unico.
+\item Una funzione che ammette sviluppo di Taylor in un intorno di $z=a$ si dice analitica in $a$.
+\item La serie di Taylor di una funzione olomorfa è convergente nel dominio di olomorfia.
+\end{itemize}
+
+\begin{esempio}
+\begin{itemize}[label=$\cdot$]
+\item Lo sviluppo di Mac Laurin di $f(z)=e^z$ è $f(z)=\sum_n^\infty \dfrac{z^n}{n!}$, la funzione è intera e la serie avrà raggio di convergenza $r=\infty$.
+\item La funzione $f(z)=\dfrac{1}{1-z}$ è olomorfa in $\mathbb{C}\setminus\{1\}$ quindi possiamo svilupparla in serie di Mac Laurin con raggio di convergenza $R=1$, lo sviluppo è $f(z)=\sum_n^\infty z^n$.
+\end{itemize}
+\end{esempio}
+
+\subsection*{Serie di Laurent}
+
+Sia $f$ olomorfa in $D$ e in particolare in una corona circolare centrata in $a$ di raggi $0\leq\alpha<\beta\leq\infty$. Allora all'interno della corona	$f(z)$ ammette una rappresentazione in serie
+\begin{equation}
+f(z)=\sum_{n=-\infty}^{+\infty} c_n (z-a)^n  
+\end{equation}
+convergente uniformememente in $\alpha'\leq|z-a|\leq\beta'$ con $\alpha'>\alpha$, $\beta'<\beta$.
+
+La successione dei coefficienti è 
+\begin{equation}
+c_n=\dfrac{1}{2\pi i}\oint_\gamma \dfrac{f(w)}{(w-a)^{n+1}}\,dw
+\end{equation}
+con $\gamma$ una qualsiasi curva chiusa appartenente alla corona circolare.
+
+\begin{osservazione}
+Lo sviluppo di Laurent è esprimibile anche come
+\[
+f(z)=\sum_{n=0}^{+\infty} c_n (z-a)^n + \sum_{n=1}^{+\infty} \dfrac{d_n}{(z-a)^n} \qquad \begin{array}{c} c_n=\dfrac{1}{2\pi i}\oint_\gamma \dfrac{f(w)}{(w-a)^{n+1}} \\ d_n=\dfrac{1}{2\pi i}\oint_\gamma f(w)(w-a)^{n-1}\, dw\end{array}
+\]
+dove sono evidenziati il primo termine di Taylor ed il secondo di Laurent.
+
+Chiaramente se la funzione è olomorfa anche nel disco interno alla corona $\gamma$ sarà contraibile in $D$, che sarà anche il dominio di olomorfia di $f(z)(z-a)^{n+1}$ $\forall n\geq 1$, e tutti i coefficienti del termine di Laurent saranno nulli lasciando solo la serie di Taylor.
+\end{osservazione}
+
+\begin{dimo}
+Possiamo usare la formula di Cauchy con la curva chiusa $\gamma_S=\gamma_\beta+\Gamma-\gamma_\alpha-\Gamma$ completamente contenuta nella corona
+\[
+f(z)=\dfrac{1}{2\pi i}\int_{\gamma_\beta} \dfrac{f(w)}{w-z}dw - \dfrac{1}{2\pi i} \int_{\gamma_\alpha}\dfrac{f(w)}{w-z}dw
+\]
+
+\begin{itemize}
+\item Per $w\in\gamma_\beta$ si ha \[\dfrac{f(w)}{w-a-z+a}=\dfrac{f(w)}{w-a}\sum_{n=0}^{+\infty} \left(\dfrac{z-a}{w-a}\right)^n\] con convergenza uniforme in $|z-a|<\beta$
+\item Per $w\in\gamma_\alpha$ si ha \[\dfrac{f(w)}{z-a-w+a}=\dfrac{f(w)}{z-a}\sum_{n=0}^{+\infty} \left(\dfrac{w-a}{z-a}\right)^n\] con convergenza uniforme in $|z-a|>\alpha$
+\end{itemize}
+
+Quindi per $\alpha<|z-a|<\beta$ entrambe le serie convergono uniformemente e posso portare i segni di sommetoria fuori dagli integrali
+
+\[
+f(z)=
+\sum_{n=0}^{+\infty}\left[\left(\dfrac{1}{2\pi i}\int_{\gamma_\beta} \dfrac{f(w)}{(w-a)^{n+1}}\, dw\right)\,(z-a)^n\right] - 
+\sum_{n=0}^{+\infty}\left[\left(\dfrac{1}{2\pi i}\int_{\gamma_\alpha}f(w) (w-a)^n \,dw\right) \dfrac{1}{(z-a)^{n+1}}\right]
+\]
+
+Le due funzioni integrande sono olomorfe e quindi posso deformare a piacere i cammini di integrazione all'interno della corone, scegliendo $\gamma_\beta\sim\gamma_\alpha\sim\gamma$ si trova
+\[
+f(w)=\sum_{n=0}^{\infty} c_n (z-a)^n + \sum_{n=1}^\infty d_n(z-a)^{n-1} \qquad c_n=\dfrac{1}{2\pi i}\oint-\gamma \dfrac{f(w)}{(w-a)^{n+1}} dw \quad d_n=\dfrac{1}{2\pi i}\oint_\gamma f(w)(w-a)^{n+1} dw
+\]
+che converge uniformemente in $\alpha'\leq|z-a|\leq\beta'$. \qedhere
+\end{dimo}
+
+Lo sviluppo in serie di Laurent è unico.
+
+\begin{esempio}
+\begin{itemize}[label=$\cdot$]
+\item La funzione $f(z)=e^{\frac{1}{z}}$ è olomorfa in $\mathbb{C}\setminus\{0\}$ e quindi si potrà rappresentare in serie di Laurent attorno all'origine con raggi $\alpha=0$ e $\beta=\infty$. Partendo dallo sviluppo di Taylor di $e^w=\sum_{n=0}^\infty \dfrac{z^w}{n!}$ tramite $w=-z$ troviamo $e^{\frac{1}{z}}\sum_{n=0}^\infty=\dfrac{1}{n!\, z^n}=\sum_{n=-\infty}^{+\infty} \dfrac{z^n}{-n!}$, questa serie converge ad $f$ nella corona e quindi è lo sviluppo in serie di Laurent cercato (per l'unicità).
+
+
+\item La funzione $f(z)=\dfrac{1}{z-a}$ è olomorfa in $\mathbb{C}\setminus\{a\}$ quindi attorno ad un generico $b\in\mathbb{C}$ avremo due possibili corone in cui svilupparla: $0\leq|z-b|<|a-b|$ e $|z-b|>|a-b|$. Per semplicità sviluppiamo attorno a $b=0$ (corrisponderebbe a ridefinire $w=z-b$ e $a'=a-b$).
+
+La prima corona ha raggio interno $0$ quindi lo sviluppo si riduce alla serie di Taylor $f(z)=\sum_{n=0}^\infty -\dfrac{1}{a} \dfrac{z^n}{a^n}$.
+
+Nella seconda corona manipoliamo la funzione fino a ricondurci ad una serie geometrica $\dfrac{1}{z-a}=\dfrac{1}{\frac{1}{z}-a}=\dfrac{\frac{1}{z}}{1-\frac{a}{z}}=\dfrac{1}{z}\sum_{n=0}^\infty \dfrac{a^n}{z^n}$ e dato che lo sviluppo di Laurent è unico troviamo $f(z)=\sum_{n=1}^\infty \dfrac{a^{n-1}}{z^n}$.
+\end{itemize}
+\end{esempio}
+
+
+\subsection{Zeri e poli}
+
+\begin{definizione}[Zero]
+Sia $f$ olomorfa in $D$ e $a\in D$. Diciamo che $a$ è uno zero di $f$ di ordine $N$ se $f(a)=0$ e $f(z)=(z-a)^Ng(z)$ con $g$ olomorfa in $D$ e $g(a)\neq0$.\end{definizione}
+
+Chiamiamo semplice uno zero di ordine $N=1$.
+
+\begin{definizione}[Polo]
+Sia $f$ olomorfa in $D\setminus\{a\}$ e scegliamo una corona $0<|z-a|<\beta$ con $\beta$ fissato. Allora diciamo che $a$ è un polo di ordine $N$ se nello sviluppo in serie di Laurent di $f$ nella corona ha $c_n=0$ $\forall n<-N$ e $c_{-N}\neq0$. Allora si ha 
+\[
+f(z)=\dfrac{1}{(z-a)^N}g(z)
+\]
+con g(z) olomorfa in $0\leq|z-a|<\beta$.
+\end{definizione}
+
+Chiaramente se $a$ è un polo di ordine $N$ di $f$ la $(z-a)^N f(z)$ sarà olomorfa in $a$.
+Un polo è una singolarità, vedremo meglio più avanti cosa sono le singolarità di una funzione e le proprietà dei poli.
+
+\subsection{Serie di Laurent della reciproca}
+f
+
+\section{Singolarità isolate}
+
+\begin{definizione}Un punto $a\in\mathbb{C}$ è una singolarità isolata di una $f$ se esiste un intorno $U\subseteq\mathbb{C}$ di $a$ tale che $f$ sia olomorfa su $U\setminus\{a\}$. Un punto $a\in\mathbb{C}$ è una singolarità non isolata se non ne esiste nessun intorno bucato $U\setminus\{a\}$ in cui $f$ si olomorfa.
+\end{definizione}
+
+Una singolarità isolata $z=a$ di una $f(z)$ si dirà:\begin{itemize}[label=$\cdot$]
+\item Eliminabile se $|f(z)|<M$ in un intorno $U\setminus\{a\}$ di $a$. 
+\item Polare se $\lim_{z\rightarrow a}f(z)=\pm\infty$.
+\item Essenziale se non esiste il limite $\lim_{z\rightarrow a}f(z)$.
+\end{itemize}
+
+Dallo sviluppo in serie di Laurent attorno ad $a$ di $f(z)=\sum_{n=\infty}^\infty c_n (z-a)^n$ troviamo che la classificazione delle singolarità isolate si può riscrivere come
+\begin{itemize}[label=$\cdot$]
+\item Eliminabile $\iff$ $c_{-n}=0 \>\> \forall n\in\mathbb{N}\setminus\{0\}$
+\item Polare $\iff$ $\exists N\in\mathbb{N}: c_{-n}=0 \>\> \forall n >N$
+\item Essenziale $\iff$ la rappresentazione ammette infiniti $c_{-n}$ non nulli
+\end{itemize}
+
+\begin{esempio}
+\begin{itemize}[label=$\cdot$]
+\item La funzione $f(z)=\dfrac{1}{z}$ ha un polo isolato nell'origine.
+\item La funzione $f(z)=e^{\frac{1}{z}}$ attorno all'origine ha sviluppo $f(z)=\sum_{n=0}^\infty \dfrac{1}{n!} \dfrac{1}{z^n} = \sum_{n=-\infty}^0 \dfrac{1}{-n!} z^n $
+che ha infiniti termini negativi, quindi $z=0$ dovrebbe essere una singolarità essenziale.\par
+
+Vediamo che \[z=|z|e^{i\theta} \implies |f(z)|=\left|e^{\frac{1}{|z|}e^{-i\theta}}\right| = \left|e^{\frac{1}{|z|}(\cos{\theta}-i\sin{\theta})}\right|=e^{\frac{\cos{\theta}}{|z|}}
+\]
+e quindi il limite dipende da $\theta$ e $\lim_{z\rightarrow o} f(z)$ non esiste.
+\end{itemize}
+\end{esempio}
+
+\begin{teorema}[Picard]
+In ogni intorno bucato di una singolarità essenziale una funzione olomorfa assume tutti i valori in $\mathbb{C}$ tranne al più uno. 
+\end{teorema}
+\begin{esempio}
+Per $f(z)=z$ se consideriamo $f(z_1)=\alpha$ avremo $ \alpha=|\alpha|e^{i\theta}=e^{\frac{1}{z}}$ quindi 
+\[
+z_{\alpha,k}=\dfrac{1}{\ln{|\alpha|}+i(\theta+2\pi k)}\underset{k\rightarrow \infty}{\longrightarrow}0
+\] 
+ma non esiste nessuno zero tale che $e^{\frac{1}{z}}=0$.
+\end{esempio}
+
+%Parte 2-----------------------------------------------------------------
+\cleardoublepage
+\addcontentsline{toc}{part}{Spazi di Hilbert e Distribuzioni}
+\thispagestyle{plain}
+	\begin{center}
+		\vspace{.1\textheight}
+		{\LARGE\scshape \textsc{Seconda parte}\par}
+		\vspace{.1\textheight}
+		\textsc{}\par
+		\vspace{.05\textheight}
+		{\Huge \textsc{Spazi di Hilbert e Distribuzioni}\par}
+		\vfill
+
+\end{center}
+\fancyfoot[C]{\small Spazi di Hilbert e Distribuzioni}
+%------------------------------------------------------------------
+
+
+\section{Topologie}
+
+Per poter definire i concetti di continuità e convergenza su uno spazio generico è necessaria l'introduzione di una topologia, cioè di una base di intorni.
+
+La gerarchia delle tipologie di spazi che andremo ad introdurre è 
+\[
+\text{Topologici}\overset{\text{Distanza}}{\longrightarrow}\text{Metrici}\overset{\text{Struttura lineare}}{\longrightarrow}\text{Metrici lineari}\overset{\text{Norma}}{\longrightarrow}\text{Normati}
+\overset{\text{Prodotto scalare}}{\longrightarrow}\text{Unitari}
+\]
+
+
+La {\bfseries topologia} $T$ di un insieme $M$ è la collezione dei suoi sottoinsiemi aperti, trovare una topologia di $M$ significa distinguere tra insiemi aperti e chiusi in $M$\footnote{In una definizione rigorosa di topologia si specifica anche la presenza dell'insieme vuoto e la sua chiusura per unioni, anche infinite, e intersezioni finite di aperti.}.
+
+Uno spazio topologico è uno spazio dotato di una topologia.
+
+Consideremo da ora solo spazi topologici.
+
+\begin{definizione}
+\begin{enumerate}[i.]
+\item Un intorno aperto di $P\in M$ è un insieme aperto $I\subset T$ tale che $P\in I$.
+\item Sia $\{P_n\}_n$ una successione im $M$. Diciamo che $\lim_n P_n=P\in M$ se per ogni intorno $I$ di $P$ esiste un $N$ tale che $P_n\in I$ $\forall n>N$.
+\item Data una mappa $f:M\rightarrow N$ tra due spazi topologici diciamo che $\lim_{p\rightarrow P_0} f(P)=Q$ se per ogni intorno $I$ di $Q$ esiste un intorno $J$ di $P_0$ tale che $f(J\setminus\{P_0\})\subset I$.
+\item Diciamo che una mappa $f:M\rightarrow N$ è continua in $P_0\in M$ se $\lim_{P\rightarrow P_0} f(P)=f(P_0)$
+\end{enumerate}
+\end{definizione}
+
+\begin{proposizione}
+Data una successione $P_n$ in $M$ tale che $\lim_n P_n=P$ ed una mappa $f:M\rightarrow N$ continua in $P$ si ha $\lim_n f(P_n)=f(P)$.
+\end{proposizione}
+
+\begin{definizione}[Spazio metrico] Un insieme $A$ si dice spazio metrico se è dotato di una mappa $d:A\times A\rightarrow\mathbb{R}$, chiamata distanza, che $\forall u,v,w\in A$ rispetti\begin{itemize}[label=$\cdot$]
+\item $d(u,v)\leq0$ e $d(u,v)=0\iff u=v$
+\item $d(u,v)=d(v,u)$
+\item $d(u,v)\leq d(u,w)+d(w,v)$
+\end{itemize}\end{definizione}
+
+In uno spazio metrico in generale \textbf{non} c'è una struttura lineare, cioè non è uno spazio vettoriale.
+
+\subsection{Basi di intorni}
+
+\begin{definizione}
+Dati uno spazio topologico $M$ ed un suo elemento $P\in M$ una famiglia $B(P)$ di aperti di $M$ si chiama una base di intorni di $P$ se:\begin{itemize}[label=$\cdot$]
+\item Ogni $I\in B(P)$ è un intorno di $P$
+\item Per ogni intorno $J$ di $P$ esiste un $I\in B(P)$ tale che $I\subseteq J$.\end{itemize}
+\end{definizione}
+	
+\begin{esempio}
+In $\mathbb{C}^d$ per un generico $z_0$ la famiglia $B(z_0)=\{z: ||z-z_0||<r \text{ al variare di } r\}$ è una base di intorni 
+\end{esempio}
+
+Possiamo usare le basi di intorni per definire la continuità di mappe tra spazi topologici
+\[f:M\rightarrow N\text{ continua in }x_0\in M \iff \forall\epsilon>0\>\exists\delta>0:|x-x_0|<\delta\implies |f(x)-f(x_0)|<\epsilon \]
+La continuità in termini di basi di intorni e quella in termini di intorni sono equivalenti.
+
+Per un punto di uno spazio topologico esiste sempre una base di intorni.
+
+\begin{proposizione}\label{propBaseIntorni}
+Sia $M$ uno spazio topologico. Per ogni elemento $P\in M$ sia assegnata una base di intorni $B(P)$. Allora:\begin{itemize}[label=$\cdot$]
+\item $B(P)\neq\emptyset$
+\item $\forall J\in B(P)$ si ha $P\in J$
+\item Dati $J_1,J_2\in B(P)$ $\exists J_3\in B(P)$ tale che $J_3\subset J_1 \cap J_2$
+\item Per ogni $Q\in J\in B(P)$ $\exists I\in B(Q)$ tale che $I\subseteq J$
+\end{itemize}
+\end{proposizione}
+
+\begin{teorema}
+Sia $M$ uno spazio topologico e per ogni $P\in M$ sia assegnata una $B(P)$ famiglia di sottoinsiemi di $P\in M$ definita con le proprietà della proposizione \ref{propBaseIntorni}. Allora esiste una e una solo topologia $T$ su $M$ per cui le $B(P)$ sono basi di intorni. Tale topologia è definita da \[A\in T \iff \> \forall P\in A\> \exists J\in B(P) : J\subset A\]
+\end{teorema}
+
+\begin{itemize}[label=$\cdot$]
+\item La topologia è identificata univocamente tramite la scelta di una base di intorni per ogni punto dello spazio.
+\item La continuità può essere definita tramite le basi di intorni.
+\item Per spazi vettoriali è sufficiente scegliere una base di intorni per l'origine per identificare la topologia.
+\item In uno spazio metrico $M$ con distanza $d$ la famiglia dei $I_\epsilon=\{y\in M : d(x,y)<\epsilon\}\subset B(x)$ è una base di intorni.
+\end{itemize}
+
+\section{Spazi di Hilbert}
+
+Ricordiamo alcune definizioni e proprietà note degli spazi vettoriali su campo complesso:
+\begin{itemize}[label=$\cdot$]
+\item Si dice che uno spazio vettoriale $V$ ha dimensione $n\geq1$ se $V$ contiene $n$ vettori linearmente indipendenti e se ogni insieme di $n+1$ vettori di $V$ è linearmente dipendente.
+\item Se uno spazio vettoriale $V$ contiene $n$ vettori linearmente indipendenti per ogni $n\in\mathbb{N}$ si dice che $V$ è $\infty$ dimensionale. 
+\end{itemize}
+
+\begin{definizione}[Spazi Unitari o preHilbertiani]
+Uno spazio vettoriale $V$ su $\mathbb{C}$ si dice unitario se è dotato di un' operazione $V\times V\rightarrow\mathbb{C}$, detta prodotto scalare, che $\forall u,v,w\in V$, $\forall a\in\mathbb{C}$ soddisfi:\begin{itemize}[label=$\cdot$]
+\item $(u,u)\geq 0$ e in particolare $(u,u)=0\iff u=0$
+\item $\overline{(u,v)}=(v,u)$
+\item $(u,av)=a(u,v)$
+\item $(u,v+w)=(u,v)+(u,w)$
+\end{itemize}\end{definizione}
+
+\begin{itemize}[label=$\cdot$]
+\item Due vettori di uno spazio unitario si dicono ortogonali se hanno prodotto scalare nullo.
+\item Se dei vettori $\{v_i\}_{i=1}^n$ di uno spazio unitario sono tutti ortogonali fra loro allora sono un insieme linearmente indipendente.
+\item Uno spazio unitario $V$ è anche uno spazio normato con norma indotta dal prodotto scalare $||v||=\sqrt{(v,v)}$ che gode delle usuali proprietà della norma, tra cui $||u+v||\leq ||u||+||v||$
+\item In ogni spazio unitario vale la disuguaglianza di Schwarz $|(u,v)|\leq ||u||\, ||v||$ per la norma indotta dal prodotto scalare.
+\item La norma indotta rispetta $||u+v||\leq (||u||+||v||)^2$.
+\item Uno spazio unitario $V$ è anche uno spazio metrico con metrica $d(u,v)=||u-v||=\sqrt{(u-v,u-v)}$
+\item Spazi normati e spazi metrici lineari sono vettoriali quindi sarà sufficiente una base di intorni dell'origine per definire una topologia.
+\item In uno spazio normato $V$ la norma $||\cdot||:V\rightarrow\mathbb{C}$ è una mappa continua e in uno spazio unitario $W$ il prodotto scalare $(\cdot,\cdots):W\times W\rightarrow\mathbb{C}$ è una mappa continua.
+\end{itemize}
+
+\begin{dimo}[Dimostrazione della disuguaglianza di Schwarz]
+\[
+0\leq||u-\lambda v||^2=(u-\lambda v,u-\lambda v)=\left| ||u||^2 +|\lambda|^2||v||^2 -\overline{\lambda}(v,u) -\lambda(u,v)  \right|
+\] 
+e per $\lambda:=\dfrac{(u,v)}{||v||^2}$ si ha 
+\[
+||u-\lambda v||=||u||^2 + \dfrac{|(u,v)|^2}{||v||^2}-\dfrac{|(u,v)|^2}{||v||^2}-\dfrac{|(u,v)|^2}{||v||^2}\geq 0
+\]
+quindi $||u||\geq\dfrac{|(u,v)|^2}{||v||^2}$ da cui $||u||^2 \, ||v||^2 \geq |(u,v)|^2$ \qedhere
+\end{dimo}
+
+
+\begin{definizione}[Spazio di Hilbert]
+Uno spazio unitario completo per la norma indotta si dice spazio di Hilbert. 
+
+Indicheremo con $\mathcal{H}$ un generico spazio di Hilbert.
+\end{definizione}
+
+\begin{itemize}[label=$\cdot$]
+\item Uno spazio di Hilbert è anche uno spazio di Banach.
+\item Un qualsiasi spazio unitario finito dimensionale è isomorfo a $\mathbb{C}^n$ ed, essendo $\mathbb{C}^n$ completo, è uno spazio di Hilbert.
+\end{itemize}
+
+\begin{definizione}
+Sia $X$ uno spazio topologico e $S\subset X$. Allora definiamo chiusura di $S$ come 
+\[
+\overline{S}=\{p\in X \text{ tale che ogni intorno di }p\text{ contenga un punto di }S\}
+\]
+\begin{itemize}[label=$\cdot$]
+\item $S\subseteq X$ si dice chiuso se $S=\overline{S}$ 
+\item $S\subseteq X$ si dice denso in $X$ se $\overline{S}=X$
+\end{itemize}
+\end{definizione}
+
+Se $X$ è uno spazio metrico allora la chiusura è anche $\overline{S}=\{p\in X : \exists\{p_n\}_n\subset S \text{ con } \lim_n p_n=p\}$.
+
+\begin{definizione}\begin{itemize}[label=$\cdot$]
+\item Una varietà lineare di uno spazio di Hilbert $\mathcal{H}$ è un suo sottoinsieme $L\subseteq \mathcal{H}$ tale che se $\psi,\chi\in L$ allora per ogni $a,b\in\mathbb{C}$ si ha che $a\psi+b\chi\in L$. In particolare una varietà lineare è uno spazio vettoriale.
+\item Una varietà lineare di uno spazio di Hilbert $\mathcal{H}$ si dice un sottospazio di $\mathcal{H}$ se è chiusa.
+\end{itemize}
+\end{definizione}
+
+\begin{esempio} $C[a,b]$ non è uno spazio di Hilbert perchè non è completo.
+
+ L'insieme $C[a,b]$ è una varietà lineare di $L_2[a,b]$ ma anche se $C[a,b]$ è denso in $L_2[a,b]$ non è chiusa e non è un suo sottospazio.
+
+\end{esempio}
+
+\begin{proposizione}Un sottospazio $S$ di uno spazio di Hilbert è a sua volta uno spazio di Hilbert.
+\end{proposizione}
+
+\subsection*{Teorema del completamento}
+
+Per ogni spazio metrico $X$ esiste uno spazio metrico $Y$ per cui: \begin{itemize}[label=$\cdot$] \item $X\subseteq Y$ \item $Y$ è completo \item $X$ è denso in $Y$ \item Per qualsiasi $p,q\in X$ vale $d_Y(p,q)=d_X(p,q)$\end{itemize}
+
+Il completamento è unico a meno di isometrie.
+
+\begin{esempio}
+Il completamento di $P[a,b]$ e di $C[a,b]$ è $L_2[a,b]$
+\end{esempio}
+ 
+Un qualsiasi spazio vettoriale prehilbertiano $V$ ammetterà dunque un unico completamento $\mathcal{H}$, in cui è denso, che sia uno spazio di Hilbert.
+
+
+
+\subsection{Lo spazio delle successioni quadrato sommabili $l_2$\ }
+
+Chiamiamo $l_2$ lo spazio delle successioni $\{u_n\}_{n}$ in $\mathbb{C}$ quadrato sommabili, cioè 
+
+\[l_2=\left\{ u=\{u_n\}_{n=1}^\infty\,, \> u_n\in\mathbb{C} \> \forall n \> : \> \sum_{n=1}^\infty |u_n|^2<\infty\right\}\]
+
+Per costruzione $l_2$ è uno spazio vettoriale, notiamo in particolare che $u,v\in l_2\implies u+v\in l_2$.
+
+In $l_2$ possiamo definire un prodotto scalare con \begin{equation} (z,w)=\sum_{n=1}^\infty \overline{z}_n\,w_n \end{equation} e questo indurrà una norma \begin{equation} ||z||_{l_2}=\sqrt{\sum_{n=1}^\infty |z_n|^2 }\end{equation}
+
+\begin{dimo}[Dimostriamo che $(u,v)<\infty$]
+Da $|ab|\leq\dfrac{1}{2}(|a|^2+|b|^2)$ abbiamo $|(u,v)|\leq\sum_{j=1}|u_j|\,|v_j| \leq \dfrac{1}{2}\sum_{j=1}(|u_j|^2+|v_j|^2)=\dfrac{1}{2}\left( ||u||^2+||v||^2\right)<\infty$
+\end{dimo}
+
+
+\begin{teorema}$l_2$ è uno spazio di Hilbert\end{teorema}
+\begin{dimo}
+Sia $\{u^a\}_{a=1}$ una successione di elementi in $l_2$, cioè ciascun $u^1,\dots,u^a,\dots$ sia una successione quadrato sommabile $\sum_n ||u^a_n||^2<\infty$, e sia $\{u^a\}_a$ una successione di Cauchy.
+
+Allora per ogni $\epsilon>0$ $\exists N$ tale che $a,b>N$ $\implies$ $||u^a-u^b||_{l_2}<\epsilon$ quindi
+\[
+\sum_{n=1}^\infty \left|u_n^a-u_n^b\right|^2<\epsilon \implies \left|u_n^a-u_n^b\right|<\epsilon \>\forall n \text{ fissato}
+\]
+Quindi per ogni $n$ fissato la successione $\{u_n^a\}_a$ converge per $a\rightarrow\infty$ (è uniformemente di Cauchy).
+
+Sia $\lim_{a\rightarrow\infty}u_n^a=u_n$, da $\forall\epsilon\exists N:$ per $a,b>N \>\sum_n^\infty |u_n^a-u_n^b|^2<\epsilon$ deduciamo che $\sum_n^M |u_n^a-u_n^b|^2<\epsilon^2$ $\forall M$ e prendendo al limite  $\lim_{b\rightarrow\infty}u_n^b=u_n$ si ha 
+\[
+\sum_{n=1}^M \left|u_n^a -u_n\right|^2<\epsilon^2
+\]
+Prendendone il limite per $M\rightarrow\infty$ segue che $||u^a-u||<\epsilon$ e quindi $\lim_{a\rightarrow\infty}u^a=u$.
+
+Dato che $u=\underset{||\,||<\epsilon}{u-u^a}+\underset{u^a\in l_2}{u^a}$ abbiamo che $u\in l_2$.
+
+Quindi ogni successione di Cauchy in $l_2$ converge in $l_2$ quindi $l_2$ è completo ed essendo unitario è uno spazio di Hilbert.\qedhere
+\end{dimo}
+
+\subsection{Gli spazi $L_2$\ }
+
+Consideriamo le funzioni $f:[a,b]\rightarrow\mathbb{C}$ e identifichiamo tutte quelle che differiscono solo in sottoinsiemi trascurabili di $[a,b]$ in classi di equivalenza $f_1(x)=f_2(x)\>\text{q.o.}\implies f_1\sim f_2$.
+
+Definiamo $L_2[a,b]$ l'insieme delle classi di equivalenza delle funzioni quadrato integrabili su $[a,b]$
+\[
+L_2[a,b]=\left\{[f]:\int_a^b |f|^2\,dx<\infty\right\}\qquad\quad [f]=\left\{g:[a,b]\rightarrow\mathbb{C}\text{ tc }g(x)=f(x)\>\text{q.o. in }[a,b]\right\}
+\]
+
+$L_2[a,b]$ è uno spazio vettoriale, infatti 
+\[
+\int_a^b |f+g|^2\,dx=\int_a^b (|f|^2+2|f|\,|g|+|g|^2)\,dx=\int_a^b (|f|^2+|g|^2)\,dx+2(|f|,|g|)<\infty
+\] 
+quindi $f,g\in L_2[a,b]\implies f+g\in L_2[a,b]$.
+
+Su $L_2[a,b]$ possiamo definire un prodotto scalare 
+\begin{equation} 
+(f,g)=\int_a^b \overline{f}(x)g(x)\,dx 
+\end{equation}
+che è ben definito 
+\[
+|(f,g)|\leq\int_a^b |f|\,|g|\,dx\leq\frac{1}{2}\int_a^b (|f|^2+|g|^2)\,dx<\infty
+\]
+e da questo definiamo una norma 
+\begin{equation}
+||f||^2_{L_2}=\int_a^b |f|^2\,dx
+\end{equation}
+
+Quindi $L_2[a,b]$ è uno spazio prehilbertiano.
+
+in modo analogo si definiscono $L_2(\mathbb{R})$ e $L_2(A)$ per $A\subseteq\mathbb{R}$ un qualsiasi sottoinsieme misurabile di $\mathbb{R}$, anche di misura infinita.
+
+\[
+L_2(A)=\left\{[f]:\int_A |f|^2\,dx<\infty\right\}
+\]
+
+\begin{teorema}Gli spazi $L_2(A)$ con $A\subseteq\mathbb{R}^d$ sono completi e quindi di Hilbert\end{teorema}
+
+\begin{osservazione}
+Tutti gli spazi $L_p(A)=\{f:A\rightarrow\mathbb{C} : \int_A |f|^p\,dx<\infty\}$ con $1\leq p<\infty$ sono spazi di Banach con norma $||f||_p=\left(\int_A |f|^p \, dx\right)^{\frac{1}{p}}$.
+
+L'unico $L_p$ che è anche uno spazio di Hilbert però è $L_2$ perchè per gli altri non è ben definito un prodotto scalare.
+
+
+Definiamo inoltre \[L^\infty(A)=\{f:A\rightarrow\mathbb{C} : ||f||_\infty<\infty\}\] dove $||f||_\infty=\sup_{x\in A}|f(x)|$ e notiamo che se $f\in L^p\cap L^\infty$ $\forall p\geq 1$ allora \\$||f||_\infty = \lim_{p\rightarrow\infty} ||f||_p$
+\end{osservazione}
+
+\subsection{Decomposizione in spazi ortogonali}
+
+\begin{definizione}
+Dato un sottoinsieme $S\subset\mathcal{H}$ definiamo il complemento ortogonale 
+\[
+S^\perp=\left\{ \psi\in\mathcal{H} : (\psi,\chi)=0 \> \forall\chi\in S\right\}
+\]
+\end{definizione}
+
+Dalla definizione si ha che $S^\perp$ è una varietà lineare e che è chiuso per la continuità del prodotto scalare $(\cdot,\chi)$. Quindi $S^\perp$ è un sottospazio di $\mathcal{H}$ ed è uno spazio di Hilbert.
+
+\begin{teorema}
+Sia $S$ un sottospazio di $\mathcal{H}$. Allora $\psi_\perp\in S^\perp$ e $\mathcal{H}=S\oplus S^\perp$ e ogni $\psi\in\mathcal{H}$ ammette un'unica decomposizione $\psi=\psi_\parallel+\psi_\perp$ con $\psi_\parallel\in S$. 
+\end{teorema}
+
+\begin{dimo}[Dimostrazione dell'unicità]
+Sia $\psi=\psi_\parallel^1+\psi_\perp^1=\psi_\parallel^2+\psi_\perp^2$ 
+
+Allora $\psi_\parallel^1-\psi_\parallel^2=\psi_\perp^2-\psi_\perp^1$ ma quindi $\left(\psi_\parallel^1-\psi_\parallel^2,\psi_\perp^2-\psi_\perp^1\right)=0=\left(\psi_\perp^2-\psi_\perp^1,\psi_\perp^2-\psi_\perp^1\right)=||\psi_\perp^2-\psi_\perp^1||^2=||\psi_\parallel^1-\psi_\parallel^2||^2=0$ quindi $\psi_\perp^1=\psi_\perp^2$ e $\psi_\parallel^1=\psi_\parallel^2$.\qedhere 
+
+\end{dimo}
+
+Come conseguenza di questo teorema se $S$ è una varietà lineare in $\mathcal{H}$ si ha che\begin{itemize}[label=$\cdot$]\item $\overline{S}^\perp=S^\perp$ \item $\mathcal{H}=\overline{S}\oplus S^\perp$ \item $\left(S^\perp\right)^\perp=\overline{S}$ \item $\overline{S}=\mathcal{H} \iff S^\perp=\emptyset $\end{itemize}
+
+\subsection{Basi ortonormali}
+
+In uno spazio vettoriale finito dimensionale $V$ con $\dim V=N$ una base ortonormale è un insieme $\{e_i\}_{i=1}^N$ con $(e_i,e_j)=\delta_{ij}$ tale che per ogni $v,w\in V$:\begin{itemize}[label=$\cdot$]
+\item $v=\sum_j v_j e_j$ con $v_j=(e_j,v)$
+\item $||v||=\sqrt{\sum_j |v_j|^2}$
+\item $(v,w)=\sum_j \overline{v}_j w_j$
+\end{itemize}
+
+\begin{definizione}Un sistema ortonormale di vettori di uno spazio prehilbertiano $V$ è una collezione $\{x_i\}_i$ di vettori $x_i\in V$ tali che $(x_i,x_j)=\delta_{ij}$.
+\end{definizione}
+
+
+\begin{teorema}[Disuguaglianza di Bessel] Sia $\{x_i\}_i^N$ un sistema ortonormale di uno spazio prehilbertiano $V$. Allora per un $y\in V$ \[\left|\left| y\right|\right|^2\geq\sum_{n=1}^N \left|(y,x_n)\right|^2\]
+\end{teorema}
+
+\begin{dimo} 
+$y=\psi+\phi$ con $\psi=\sum_i^n (x_i,y)x_i$ e $\phi=y-\sum_i^n (x_i,y)x_i$. Allora
+
+\begin{align*} 
+(\psi,\phi)&=\sum_{n=1}^N \overline{(x_n,y)}(x_n,y)-\sum_{n,k=1}^N \overline{(x_n,y)} \left(x_n,(x_k,y)x_k\right)=\\
+&==\sum_{n=1}^N \overline{(x_n,y)}(x_n,y)-\sum_{n,k=1}^N \overline{(x_n,y)} (x_k,y)   \,
+\underset{=\delta_{nk}}{\left(x_n,x_k\right)}
+=0
+\end{align*}
+Quindi
+\begin{align*} 
+||y||^2&= ||\psi||^2+||\phi||^2+2(\psi,\phi)\geq||\psi||^2=\sum_{n=1}^N \left|(y,x_n)\right|^2 \qedhere
+\end{align*}
+\end{dimo}
+
+\begin{definizione}Una base ortonormale di uno spazio di Hilbert $\mathcal{H}$ è un sistema ortonormale $S$ di $\mathcal{H}$ tale che nessun altro sistema ortonormale di $\mathcal{H}$ lo contenga propriamente.\end{definizione}
+
+\begin{teorema}Ogni spazio di Hilbert ammette una base ortonormale\end{teorema}
+
+Omettiamo la dimostrazione di questo teorema, accenniamo soltanto che usa il Lemma di Zorn e segue la stessa idea di quella dell'assioma della scelta.
+
+\begin{lemma}\label{lemmaSistemaBaseDenso}
+Un sistema ortonormale $S=\{e_\alpha\}_{\alpha\in A}$ di $\mathcal{H}$ è una base ortonormale di $\mathcal{H}$ se e solo se l'insieme $M$ di tutte le combinazioni lineari finite di $S$ è denso in $\mathcal{H}$.
+\end{lemma}
+
+\begin{dimo}
+$\overline{M}=\mathcal{H}\implies M^\perp=\emptyset$  quindi non esiste nessun vettore ortogonale a $S$ quindi $S$ è una base.
+
+\end{dimo}
+
+\begin{definizione}Uno spazio di Hilbert $\mathcal{H}$ si dice separabile se ne esiste un sottoinsieme $W$ numerabile e denso in $\mathcal{H}$\end{definizione}
+
+\begin{teorema}Uno spazio di Hilbert è separabile se e solo se ammette una base ortonormale numerabile\end{teorema}
+
+\begin{dimo}~
+
+\begin{itemize} 
+\item Sia $\mathcal{H}$ separabile con $W$ un sottoinsieme numerabile denso $\overline{W}=\mathcal{H}$
+
+Eliminiamo da $W$ i vettori linearmente dipendenti da altri in modo da ottenere un insieme $Z\subseteq W$ numerabile e linearmente indipendente il cui insieme delle combinazioni lineari (appunto $W$) sia denso in $\mathcal{H}$. Allora $Z=\{e_n\}_n^\infty$. Col procedimento di Gram-Schmidt otteniamo poi un altro insieme $S=\{y_n\}_n^\infty$ con $(y_n,y_m)=\delta_{nm}$ il cui insieme delle combinazioni lineari è ancora denso in $\mathcal{H}$. Quindi per il lemma \ref{lemmaSistemaBaseDenso} $S$ è una base.
+\item Se $\mathcal{H}$ ammette una base numerabile allora ne esiste un sottoinsieme numerabile denso, infatti per $y\in\mathcal{H}$ è sufficiente considerare ``l'approssimante'' $y^*=\sum_{j=1}^N c_j^* e_j$ con $c_j$ i numeri razionali che approssimano $(e_j,y)$.\qedhere 
+\end{itemize}
+\end{dimo}
+
+\begin{teorema}
+Sia $\mathcal{H}$ uno spazio di Hilbert separabile e sia $S=\{e_n\}_n^\infty$ una base ortonormale numerabile.
+Allora valgono:\begin{enumerate}[i.]
+\item Ogni elemento di $\mathcal{H}$ ammette l'espansione in serie di Fourier $y=\sum_n^\infty (e_n,y)e_n$ 
+\item \textbf{ L'indentità di Parseval} \[||y||^2=\sum_n^\infty \left|(e_n,y)\right|^2 \qquad \quad(x,y)=\sum_n^\infty \overline{(e_n,x)}(e_n,y)\]
+\item Il \textbf{teorema di Riesz-Fischer} 
+\[ \sum_n^\infty|c_n|^2<\infty \implies \sum_n^\infty c_n e_n\in\mathcal{H}\]
+\end{enumerate}
+\end{teorema}
+
+\begin{dimo}
+
+
+\end{dimo}
+
+Questo ci dice che tutti gli spazi di Hilbert separabili sono isomorfi a $l_2$.
+
+\begin{teorema}
+Tutti gli spazi $L_2(A)$ con $A\subseteq\mathbb{R}^d$ sono separabili.
+\end{teorema}
+
+\begin{esempio}[BasI di $L_2(A)$]
+\begin{itemize}[label=$\cdot$]
+\item Base di Fourier $L_2[0,L]$
+
+\item Base di Legendre $L_2[-1,1]$
+
+\item Base di Hermite $L_2(\mathbb{R})$
+
+\end{itemize}
+\end{esempio}
+
+\section{Funzionali lineari}
+
+Un funzionale è una mappa $V\rightarrow\mathbb{C}$ dove $V$ può essere uno spazio arbitrario qualsiasi.
+
+\begin{esempio}
+Scegliendo $V=C[a,b]$ la mappa $f\mapsto\int_a^b |f(x)\,dx$ è un funzionale.
+\end{esempio}
+
+\begin{definizione}
+Un funzionale lineare su uno spazio vettoriale $U$ è una mappa $F:U\rightarrow\mathbb{C}$ lineare
+\[
+F(au+bv)=aF(u)+bF(v)\qquad\quad\forall u,v\in U\> \forall a,b\in\mathbb{C}
+\]
+\end{definizione}
+
+\begin{esempio}~
+
+Su $\mathbb{C}$ la mappa $F(u)=ku$ con $k\in\mathbb{C}$ fissato è un funzionale lineare.
+
+Su $\mathbb{C}^n$ la mappa $F(u)=(w,u)$ con $w\in\mathbb{c}^n$ fissato è un funzionale lineare.
+\end{esempio}
+
+\begin{definizione}
+Una mappa lineare $F:U\rightarrow V$ con $U,V$ spazi normati si dice limitata se esiste un $M>0$ tale che 
+\[
+\left|\left| F(u)\right|\right|_V\leq M\left|\left|u\right|\right|_U
+\]
+per ogni $u\in U$.
+
+Il più piccolo $M$ per cui vale tale proprietà è chiamato norma di $F$ ed indicato con $||F||$. 
+\end{definizione}
+Chiaramaente la norma di $F$ così definita rispetta
+\begin{equation}
+\left|\left|F\right|\right|=\sup_{u\in U} \dfrac{\left|\left|F(u)\right|\right|_V}{||u||_U}=\sup_{||u||_U=1} \left|\left|F(u)\right|\right|_V
+\end{equation}
+
+
+\begin{teorema}
+Una mappa lineare $F$ tra spazi normati $U,V$ è limitata se e solo se è continua.
+\end{teorema}
+\begin{dimo}~
+\begin{enumerate}[i.]
+\item Sia $F$ limitata. Per mostrare la continuità occorre dimostrare che $\lim_{h\rightarrow0}F(u+h)=F(u)$ con $u,h\in U$, ma $\left|\left|F(u+h)-F(u)\right|\right|=\left|\left|F(h)\right|\right|\leq M ||h||$ e quindi a limite si ha la continuità.
+\item Sia $F$ continua, allora esiste $\Delta>0$ tale che 
+\[
+||h||\leq\Delta \implies \left|\left| F(h) \right|\right| = \left|\left| F(h)-F(0) \right|\right|\leq 1 
+\]
+per $u\in U$ quindi
+\[
+\left|\left| F(u)\right|\right| =\left|\left|F\left(\dfrac{u}{||u||}\Delta\right)\right|\right|\, \dfrac{||u||}{\Delta}
+\]
+ma $\left|\left|\dfrac{u}{||u||}\Delta\right|\right|=||\Delta||$ quindi $\left|\left|F(u)\right|\right|\leq \dfrac{||u||}{\Delta}$ e quindi $F$ è limitato.\qedhere
+\end{enumerate}
+\end{dimo}
+
+ Lo spazio delle mappe lineari e continue tra due $U,V$ normati è a sua volta uno spazio normato con norma $||F||=\sup_{||u||_U=1}||F(u)||_V$, inoltre se $U,V$ sono spazi di Banach anche lo spazio delle mappe lineari continue è uno spazio di Banach.
+
+In particolare se $U$ è uno spazio di Banach e $V=\mathbb{C}$ l'insieme dei funzionali lineari e continui su $U$ è uno spazio di Banach chiamato \textbf{\boldmath spazio duale di $U$} ed indicato con $U^*$.
+La norma su $U^*$ è \begin{equation} ||F||_{U^*}=\sup_{u\in U}\dfrac{|F(u)|}{||u||_U}\end{equation} dove chiaramente $||F(u)||_{\mathbb{C}}=|F(u)|$.
+
+Ora vogliamo individuare lo spazio duale ad un generico spazio di Hilbert $\mathcal{H}$. Per un $w\in\mathcal{H}$ il funzionale lineare $F:\mathcal{H}\rightarrow\mathbb{C}$ definita da $x\mapsto(w,x)$ per un $w\in\mathcal{H}$ fissato è continua e ha norma $||F||_{\mathcal{H}^*}=||w||_{\mathcal{H}}$.
+
+Infatti
+\[
+\left|F(x)\right|=|(w,x)|\leq ||w|| \,||x||=M||x|| \qquad M=||w||
+\]
+
+\begin{teorema}[Teorema di Riesz]
+Per ogni $F\in\mathcal{H}^*$ esiste un unico $w\in\mathcal{H}$ tale che $F(x)=(w,x)$ per ogni $x\in\mathcal{H}$, ovvero $\mathcal{H}^*=\mathcal{H}$.
+\end{teorema}
+
+\begin{dimo}
+
+\end{dimo}
+
+
+\begin{esempio}
+Il funzionale lineare su $L_2[a,b]$ definito da 
+\[
+F(\varphi)=\int_a^b \varphi(x)\,dx \qquad\quad \varphi\in L_2[a,b]
+\]
+è limitato, infatti per $w=1\in L_2[a,b]$ si ha che $F(\varphi)=(w,\varphi)_{L_2[a,b]}$ e quindi \\$||F||_{L_2[a,b]}=||w||_{L_2[a,b]}=\sqrt{b-a}$.
+\end{esempio}
+
+\section{Distribuzioni}
+
+Vogliamo allargare il concetto di ``funzione'' introducendo le distribuzioni:\begin{itemize}
+\item Le distribuzioni ammettono sempre derivata
+\item Le funzioni sono distribuzioni
+\item Le distribuzioni ammettono sempre trasformata di Fourier
+\item Le distribuzioni permettono la risouluzioni delle equazioni differenziali alle derivate parziali
+\end{itemize}
+
+
+
+\subsection{Spazio delle funzioni di test}
+
+Lo spazio delle funzioni di Test di Schwartz è definito da
+\begin{equation}
+S(\mathbb{R})=\left\{\varphi\in C^\infty(\mathbb{R}) : \sup_{x\in\mathbb{R}}\left|x^i D^j \varphi\right|=:||\varphi||_{ij}<\infty \>\forall i,j\in\mathbb{N}\right\}
+\end{equation}
+
+le funzioni di test sono funzioni di classe $C^\infty$ le cui derivate di ogni ordine decrescono ad infinito più velocemente dell'inverso di qualsiasi potenza.
+
+\begin{esempio}~
+\begin{itemize}[label=$\cdot$]
+\item $\dfrac{1}{x^2+1}\not\in S(\mathbb{R})$ perchè $\dfrac{x^3}{x^2+1}\underset{x\rightarrow\infty}{\longrightarrow}\infty$
+\item $e^{-|x|}\not\in S(\mathbb{R})$ perchè non è $C^\infty$
+\item $x^me^{-x^2}\in S(\mathbb{R})$: è di classe $C^\infty$ e a limite $x^{m+n}e^{-x^2}\underset{x\rightarrow\infty}{\longrightarrow}0$ $\forall n$ e per ogni ordine di derivata.
+\end{itemize}
+\end{esempio}
+
+Similmente possiamo definire $S(\mathbb{R}^2)$ con
+\[
+S(\mathbb{R}^2)=\left\{ \varphi:\mathbb{R}^2\rightarrow\mathbb{C} \> \text{ di classe } C^\infty : \sup_{(x,y)\in\mathbb{R}^2}\left|x^my^n\partial_x^i\partial_y^j \varphi(x,y)\right|=:||\varphi||_{\underset{nj}{mi}}<\infty\>\forall m,n,i,j\in\mathbb{N}\right\}
+\]
+
+e allo stesso modo ogni altro $S(\mathbb{R}^d)$.
+
+Lo spazio delle funzioni di test è uno spazio vettoriale infinito dimensionale, in particolare $S(\mathbb{R}^d)\subset L_2(\mathbb{R}^d)$. 
+
+
+$S(\mathbb{R}^d)$ è denso in $L_2(\mathbb{R}^d)$ per la norma di $L_2$ cioè
+\[
+\left.\overline{S\left(\mathbb{R}^d\right)}\right._{||\cdot||_2}=L_2\left(\mathbb{R}^d\right)
+\]
+infatti $L_2(\mathbb{R}^d)$ ammette la base $\{e_n(x)\}_n$ di Hermite con $e_n(x)\in S(\mathbb{R})$.
+
+\begin{definizione}[Topologia di $S$]
+Definiamo la base di intorni $B(0)$ di $\varphi(x)=0$, origine di $S(\mathbb{R})$, come le intersezioni finite 
+degli insiemi 
+\[
+U_{ij,\epsilon}=\left\{\phi\in S(\mathbb{R}) : ||\phi||_{ij}<\epsilon\right\}
+\]
+al variare di $i,j$ ed $\epsilon$.
+\end{definizione}
+
+Da questo segue che $S-\lim_{n\rightarrow\infty}\varphi_n=\varphi$ se e solo se $\lim_n ||\varphi_n-\varphi||_{ij}=0$ $\forall i,j$.
+
+\begin{osservazione}[Nota]
+\[
+\lim_n ||\varphi_n-\varphi||_{ij}=0 \iff \forall\epsilon>0\> \exists N : n>N \implies(\varphi_n-\varphi)\in U_{ij,\epsilon} \text{ cioè }||\varphi_n-\varphi||_{ij}<\epsilon 
+\]
+
+
+In realtà $S(\mathbb{R})$ è metrizzabile con una metrica che induce questa stessa topologia, però la metrica è abbastanza complicata.
+\end{osservazione}
+
+La topologia di $S$ è costruita in modo che $S-\lim_n \varphi_n = \varphi$ implichi $L_2-\lim_n \varphi_n=\varphi$ ma non vale il viceversa.
+
+\begin{teorema}$S(\mathbb{R})$ è uno spazio completo.\end{teorema}
+
+\subsubsection{Mappe continue in \boldmath$S(\mathbb{R})$}
+\begin{itemize}
+\item La mappa $D:S(\mathbb{R})\rightarrow S(\mathbb{R})$ definita da $\varphi\mapsto\varphi'$ è una mappa continua. Fissato un intorno $\tilde{U}$ di $\varphi'=0$ esiste un intorno di $\varphi=0$ tale che $D\phi=\phi'\in\tilde{U}$ se $\phi\in U$. Infatti per come abbiamo definito le seminorme segue che 
+\[
+\left|\left| D\phi\right|\right|_{ij}=||\phi||_{i,j+1}<\epsilon
+\] 
+
+\item Per funzioni $f$ sufficientemente ``piccole'' la mappa data dal prodotto $f\varphi$ è una mappa continua in $S(\mathbb{R})$
+\begin{definizione}Definiamo 
+$O_M=\left\{f\in C^\infty(\mathbb{R}) : \left|D^i f(x)\right|\leq C_i(1+x^{2n_i})\>\forall i\in\mathbb{N}\right\}$
+\end{definizione}
+e allora la mappa $G:S(\mathbb{R})\rightarrow S(\mathbb{R})$ data da $\varphi\mapsto f\varphi$ con $f\in O_M$ è continua, infatti senza andare nei dettagli dei conti
+\[
+\left|\left|f\varphi\right|\right|_{ij}=\sup_{x\in\mathbb{R}} \left|x^iD^j (f\varphi)\right| \leq  \sum_{i,j}^N C_{ij} ||\varphi||_{ij}
+\]
+\item La mappa $\varphi_0 * :S(\mathbb{R})\rightarrow S(\mathbb{R})$, data dalla convoluzione con una $\varphi_0\in S(\mathbb{R})$ fissata, è una funzione continua in $S(\mathbb{R})$.
+\[
+\phi\mapsto \varphi_0 * \phi = \int \varphi_0(x-y) \phi(y)\, dy
+\]
+
+
+\end{itemize}
+
+\subsection{Spazio delle distribuzioni temperate}
+
+
+\begin{definizione}Lo spazio duale a $S(\mathbb{R})$, indicato con $S^*(\mathbb{R})$ o $S'(\mathbb{R})$, si chiama spazio delle distribuzioni temperate o spazio delle distribuzioni di Schwartz.
+\[
+S^*(\mathbb{R})=\left\{F :S(\mathbb{R})\rightarrow\mathbb{C}, \> \varphi\mapsto F(\varphi)\in\mathbb{C}  \> \text{ lineare, continuo e limitato}\right\}
+\]
+\end{definizione}
+
+$S'$ è lo spazio vettoriale (per definizione di spazio duale) dei funzionali lineari su $S$ dunque per ogni intorno $\epsilon$ dell'origine in $\mathbb{C}$ esiste un intorno base $U$ di $\varphi=0$ in $S$ tale che se $\varphi\in U$ allora $|F(\varphi)|<\epsilon$.
+
+\begin{teorema}
+Un funzionale lineare $F:S(\mathbb{R})\rightarrow\mathbb{C}$ appartiene a $S'(\mathbb{R})$ se e solo se esiste una costante $C>0$ e un insieme finito di seminorme $||\cdot||_{ij}$ con $i,j\in I$ tali che 
+\[
+\left|F(\varphi)\right|\leq C\sum_{ij\in I} ||\varphi||_{ij} \qquad \forall \varphi\in S(\mathbb{R})
+\]
+\end{teorema}
+
+\begin{dimo}[Dimostriamo solo il $\Leftarrow$]
+Fissato $\epsilon>0$ sia $N$ il numero delle seminorme che esiste per l'ipotesi, scelgo come intorno base $||\varphi||_{ij}<\dfrac{\epsilon}{NC}$ $\forall i,j\in I$. Allora 
+\[
+|F(\varphi)|\leq C\sum_{ij\in I} \dfrac{\epsilon}{NC}=\epsilon \qedhere
+\]
+\end{dimo}
+
+Alcuni elementi di $S'$ sono rappresentati da ``vere'' funzione $f:\mathbb{R}^D\rightarrow\mathbb{C}$ e corrispondono ai funzionali definiti da
+\[
+F(\varphi)=\int_{\mathbb{R}^D} f(x)\varphi(x) \, d^Dx \qquad \varphi\in S
+\]
+
+le distribuzioni temperate di questo tipo sono chiamate \textbf{distribuzioni regolari}.
+
+In particolare si ha:\begin{itemize}
+\item $S\subset S'$
+Sia $\varphi_0\in S$ e poniamo $F(\varphi)=\int_{\mathbb{R}^D} \varphi_0(x)\varphi(x)\,d^Dx$ allora 
+\[
+|F(\varphi)|\leq\int_{\mathbb{R}^D} |\varphi_0(x)|\,|\varphi(x)|\,d^Dx \leq ||\varphi||_{00} \, \int_{\mathbb{R}^D} |\varphi_0|\,d^Dx= ||\varphi_0||_{L_1}\,||\varphi||_00
+\]
+\item $L^p\subset S'$
+Sia $f\in L^p(\mathbb{R}^D)$ e $\begin{cases}A=\{x\in\mathbb{R}^D : |f|\leq1\} \\ B=\{x\in\mathbb{R}^D : |f|>1\}\end{cases}$, poniamo $F(\varphi)=\int_{\mathbb{R}^D} f(x)\varphi(x)\,d^Dx$ allora
+\begin{align*}
+|F(\varphi)| & \leq \int_A |f(x)| \,|\varphi(x)|\,d^Dx + \int_B |f(x)| \,|\varphi(x)|\,d^Dx \leq 
+\int_A |\varphi(x)|\,d^Dx + \int_B |f(x)|^p \,|\varphi(x)|\,d^Dx \\
+& \leq \int_{\mathbb{R}^D} \dfrac{1+|x|^{2D}}{1+|x|^2}\,|\varphi(x)|\,d^D x + \sup_{x\in\mathbb{R}^D}|\varphi(x)|\,\int_{\mathbb{R}^D} |f(x)| \,d^Dx = \int_{\mathbb{R}^D} \dfrac{1+|x|^{2D}}{1+|x|^2}\,|\varphi(x)|\,d^D x + ||f||_{L^p}\,||\varphi||_{00} \\
+& \leq \left(\int_{\mathbb{R}^D} \dfrac{d^Dx}{1+|x|^{2D}} \right)\sup_{x\in\mathbb{R}^D}\left|(1+x^{2D})\varphi\right| + a ||\varphi||_{00} =\\
+&= b\left(||\varphi||_{00} +\sum_{\{j\}} ||\varphi||_{j_1,...,j_{2d}} \right) + a ||\varphi||_{00}
+\end{align*}
+
+\item $O_M=O_M=\left\{f\in C^\infty(\mathbb{R}) : \left|D^i f(x)\right|\leq C_i(1+x^{2n_i})\>\forall i\in\mathbb{N}\right\}\subset S'$
+
+\item Tutte le funzioni localmente integrabili, $\int_{|x|<R}|f(x)dx<\infty$, e polinomialmente limitate all'infinito, $|f(x)|<C(x^2)^N$ per $|x|>R$, sono in $S'$
+\begin{align*} 
+|F(\varphi)|&\leq \int_{|x|<R} |f|\,|\varphi|\,d^Dx + \int_{|x|>R}|f|\,|\varphi|\,d^Dx \\ 
+&\leq ||f||_{\underset{|x|<R}{L^1}}\,||\varphi||_{00} + C\int_{|x|>R}(x^2)^N |\varphi(x)| \, d^Dx \\
+& = a ||\varphi||_{00} + C\int_{|x|>R} \dfrac{(x^2)^N}{(x^2)^{N+D}}(x^2)^{N+D}|\varphi|\,d^Dx \\ 
+& \leq a||\varphi||_{00} +C\int{|x|>R} \dfrac{d^Dx}{|x|^{2D}} \sum_{\{j\}} c_{\{j\}} ||\varphi||_{j_1,...,j_{2N+2D}}
+\end{align*}
+\end{itemize}
+
+Per esempio:\begin{itemize}[label=$\cdot$]
+\item $x^\alpha$ per $\alpha>-1$ è in $S'$
+\item $\left(\ln{|x|}\right)^\beta$ per $\beta>0$ è in $S'$
+\item La funzione di Heaviside è una distribuzione temperata
+\item $e^{-|x|}\in S'$
+\end{itemize}
+mentre alcune funzioni ``usuali'' non sono distribuzioni: $e^x\not\in S'$ e $\frac{1}{x}\not\in S'(\mathbb{R})$ per esempio.
+
+
+\subsection{Distribuzioni non regolari}
+
+In generale le distribuzioni \textbf{non} sono rappresentabili con funzioni. La notazione ``formale'' $F(\varphi)=\int F(x)\varphi(x)\,dx$ si usa spesso nonostante non esista una funzione $F(x)$ per cui sia vera l'uguaglianza:\begin{itemize}[label=$\cdot$]
+\item $\delta$ di Dirac piccata in $x=a$ è definita con
+\begin{equation}
+\delta_a (\varphi):= \varphi(a) \quad \text{ formalmente } \quad \int_{\mathbb{R}^D} \delta^D(x-a) \varphi(x)\,d^Dx=\varphi(a)
+\end{equation}
+\item La parte principale di $\frac{1}{x}$ è una distribuzione: sappiamo già che $\frac{1}{x}\not\in S'(\mathbb{R})$ perchè non è localmente integrabile. Poniamo
+\[
+\left(\mathcal{P}\left(\sfrac{1}{x}\right)\right)(\varphi):=\lim_{\epsilon\rightarrow0}\int_{|x|>\epsilon}\dfrac{1}{x}\varphi(x)\,dx = \lim_{\epsilon\rightarrow0} \int_\epsilon^\infty \underset{\text{continua in }x=0}{\dfrac{\varphi(x)-\varphi(-x)}{x}}\,dx = \int_0^\infty \dfrac{\varphi(x)-\varphi(-x)}{x}\,dx
+\]
+e quindi definiamo il funzionale come
+\begin{equation}
+\left(\mathcal{P}(\sfrac{1}{x})\right)(\varphi)=\int_0^\infty \dfrac{\varphi(x)-\varphi(-x)}{x}\,dx
+\end{equation}
+Chiaramente $\mathcal{P}(\sfrac{1}{x})$ è lineare, inoltre
+\begin{align*}
+\left|\dfrac{\varphi(x)-\varphi(-x)}{x}\right|&=\left|\frac{1}{x}\int_{-x}^x \varphi'(y)\,dy \right| \leq \frac{1}{|x|}\int_{-x}^x \, \underset{\text{costante}}{||\varphi||_{01}}\,dx \leq 2 ||\varphi||_{01}\\
+(\mathcal{P}(\sfrac{1}{x}))(x)&\leq \int_0^1 \left|\dfrac{\varphi(x)-\varphi(-x)}{x}\right|\,dx + \int_1^\infty \left|\dfrac{\varphi(x)-\varphi(-x)}{x}\right|\,dx\leq \\ &\leq 2||\varphi||_{01} + \int_1^\infty \left(x|\varphi(x)|+x|\varphi(-x)|\right)\,\dfrac{dx}{x^2}\leq 2||\varphi||_{01}+2||\varphi||_{10}
+\end{align*}
+quindi $\mathcal{P}(\sfrac{1}{x})$ è una distribuzione.
+\end{itemize}
+
+In generale quindi una distribuzione non ``assume valori'' e non si ``annulla'' in un punto $x\in\mathbb{R}^D$, possiamo però specificare cosa intendiamo per annullamente in un aperto $A\subset\mathbb{R}^d$.
+\begin{definizione}
+Sia $A$ un aperto di $\mathbb{R}^D$ e $F\in S'(\mathbb{R}^D)$. Diremo che $F$ è nulla in $A$ se $F(\varphi)\equiv 0_{S(\mathbb{R}^D)}$ per ogni $\varphi$ il cui supporto sia contenuto in $A$.
+
+Definiamo supporto di $F$, $\text{supp}\,F$, il complemento del più grande $A$ sul quale $F$ è nulla.
+\end{definizione}
+Pertanto $\text{supp}\,F$ è chiuso.
+
+Per esempio:
+\begin{itemize}[label=$\cdot$]
+\item $\text{supp}\,\delta_a=\{a\}$
+\item $\text{supp}\,H=\mathbb{R}^+$
+\end{itemize} 
+
+\subsection{Topologia debole di $S'$}
+
+Dato che $S'$ è uno spazio vettoriale ci basta edfinirne una base di intorni di $F=0$. 
+\begin{definizione}
+La base di intorni in $S'$ di $F=0$ è data dalle \textbf{intersezioni finite} degli insiemi
+\[
+U_{\varphi,\epsilon}:=\left\{F\in S' : |F(\varphi)<\epsilon\right\} \qquad \text{ al variare di }\varphi,\epsilon
+\]
+\end{definizione}
+
+Da questo segue
+\begin{equation}
+S'\lim_{n\rightarrow\infty}F_n=F\iff\lim_{n\rightarrow\infty}F_n(\varphi)=F(\varphi)\in\mathbb{C} \qquad \forall\varphi\in S
+\end{equation}
+
+\begin{itemize}[label=$\cdot$]
+\item La topologia indotta dalla base di intorni di $S'$ che abbiamo definito si chiama \textbf{topologia debole} di $S'$.
+\item Dato che $L_2\subset S'$ possiamo usare la topologia debole anche in $L^2$, questa sarà però più debole della topologia in norma che abbiamo definito precedentemente per $L^2$, cioè ci saranno successioni convergenti in $L^2$ per la topologia debole ma non per la topologia in norma.
+\end{itemize}
+
+Abbiamo inoltre in criterio sufficiente alla continuità in $S'$ di una mappa $A:S'\rightarrow S'$ 
+\[
+|AF(\varphi)|\leq|F(\varphi_0)|\implies A \text{ continua perchè } \epsilon>k|F(\varphi_0)|\geq|AF(\varphi)|\rightarrow \delta=\dfrac{\epsilon}{k}
+\]
+
+\begin{teorema}
+S è completo nella topologia debole e $\overline{S}_{debole}=S'$.
+\end{teorema}
+Questo teorema ci dice che ogni distribuzione temperata è approssimabile nella topologia debole tramite funzioni di test.
+
+
+Non dimostriamo questo teorema ed il lemma successivo.
+\begin{lemma}[Convergenza dominata]
+Sia $f_n\in L^1(\mathbb{R}^D)$ ed esista $\lim_{n\rightarrow\infty}f_n(x)=f(x)$ quasi ovunque. Esista inoltre $g(x)\in L^1(\mathbb{R}^D)$ tale che $|f(x)\leq g(x)$ q.o., allora
+\[
+\lim_{n\rightarrow\infty}\int f_n(x)d^Dx=\int \lim_{n\rightarrow\infty}f_n(x)d^Dx=\int f(x) d^Dx
+\]
+\end{lemma}
+
+\subsubsection{Serie \boldmath$\delta$}
+
+Le successioni $\delta$ sono successioni di funzioni che convergono, per la topologia debole, alla delta di Dirac.
+
+Queste successioni si possono definire in modo equivalente come $F_n$ convergenti alla $\delta$ per $n\rightarrow\infty$ o per $\epsilon=\frac{1}{n}$ che convergeranno alla $\delta$ per $\epsilon\rightarrow0$.
+
+\begin{enumerate}[i.]
+\item $F_n(x)=\dfrac{n}{\sqrt{\pi}}e^{-n^2x^2}\in S(\mathbb{R})$
+\item $F_n(x)=\dfrac{\sin{nx}}{\pi x}\in L^p(\mathbb{R})$ con $p\geq2$
+\item $F_n(x)=\dfrac{n}{\pi(n^2x^2+1)}=\dfrac{\epsilon}{\pi(x^2+\epsilon^2)}$
+\item $F_n(x)=\dfrac{1-\cos{nx}}{\pi nx^2}$
+\end{enumerate}
+
+\begin{dimo}[Dimostriamo che la prima successione converge alla $\delta$ in $S'$]
+\begin{align*}
+F_n(\varphi)&=\dfrac{n}{\sqrt{\pi}}\int_{\mathbb{R}} e^{-n^2x^2}\varphi(x)\,dx \qquad \text{cambio di variabili }nx\rightarrow x \\
+&= \dfrac{1}{\sqrt{\pi}} \int_{\mathbb{R}} e^{-x^2} \varphi\left(\frac{x}{n}\right)\, dx
+\end{align*}
+Si ha $\left|e^{-x^2}\varphi\left(\frac{x}{n}\right)\right|\leq e^{-x^2} ||\varphi||_{00}=g\in L^1$ quindi usando la convergenza dominata
+\[
+\lim_{n\rightarrow\infty}F_n(\varphi)=\dfrac{1}{\sqrt{\pi}} \int_{\mathbb{R}}\lim_{n\rightarrow\infty} e^{-x^2}\varphi\left(\frac{x}{n}\right)\,dx=\dfrac{\varphi(0)}{\sqrt{\pi}}\int_{\mathbb{R}} e^{-x^2}\,dx=\varphi(0) \qedhere
+\] 
+\end{dimo}
+
+
+\subsection{Operazioni in $S'$}
+
+Sia $A:S\rightarrow S$ $\varphi\mapsto A\varphi$ un'operazione continua e lineare su $S$. Vogliamo estenderla ad un'operazione su $S'$.
+
+Supponiamo che esista un operatore lineare e continuo $A^*:S\rightarrow S$ tale che per ogni distribuzione regolare $\varphi_0\in S$ si abbia
+\[
+(A\varphi_0)(\varphi)=\varphi_0 (A^*\varphi)
+\]
+ovvero
+\[
+\int (A\varphi_0)(x)\,\varphi(x)\,d^Dx = \int \varphi_0(x)\,A^*\varphi(x)\,d^Dx
+\]
+
+Allora per ogni $F\in S'$ definiamo l'operatore $A:S'\rightarrow S'$ come 
+\[
+(AF)(\varphi)=F(A^*\varphi) \qquad \forall \varphi\in S
+\]
+
+\begin{itemize}[label=$\cdot$]
+\item $AF$ è lineare e ben definito perchè $A^*\varphi\in S$
+\item $AF\in S'$ perchè è definito come combinazione di mappe continue
+\item La mappa $A:s'\rightarrow S'$ è continua perchè per $AF=\tilde{F}$
+\[
+|\tilde{F}(\varphi)|=|F(A^*\varphi)|=|F(\varphi^*)|<\epsilon
+\]
+\end{itemize}
+
+Evidenziamo che in generale non è ben definito il prodotto $\psi\chi$ tra due distribuzioni, nel caso particolare in cui però una delle due distribuzioni $\psi=f$ sia regolare e anche in $O_M$ allora il prodotto $f\chi$ è ancora una distribuzione e 
+\[
+(f\chi)(\varphi)=\chi(f\varphi) \quad \forall \chi\in S'
+\]
+
+
+\subsubsection{Derivata di una distribuzione}
+
+Ogni $F\in S'(\mathbb{R}^D$ ammette derivata parziale di ogni ordine in ogni direzione in senso distribuzionale e queste soddisfano $\partial_i\partial_j F=\partial_j\partial_i F$ $\forall F\in S',\forall i\in[1,D]$.
+
+La derivata distribuzionale sarà una mappa $A:S'\rightarrow S'$ quindi la costruiamo usando una mappa continua in $S$ e definendo l'effetto di $A F$ su ogni funzione di test.
+
+Usando una distribuzione regolare $F_0\in S$ avremo che la sua derivata $AF_0$ agisce su funzioni di test secondo
+\[
+(AF_0)(\varphi)=\int_{\mathbb{R}} \partial_j F_0(x)\, \varphi(x)\,dx = [F_0(x)\varphi(x)]_{-\infty}^{+\infty} -\int_{\mathbb{R}} F_0(x)\,\partial\varphi(x)\,dx=-\int_\mathbb{R} F_0(x)\,\partial\varphi(x)\,dx
+\]
+Dove nell'ultimo passaggio ricordiamo che le funzioni di test si annullano ad infinito estremamente velocemente. In $\mathbb{R}^D$ gli integrali sono $D-$dimensionali ma il risultato è lo stesso.
+
+Questi passaggi si possono replicare formalmente senza nessun cambiamento per distribuzioni $F$ qualsiasi quindi definiamo la derivata distribuzionale come
+\begin{equation}
+(\partial_j F)(\varphi)=-F(\partial_j\varphi)
+\end{equation}
+
+Più in genereale se $P(\partial)$ è un polinomio nelle derivate si ha che
+\[
+\left(P(\partial)F\right)(\varphi)=F\left(P(-\partial)\varphi\right)
+\]
+
+\begin{esempio}[Esempi di derivate distribuzionali]
+\begin{itemize}[label=$\cdot$]
+\item La funzione di Heaviside ha come derivata la delta di Dirac.
+\[
+H'(x-a)(\varphi)=-H(x-a)\varphi'(x)=-\int_{-\infty}^{+\infty} H(x-a)\varphi'(x)\,dx=-\int_{a}^{+\infty} \varphi'(x)\,dx=\varphi(a)
+\]
+\item Le derivate della delta di Dirac sono:
+\[
+\left(\delta^{(N)}(x-a)\right)(\varphi)=\delta(x-a)\left((-)D^N \varphi\right)=-^N\delta(x-a)(D^N \varphi)
+\]
+quindi $\delta^{(N)}(x-a)=\delta(x-a)D^N$
+\item $(\ln{|x|})'=\mathcal{P}(\sfrac{1}{x})$
+\end{itemize}
+\end{esempio}
+
+In particolare la derivata distribuzionale di una distribuzione regolare rappresentata da un $f$ di classe $C^1$ coincide con la derivata ordinaria di $f$.
+
+Dato che la derivata distribuzionale è una mappa continua in $S'$ commuterà con gli $S'-\lim$.
+
+\subsubsection{Convoluzione}
+g
+
+\subsubsection{Composizione della $\delta$ con una funzione}
+u
+
+\section{Trasformata di Fourier}
+\begin{definizione}
+Definiamo la trasformata di Fourier $\mathcal{F}$ di un $\varphi\in L^1(\mathbb{R}^D)$ come
+\begin{equation}
+\hat{\varphi}(k)=
+\dfrac{1}{(2\pi)^{\frac{D}{2}}}
+\int_{\mathbb{R}^D}e^{-i\vec{k}\cdot\vec{x}}\varphi(x)\,d^Dx
+\end{equation}
+e l'antitrasformata di Fourier $\mathcal{F}^{-1}$ come
+\begin{equation}
+\check{\varphi}(k)=
+\dfrac{1}{(2\pi)^{\frac{D}{2}}}
+\int_{\mathbb{R}^D}e^{i\vec{k}\cdot\vec{x}}\varphi(x)\,d^Dx
+\end{equation}
+\end{definizione}
+
+Ora vorremmo capire se per una $\varphi\in S$ la sua trasformata sia ancora in $S\subset L^1$, se la $\mathcal{F}:\varphi\mapsto\hat{\varphi}$ sia continua e invertibile e se in tal caso $\mathcal{F}^{-1}$ sia la sua inversa.
+
+
+\begin{itemize}
+\item Per $\varphi\in S(\mathbb{R}^D)$ la sua trasformata $\hat{\varphi}$ è di classe $C^\infty$
+ \begin{dimo}[Lo mostraiamo  per $D=1$]
+ \[
+ \hat{\varphi}(k)=\dfrac{1}{\sqrt{2\pi}}\int e^{-ikx}\varphi(x)\,dx \quad \text{quindi}\quad
+ \dfrac{ \hat{\varphi}(k+\Delta) -\hat{\varphi}(k)}{\Delta}=\dfrac{1}{\sqrt{2\pi}}\int e^{-ikx} \,  \dfrac{e^{-ix\Delta}-1}{\Delta x} \, x\varphi(x)\,dx
+ \]
+ E dato che $\left| e^{-ikx}\, \dfrac{e^{-ix\Delta}-1}{\Delta x} \, x\varphi(x)\right|\leq |x|\,|\varphi(x)|=g(x)\in L^1$ possiamo usare la convergenza dominata
+ \begin{align*}
+ \dfrac{\partial}{\partial k}\hat{\varphi}(k)&=\dfrac{1}{\sqrt{2\pi}}\int \lim_{\Delta\rightarrow0}  e^{-ikx}\, \dfrac{e^{-ix\Delta}-1}{\Delta x} \, x\varphi(x) = \dfrac{1}{\sqrt{2\pi}}\int e^{-ikx}-ix\varphi(x)\,dx=\\
+ &=-i\mathcal{F}\left(x\varphi(x)\right)\,(k) \implies \hat{\varphi}\in C^\infty \qedhere
+ \end{align*}
+ \end{dimo}
+\item Dato $P(x^m,\partial_i)$ un generico polinomio in $\vec{x}$ e $\vec{\nabla}$ vale
+\begin{equation}
+\mathcal{F}\left( P(x^m,\partial_i)\varphi \right) \, (\vec{k}) =
+P\left(i\dfrac{\partial}{\partial k^m},ik^i\right)\hat{\varphi}(\vec{k})
+\end{equation}
+\item Per  $\varphi\in S$ si ha che $\hat{\varphi}\in S$ e la trasformata di Fourier è una mappa continua da $S$ in $S$
+\begin{dimo}
+\begin{align*}
+\left| k^N\partial^M \hat{\varphi}(k) \right| &=\left| \dfrac{\partial^N}{\partial x^N} \left( x^M \varphi(x)\right) \, (k)\right| = \dfrac{1}{\sqrt{2\pi}}\left| \int e^{-ikx} \partial^N\left(x^M\varphi(x)\right)\,dx \right| \\ &\leq \dfrac{1}{\sqrt{2\pi}} \int \left| \partial^N\left(x^M\varphi(x)\right)\right|\,dx\\
+\left|\left|\hat{\varphi}\right|\right|_{NM}&=\sup_{k\in\mathbb{R}}\left| k^N\partial^M\hat{\varphi}(k) \right|\leq\dfrac{1}{\sqrt{2\pi}}\int \left| \partial^N\left(x^M\varphi(x)\right)\right|\,dx\\
+&\leq \dfrac{1}{\sqrt{2\pi}}\int \dfrac{1+x^2}{1+x^2}\left| \partial^N\left(x^M\varphi(x)\right)\right|\,dx\\&\leq C\sum_{\text{finita}}||\varphi|| \qquad \text{non entriamo troppo nei dettagli}\qedhere
+\end{align*}
+\end{dimo}
+\end{itemize} 
+
+\begin{proposizione}$\mathcal{F}^{-1}\circ\mathcal{F}=\mathcal{F}\circ\mathcal{F}^{-1}=\mathbb{I}_{S}$\end{proposizione}
+\begin{dimo}
+
+\end{dimo}
+
+Le proprietà della trasformata di Fourier in $S$ sono:\begin{itemize}[label=$\cdot$]
+\item $\hat{\hat{\varphi}}(x)=\varphi(-x)$ 
+\item $\mathcal{F}^4=\mathbb{I}$
+\item $\mathcal{F}\left(\varphi(x+a)\right)\,(k)=e^{ika}\hat{\varphi}(k)$
+\item $\mathcal{F}\left(e^{i\alpha x}\varphi(x)\right)\,(k)=\hat{\varphi}(k-a)$
+\item $\mathcal{F}\left(\varphi_1 * \varphi_2\right) (k)=(2\pi)^{\frac{D}{2}}\hat{\varphi_1}(k)\hat{\varphi_2}(k)$
+\item $\mathcal{F}(\varphi_1 \varphi_2)\,(k)=\dfrac{1}{(2\pi)^\frac{D}{2}}(\hat{\varphi_1} * \hat{\varphi_2})(k)$
+\end{itemize}
+
+ 
+ 
+\subsection{Tasformata di Fourier in $S'$}
+`
+
+\subsection{Trasformata di Fourier ed equazioni differenziali alle derivate parziali}
+;
+
+\section{Operatori su spazi di Hilbert}
+l
+
+\subsection{Derivata}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,156 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}  
+\usepackage{amsmath, amsthm, amsfonts, amssymb, xfrac}
+\usepackage[left=1cm, right=1cm, top=0.8cm, bottom=1cm, landscape]{geometry} 
+\usepackage[shortlabels]{enumitem}
+\usepackage{multicol}
+
+\pagestyle{empty}
+\setlength{\columnsep}{0.3cm}\setlength{\columnseprule}{0pt}
+
+\begin{document}
+\small
+\begin{multicols*}{3}
+[
+\begin{center}
+	Formulario di meccanica statistica \hspace{0.25\linewidth}\textit{Istituzioni di Fisica teorics} 2020-2021
+\end{center}
+]
+
+
+\begin{center}
+\textbf{\large Termodinamica}
+\end{center}
+\begin{center}
+
+\begin{itemize}[label=$\cdot$]
+\item \textbf{Principio di additività}
+\[
+S_c^{tot}=S_A+S_B \qquad U_c^{tot}=U^A+U^B
+\]
+
+\item \textbf{Principio di omogeneità}
+\[
+S(\lambda U, \lambda V, \lambda N)=\lambda S(U,V,N) \qquad S(U,V,N)=N\,s(u,v)
+\]
+
+\item \textbf{Principio di massima entropia} Alla rimozione del vincolo interno sulla variabile $X_k$ estensiva l'entropia all'equilibrio è data da
+\[
+S^{tot}(X_k^{tot})=\max_{X_k^A} S_c^{tot}(X_k^A|X_k^{tot})=S^A(\overline{X_k^A})+S^B(X_k^{tot}-\overline{X_k^A} )
+\]
+in energia il valore di $X_k^A$ all'equilibrio corrisponderà al minimo di $U_c^{tot}$.
+\item \textbf{Equazioni di Stato}
+\[
+\dfrac{\partial S}{\partial U}=\dfrac{1}{T} \quad \dfrac{\partial S}{\partial V}=\dfrac{P}{T} \quad
+\dfrac{\partial S}{\partial N}=-\dfrac{\mu}{T}
+\]
+\[
+\dfrac{\partial U}{\partial D}=T \quad \dfrac{\partial U}{\partial V}=-P \quad
+\dfrac{\partial S}{\partial N}=\mu
+\]
+\item \textbf{Relazione di Eulero}
+\[
+dS=\dfrac{1}{T}dU+\dfrac{P}{T}dV-\dfrac{\mu}{T}dN \qquad S=\dfrac{1}{T}dU+\dfrac{P}{T}V-\dfrac{\mu}{T}N
+\]
+\item \textbf{Potenziali termodinamici e funzioni di Massieu}
+$U[S](T,V,N)=:F(T,V,N)=U(\overline{S},V,N)-T\overline(S) $ e $ S[U](T,V,N)=-\dfrac{F}{T}$
+
+$U[S,V](T,P,N)=:G(T,P,N)=U(\overline{S},\overline{V},N)-T\overline(S)+P\overline{V} $ e $ S[U,V](T,P,N)=-\dfrac{G}{T}$
+
+$U[S,N](T,N,\mu)=:\mathcal{G}(T,P,\mu)=U(\overline{S},V,\overline{N})-T\overline(S)-\mu\overline{N}$ e $ S[U,V](T,P,N)=-\dfrac{\mathcal{G}}{T}$
+\item \textbf{Leggi dei gas ideali}
+\[
+PV=Nk_BT \qquad U=cNk_BT
+\]
+\item \textbf{Entropia del gas ideale isolato}
+\[
+S(U,V,N)=Nk_B\ln\left[ \left(\dfrac{U}{U_0}\right)^c \dfrac{V}{V_0} \left(\dfrac{N}{N_0}\right)^{-(c+1)} \right]+Ns_0
+\]
+\item Calore di volume e pressione
+\[
+c_V:=T\left.\dfrac{\partial S}{\partial T}\right|_V=T\dfrac{\partial}{\partial T}\left(-\dfrac{F}{T}\right)\quad 
+c_P=T\left.\dfrac{\partial S}{\partial T}\right|_P=T\dfrac{\partial }{\partial T}\left(-\dfrac{G}{T} \right)
+\]
+\end{itemize}
+
+\columnbreak
+\textbf{\large Ensemble classiche}
+\begin{itemize}[label=$\cdot$]
+\item \textbf{Volume del guscio di energia}
+\[
+\Gamma(U,X)=\int \delta_k(H(x)-U)\, d^{6N}x \quad Z_{mc}(U,X)=\dfrac{\Gamma(U,X)}{\Gamma_0(N)}
+\]
+\item \textbf{Densità di probabilità microcanonica}
+\[
+\rho_{mc}=\dfrac{\mathbb{I}_D}{\Gamma(U,X)} \qquad \mathbb{E}[X_k]=\int \rho_{mc}\, X_k(x) d^{6N}x
+\]
+\item Quantità constrained per un sistema isolato 
+\[
+\Gamma_c(U^A|U^{tot})=\Gamma(U^A)\,\Gamma(U^{tot}-X^A)
+\]
+\[
+S_c(U^A|U^{tot},X^{tot})=k_b\ln\left[\dfrac{\Gamma_c(U^A|U^{tot},X^{tot})}{\Gamma_0^{tot}(N^A,N^B)}\right]
+\]
+\item \textbf{Entropia  microcanica}
+\[
+S_{mc}(U,V,N)=k_b\ln\left[ \dfrac{\Gamma^{tot}(U^{tot},X^{tot})}{\Gamma_0(N^A,N^B)}\right]
+\]
+\[
+\Gamma^{tot}(U^{tot},X^{tot})=\int\dfrac{dU}{\Delta U}\,\Gamma_c^{tot}(U^A|U^{tot},X^{tot})
+\]
+\item \textbf{Probabilità sul valore di una variabile $X_k$}
+\begin{align*}
+P(X_k|P_k)\,\Delta X_k&=\mathbb{E}(\mathbb{I}_{X_k})=\dfrac{Z_c^{tot}(X_K|P_k)}{Z^{tot}(P_k)}\\
+& \approx \dfrac{e^{\dfrac{S(X_k)}{k_B} - \dfrac{P_kX_k}{k_B} }}{\int dX_k\, e^{\dfrac{S(X_k)}{k_B} - \dfrac{P_kX_k}{k_B} }}
+\end{align*}
+\item $\mathbb{E}[X_k]=-\dfrac{\partial}{\partial\left( \dfrac{P_k}{k_B} \right)}\ln Z^{tot}(P_k)$
+\end{itemize}
+
+\textbf{Gas ideale isolato}
+\begin{itemize}[label=$\cdot$]
+\item $\Gamma(U,V,N)=V^N\int_{D_p}d^{3N}p=\dfrac{U^{\dfrac{3N}{2}}}{\left( \dfrac{3N}{2}\right)!}V^N (2\pi m)^{\dfrac{3N}{2}} \dfrac{3N}{2} \dfrac{\Delta U}{U}$
+\item $\Gamma_0(N)=N!\,h^{3N}$ che prima della rimozione del vincolo interno corrisponde a $\Gamma_0(N^A,n^B)=N^A!N^B!\,h^{3N^{tot}}$ e dopo la rimozione del vincolo a \\ \[ \left.\Gamma_0\right._{distinte}(N^A,N^B)=N^A!N^B!h^{3N^{tot}}\]\[ \left.\Gamma_0\right._{identiche}(N^A,N^B)=(N^A+N^B)!h^{3N^{tot}}\]
+\item $P(U^A)=\dfrac{(U^A)^{\frac{3N^A}{2}} (U^{tot}-U^A)^{\frac{3N^B}{2}} }{\int dU^{A}\, (U^A)^{\frac{3}{2}N^A}(U^{tot}-U^A)^{\frac{3}{2}N^B } }$
+\end{itemize}
+
+\textbf{Canonical ensemble}
+\begin{itemize}[label=$\cdot$]
+\item $Z_{can}(T,X)=\dfrac{1}{\Gamma_0(N)}\int d^{6N}x\, e^{-\beta F_U(x)}$ con $F_U$ la funzione che associa al microstato l'energia scambiata per le altre variabili $X_k$ fissate, in questo caso $F_U(x)=H(x)$.
+\item $\beta:=\dfrac{1}{k_B T}$ ~ $\mathbb{E}[U]=-\dfrac{\partial}{\partial \beta}\ln Z_{can}$
+\item Gas ideale canonico:
+\[
+Z_{can,gas}=\dfrac{1}{N!}\dfrac{V^N}{\lambda^{3N}(T)}
+\quad \text{con }\lambda(t)=\dfrac{h}{\sqrt{2\pi mk_B T} }
+\]
+All'equilibrio $P(U)=\dfrac{ \exp{\left[ \frac{S(U,X)}{k_B}-\beta U \right]  } }{ \Delta U Z_{can}(T,X) }$
+\end{itemize}
+
+\textbf{Gibbs ensemble}
+\begin{itemize}[label=$\cdot$]
+\item $Z_{G}(T,P,N)=\dfrac{1}{\Gamma_0(N)}\int d^{6N}x\, e^{-\beta F_U(x)}e^{-\beta F_V(x)}$ con $F_V$ la funzione che associa al microstato il volume occupato e $F_U(x)\neq H(x)$.
+\item È possibile sostituire al volume un'altra variabile estensiva qualsiasi associata al meccanismo di rottura della simmetria ed alla pressione il campo associato. Semplicemente si rimpiazzerano le nuove variabili pari pari nella $Z_G$ generale, inserendovi poi i dati specifici.
+\item $\mathbb{E}[V]=-k_B T\dfrac{\partial}{\partial P}\ln Z_{G}$ ~ $\mathbb{E}[U+PV]=-\dfrac{\partial}{\partial \beta}\ln Z_{G}$ dove $U+PV$ è il corrispondente dell'entalpia.
+\item Gas ideale canonico:
+\begin{align*}
+Z_{G,gas}&= \dfrac{1}{\lambda^{3N}(T)(\beta P)^{N+1}}\dfrac{1}{\Delta V} \\&=\dfrac{(k_BT)^{\dfrac{5N}{2}}}{P^N}\left(\dfrac{2\pi m}{h^2} \right)^{\dfrac{3N}{2}}\dfrac{k_B T}{P\Delta V}
+\end{align*}
+\end{itemize}
+
+\textbf{Grand canonical ensemble}
+\begin{itemize}[label=$\cdot$]
+\item $Z_{gc}(T,V,\mu)=\sum_{N=0}^\infty \dfrac{1}{\Gamma_0(N)} \int e^{-\beta F_U(x)}e^{-\beta \mu F_N(x)}\,d^{6N}x$
+\item $\mathbb{E}[N]=k_B T\dfrac{\partial}{\partial \mu}\ln Z_{gc}$, $\mathbb{E}[U-\mu N]=-\dfrac{\partial}{\partial\beta}\ln Z_{gc}$ 
+\item Gas ideale canonico:
+\[
+Z_{gc,gas}= e^{\beta\mu\dfrac{V}{\lambda^3(T)}}
+\]
+\[
+P(N^A)=\dfrac{N!}{N^A!(N-N^A)!}\left(\dfrac{V^A}{V}\right)^{N^A}\left(\dfrac{V^B}{V}\right)^{N-N^A}
+\]
+\end{itemize}
+
+\end{center}
+\end{multicols*}
+\end{document}

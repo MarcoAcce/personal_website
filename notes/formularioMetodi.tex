@@ -1,0 +1,222 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}  
+\usepackage{amsmath, amsthm, amsfonts, amssymb, xfrac, mathabx}
+\usepackage[italian]{babel}
+\usepackage[left=1cm, right=1cm, top=0.8cm, bottom=1cm, landscape]{geometry} 
+\usepackage{float, graphicx, wrapfig} 
+\usepackage[shortlabels]{enumitem}
+\usepackage[skins, breakable, theorems, fitting]{tcolorbox}
+\usepackage{multicol}
+\pagestyle{empty}
+\setlength{\columnsep}{0.3cm}\setlength{\columnseprule}{0pt}
+
+\begin{document}
+\small
+%Intestazione---------------------------------------------------------------------------------------
+\begin{multicols*}{3}
+[
+	\begin{center} Riassunto per l'esame di \textit{Istituzioni di Metodi Matematici} 2019-2020\end{center}
+]
+%Inizio---------------------------------------------------------------------------------------------
+\begin{center}
+
+\textbf{\large Analisi Complessa}\par
+	\begin{itemize}[label=$\cdot$]
+		\item Teorema di Cauchy: Se $f(z)$ è olomoforfa in un insieme $D$ la circuitazione di $f$ lungo una qualsiasi curva chiusa contraibile in $D$ è nullo.
+		\item Formula di Cauchy: Se $f(z)$ è olomorfa in un insieme $D$ e $\gamma$ è una curva contraibile in $D$ con $\gamma=\partial S\subset D$ 
+		\[
+		\dfrac{1}{2\pi i}\oint_\gamma \dfrac{f(w)}{w-a}\,dw =\begin{cases} f(a) & a\in S \\ 0 \end{cases}
+		\]
+		e le derivate di $f$ in $z\in S$ saranno 
+		\[
+		f^{(n)}(z)=\dfrac{n!}{2\pi i} \oint_\gamma \dfrac{f(w)}{(w-z)^{n+1}}\,dw
+		\]
+		\item Teorema di Liouville: Se $f(z)$ è intera e $\left|f(z)\right|\leq a|z|^n+b$ $\forall z$ allora $f$ è un polinomio complesso di grado $\leq n$.
+	\end{itemize}
+\textbf{Rappresentazione per serie} \par
+	\begin{itemize}[label=$\cdot$]
+		\item Serie di Taylor: Se $f(z)$ è olomorfa in $D$ allora per ogni disco $B_{r}(z_0)$ completamente contenuto in $D$ la serie 
+		\[
+		\sum_{n=0}^\infty \dfrac{f^{(n)}(z_0)}{n!}(z-z_0)^n \qquad n\in\mathbb{N}
+		\]
+		converge uniformemente a $f(z)$ nel disco $|z-z_0|\leq r$ .
+		\item Serie di Laurent: Se $f(z)$ è olomorfa in $D$ allora per una corona circolare $r<|z-z_0|<R$  completamente contenuta in $D$ la serie
+		\[
+		\sum_{n=-\infty}^{\infty} c_n (z-z_0)^n=\sum_{n=0}^\infty c_n (z-z_0)^n +\sum_{n=1}^\infty \dfrac{d_n}{(z-a)^n} \qquad n\in\mathbb{Z}
+		\]
+		converge uniformemente a $f(z)$ nella corona . I coefficenti sono dati da 
+		\[
+		c_n=\dfrac{1}{2\pi i} \oint_\gamma \dfrac{f(w)}{(w-z_0)^{n+1}}\,dw \qquad \gamma\text{ contraibile nella corona} 
+		\]
+		\item Per $f(z)=e^{\frac{1}{z}}$, noto lo sviluppo di Taylor per l'esponenziale, lo sviluppo di Laurent attorno allo zero sarà \[e^{\frac{1}{z}}=\sum_{n=0}^\infty \dfrac{\left(\frac{1}{z}\right)^n}{n!}=\sum_{n=-\infty}^{0} \dfrac{z^n}{(-n)!} \qquad R=\infty\]
+		\item Per $f(z)=\dfrac{1}{z-a}$ la funzione sarà olomorfa in $\mathbb{C}\setminus\{a\}$ quindi le due corone possibili attorno a  $b\in\mathbb{C}$ saranno $|z-b|<|b-a|$, in cui lo sviluppo sarà di Taylor, e $|z-b|>|b-a|$. Definiendo $w=z-b$ nella seconda corona $\dfrac{1}{w-a}=\dfrac{\frac{1}{w}}{1-\frac{a}{w}}$ e usando la serie geometrica
+		\[
+		f(w)=\dfrac{1}{z}\sum_{n=0}^\infty \left(\dfrac{a}{w}\right)^n =\sum_{n=1}^{\infty}\dfrac{a^{n-1}}{w^n}
+		\] 
+	\end{itemize}
+\par
+\textbf{Singolarità e residui} \par
+	\begin{itemize}[label=$\cdot$]
+		\item Una singolarità isolata $a\in\mathbb{C}$ di una $f(z)$ si dice: eliminabile se $f$ è limitata in ogni intorno di $a$, polare se $f(z)\underset{z\rightarrow a}{\longrightarrow}\pm\infty$, essenziale se $f$ non ha limite per $\rightarrow a$.
+		\item Singolarità ad infinito: Se $f(z)$ è olomorfa per $|z|>M$ allora la funzione $g(w)=f(w)=f(\frac{1}{z})$ ha una singolarità in $w=0$.
+		\item Se $f(z)$ è olomorfa in un intorno di infinito ed ha singolarità ad infinito con $g(w)=f(\frac{1}{w})$ allora definiamo residuo all'infito di $f$
+		\[
+		\left.\text{Res}f\right|_{\infty} =- \left.\text{Res}\dfrac{g}{w^2}\right|_{0}=-c_{-1}
+		\]
+		dove $c_{-1}$ è il coefficente $-1$ dello sviluppo di Laurent di $f$ attorno all'origine.
+		\item Teorema dei residui: se $f(z)$ è olomorfa in $E\setminus\{a_i\}_i$, con $a_i$ un numero finito di singolarità isolate, allora se $\gamma\in E$ è una curva chiusa che racchiude $m$ singolarità senza intersecarne nessuna
+		\[
+		\oint_\gamma f(z)dz=2\pi i \sum_{i=1}^m \left.\text{Res}f\right|_{a_i}
+		\]
+		
+		\item Teorema della somma dei residui: Se $f(z)$ è olomorfa su $\mathbb{C}\setminus\{a_i\}_{i=1}^n$ con $\{a_i\}_i$ singolarità isolate allora
+		\[
+		 \sum_{i=1}^n \left.\text{Res}f\right|_{a_i} + \left.\text{Res}f\right|_{\infty}=0
+		\]
+		\item Se $z=a$ è una singolarità eliminabile di $f(z)$ allora $\left.\text{Res}f\right|_{a}=0$
+		\item Se $z=a$ è un polo di ordine $m$ di $f(z)$ allora \[\left.\text{Res}f\right|_{a}=\lim_{z\rightarrow a} \dfrac{1}{(n-1)!} \dfrac{d^{n-1}}{dz^{n-1}} \left[ (z-a)^n f(z) \right]\] 
+		e in particolare per un polo semplice il residuo è $\lim_{z\rightarrow a} (z-a)f(z)$.
+	\end{itemize}
+\textbf{Integrali con i residui} \par
+Per $I=\int_{-\infty}^{+\infty} f(z) dz=\lim_{R\rightarrow \infty}\int_{-R}^R f(z) dz$ con $f(z)$ meromorfa possiamo concatenare $\gamma_R$ con un semicerchio $S_R$ e allora $\tilde{I}=\pm\sum 2\pi i \text{Res} f= I +\int_{S_R} f(z)dz$ dove il segno del $\pm$ è dato dall'orientazione di $S_R$.
+	\begin{itemize}[label=$\cdot$]
+		\item Criterio base: Se $\lim_{|z|\rightarrow\infty} zf(z)=0$ allora $\lim_{r\rightarrow\infty} \int_{S_R\pm} f(z)dz=0$
+		\item Lemma di Jordan: Se $f(z)=e^{i\alpha z} g(z)$ con $\alpha\in\mathbb{R}$ e $\lim_{|z|\rightarrow\infty} g(z)=0$ allora 
+		\[
+		\lim_{R\rightarrow\infty}\int_{S_R} f(z)dz=0 \text{ con }\begin{cases} S_R=S_R+ &\alpha>0 \\ S_R=S_R- &\alpha<0 \end{cases}
+		\]
+	\end{itemize}
+\par
+\textbf{Parte principale} \par
+Per $I=\int_\gamma f(z)dz$ con poli semplici sul cammino di integrazione, per esempio in $z=\gamma(0)$, definiamo \[\mathcal{P} I=\lim_{\epsilon\rightarrow0}\int_{\lambda_1}^{-\epsilon} f(z)dz + \int_{\epsilon}^{\lambda_2} f(z)dz \]
+	\begin{itemize}[label=$\cdot$]
+		\item Se passiamo sopra, o sotto, al polo con un cerchietto di raggio $\epsilon$ potremo definire la curva ottenuata $\Gamma_\epsilon=\gamma_\epsilon-C_\epsilon$ e allora $\mathcal{P}I=\lim_{\epsilon\rightarrow 0} \int_{\Gamma_{\epsilon}}f(z)dz-\int_{C_{\epsilon}}f(z)dz$ ma sapendo che $\int_{C_\epsilon} f(z)dz=\pm i\pi g(a)=\pm i\pi \left.\text{Res}f\right|_{a}$ avremo
+		$\mathcal{P}I=\lim_{\epsilon\rightarrow 0} \int_{\Gamma_{\epsilon}}f(z)dz\mp i \pi \left.\text{Res}f\right|_{a}$
+	\end{itemize}
+\par
+\textbf{Prescrizione \boldmath$\pm i\epsilon$\unboldmath} \par
+Per $I=\int_\gamma f(x)dx$ con $\gamma$  con un polo semplice in $x=a$ lungo il cammino di integrazione per $\left.f(z)\right|_{z=a}=f(x)$ e $f(z)=\dfrac{g(z)}{z-a}$ aggiriamo il polo con un cerchio $C_\epsilon$ di raggio infinitesimo integriamo con
+\[
+\int_{\gamma_\epsilon}\dfrac{g(z)}{z-a}dz=\lim_{\nu\rightarrow 0^+} \int_{\gamma_\epsilon}\dfrac{g(z)}{z-(a-i\nu)}dz=\lim_{\nu\rightarrow 0^+} \int_{-\infty}^{+\infty}\dfrac{g(x)}{x-(a-i\nu)}dx
+\]
+Questa prescrizione darà un risultato diverso dalla parte principale di $\pm i \left.\text{Res}f\right|_a$
+\par
+\textbf{Integrali di funzioni trigonometriche} \par
+Per $I=\int_0^{2\pi} F(\cos{\phi},\sin{\phi})d\phi$ possiamo definire $z=e^{i\phi}$ e trasformare l'integrale ad un integrale complesso lungo la circonferenza unitaria
+	\begin{itemize}[label=$\cdot$]
+		\item $dz=izd\phi$ quindi $d\phi=-i\dfrac{dz}{z}$
+		\item $cos{\phi}=\dfrac{e^{i\phi}+e^{-i\phi}}{2}=\dfrac{z+\frac{1}{z}}{2}$
+		\item $\sin{\phi}=\dfrac{z-\frac{1}{z}}{2i}$
+	\end{itemize}
+
+\newpage
+
+\textbf{\large Spazi di Hilbert}\par
+	\begin{itemize}[label=$\cdot$]
+		\item In un insieme topologico $M$ diciamo che $\lim_{n\rightarrow\infty} P_n=P$ se per ogni intorno $I$ di $P$ esiste $N\in\mathbb{N}$ tale che $P_n\in I$ $\forall n\geq N$.
+		\item Data una mappa $f:M\rightarrow N$ tra due spazi topologici diciamo che $\text{M}-\lim_{P\rightarrow P_0} f(P)=Q\in N$ se per ogni intorno $I\subset N$ di $Q$ eiste un intorno $J\subset M$ di $P_0$ tale che $f(J\setminus\{P_0\})\subseteq I$.
+		\item Una mappa tra sue spazi topologici $f:M\rightarrow N$ si dice continua in $P\in M$ se, data una successione $P_n$ in $M$ convergente a $P$ si ha $\lim_{n\rightarrow\infty}f(P_n)=f(P)$
+		\item Uno spazio vettoriale $V$ su $\mathbb{C}$ si dice unitario, o preHilbertiano, se è dotato di una mappa $``\cdot'':V\times V\rightarrow\mathbb{C}$ ~$u,v\mapsto (u,v)$ che soddisfi 
+			\begin{multicols*}{2}
+				\begin{itemize}[label=$\cdot$]
+					\item $\overline{(v,u)}=(u,v)$
+					\item $(v,\alpha u)=\alpha(v,u)$
+					\item $(v,u_1+u_2)=(v,u_1)+(v,u_2)$
+				\end{itemize}
+			\end{multicols*}
+	\end{itemize}
+\textbf{Spazi di Hilbert} \par
+Uno spazio unitario completo rispetto alla norma indotta dal prodotto scalare si chiama spazio di Hilbert.\par
+	\begin{itemize}[label=$\cdot$]
+		\item Uno spazio di Hilbert $\mathcal{H}$ è separabile, cioe ne esiste un sottoinsieme $W\subseteq\mathcal{H}$ numerabile e denso in $\mathcal{H}$, se e solo se ammette una base ortonormale numerabile. Tutti gli spazi di Hilbert separabili sono isomorfi a $L^2$.
+		\item Lo spazio delle successioni quadrato sommabili $L^2$ è uno spazio di Hilbert con prodotto scalare $(v,u)=\sum_{j=1}^\infty \overline{v}_j u_j$ e norma $||v||=\sum_j^\infty |u_j|^2$.
+		\item Gli spazi delle classi di equivalenza di funzioni quadrato integrabili sul dominio $L^2(A)$ sono spazi di Hilbert con prodotto scalare $(f,g)=\int_A \overline{f}(x)g(x)dx$ e norma $||f||=\sqrt{\int_A |f(x)|^2 dx}$. 
+		\begin{itemize}
+			\item $L^2[0,2\pi]$ ammette la base di Fourier $e_n=\dfrac{1}{\sqrt{2\pi}}e^{-inx}$
+			\item $L^2[0,2\pi]$ ammette la base $e_n=\dfrac{1}{\sqrt{L}}e^{\dfrac{2\pi inx}{L}}$
+		\end{itemize}
+	\end{itemize}
+\par
+\textbf{Funzionali Lineari} \par
+Un funzionale lineare $F:U\rightarrow \mathbb{C}$ e una mappa lineare tra spazi vettoriali. \par
+	\begin{itemize}[label=$\cdot$]
+		\item Una mappa $G:U\rightarrow V$ tra spazi normati si dice limitata se $\exists M>0$ tale che $||G(u)||\leq M ||u||_U$ $\forall u\in U$ o alternativamente se $\forall u\in U$ $\dfrac{||F(u)||}{||u||_U}\leq M$.\\ Definiamo norma di $F$ la quantità \[||F||=\sup_{u\in U}\dfrac{||F(u)||}{||u||}=\sup_{||u||=1}||F(u)||\]
+		\item Una mappa lineare tra spazi normati è limitata se e solo se è continua.
+		\item L'insieme delle mappe lineari tra spazi normati $U\rightarrow V$ imitate e continue è uno spazio normato e se $U,V$ sono spazi di Banach lo è anche questo insieme.
+		\item Lo spazio dei funzionali lineari  $F:U\rightarrow\mathbb{C}$ limitati su $U$ è detto spazio duale ad $U$ e si scrive $U^*$ o $U'$.
+		\item Per un generico spazio di Hilbert $\mathcal{H}$ lo spazio duale $\mathcal{H}'$ è isomorfo a $\mathcal{H}$, per ogni funzionale lineare limitato $F$ esiste un unico $w\in\mathcal{H}$ tale che $F(x)=(w,x)$ $\forall x\in \mathcal{H}$ e $||F||_{\mathcal{H}'}=||w||_{\mathcal{H}}$. 
+	\end{itemize}
+\par
+\textbf{\large Distribuzioni}\par 
+	\begin{itemize}[label=$\cdot$]
+		\item Lo spazio delle funzioni di test di Schwartz è
+\[S(\mathbb{R})=\{\varphi\in C^\infty(\mathbb{R}) : ||\varphi||_{ij}:=\sup_{x\in\mathbb{R}}|x^iD^j \varphi(x) |<\infty \>\forall i,j\in\mathbb{N}\} \]
+		\item $S(\mathbb{R}^d)$ è uno spazio vettoriale infinito dimensionale, contenuto e denso in $L^2(\mathbb{R}^d)$  per la topologia di $L^2$.
+	\end{itemize}
+\textbf{Spazio delle distribuzioni} \par
+Lo spazio delle distribuzioni temperate è lo spazio duale allo spazio di Schwartz $S^*$.
+	\begin{itemize}[label=$\cdot$]
+		\item Le funzioni $f:\mathbb{R}^d\rightarrow\mathbb{C}$, appartenti ad un $L^p(\mathbb{R}^d$) o a $O_M$ o ad $S(\mathbb{R}^d)$, definiscono distribuzioni dette regolari con $F(\varphi)=\int_\mathbb{R} f(x)\varphi(x) dx$ $\forall\varphi\in S(\mathbb{R})$.
+		\item Una distribuzione non regolare $\Psi$ è definita dal suo effetto su una funzione di test qualsiasi e mediante l'integrale formale $\int \psi(x) \varphi(x) dx$.
+	\end{itemize}
+\par
+	\textbf{\boldmath Operazioni in $S'$ \unboldmath} \par
+		\begin{itemize}[label=$\cdot$]
+			\item 	Se $A:S\rightarrow S$ è una mappa lineare e continua allora per ogni distribuzione regolare $\varphi_0\in S$ esiste una mappa lineare e continua $A^*$ tale che $(A\varphi_0)(\varphi)=\varphi_0(A^*\varphi)$ cioè
+			$\int A\varphi_0 (x) \, \varphi(x)\, dx = \int \varphi_0(x) \, A^*\varphi(x)\, dx$
+			\item Una mappa $A$ lineare e continua su $S'$ è definita da $AF(\varphi)=F(A^*\varphi)$
+			\item Moltiplicazione per una funzione $f\in O_M$:\\$fF(\varphi)=F(f\varphi)$.
+			\item Derivata: $DF(\varphi)=-F(D\varphi)$
+		\end{itemize}
+\par
+	\textbf{ Delta di Dirac} \par
+	La delta di Dirac è una distribuzione non regolare definita da
+	\[
+	\delta^D_a \varphi= \int_{\mathbb{R}^D} \delta(x-a) \varphi(x) d^Dx := \varphi(a)
+	\]		
+	\begin{itemize}[label=$\cdot$]
+		\item La delta è componibile con una funzione $f:\mathbb{R}^D\rightarrow\mathbb{R}^D$ che sia di classe $C^1$ con $N$ zeri in $x_1,\dots,x_N$ e la composizione sarà la distribuzione
+		\[
+			\delta^D(f)=\sum_{j=1}^N \dfrac{\delta^D(x-x_j)}{|\det{J_f}(x_j)|} 
+		\]
+	\end{itemize}
+\par
+\textbf{\boldmath Trasformate di Fourier\unboldmath} \par
+Per $f\in L^1(\mathbb{R}^D)$ la sua trasformata di Fourier è 
+\[
+	\mathcal{F}f=\hat{f}:=\dfrac{1}{(2\pi)^{\sfrac{D}{2}}} \int_{\mathbb{R}^D} e^{-ik\cdot x}f(x) d^Dx
+\]
+	\begin{itemize}[label=$\cdot$]
+		\item L'antitrasformata $\mathcal{F}^{-1}$ di $f$ è definita \[\widecheck{f}=\dfrac{1}{(2\pi)^{\sfrac{D}{2}}} \int_{\mathbb{R}^D} e^{ik\cdot x}f(x) d^Dx\]
+		\item Il complesso coniugato della trasformata di $f$ è l'antitrasformata del complesso coniugato di $f$.
+		\item $\mathcal{F}\circ\mathcal{F}^{-1}=\mathcal{F}^{-1}\circ\mathcal{F}=\mathbb{I}_{L^1}$
+		\item La trasformata di Fourier in $L^1$ rispetta :
+			\begin{multicols*}{2}
+				\begin{itemize}[label=$\cdot$]
+					\item $\widehat{\widehat{f}}(x)=f(-x)$
+					\item $\widehat{f(x+a)}=e^{ika}\widehat{f}(k)$
+					\item $\widehat{e^{iax}f(x)}=\widehat{f}(k-a) $
+					\item $\widehat{f_1*f_2}=(2\pi)^{\sfrac{D}{2}} \widehat{f_1}\widehat{f_2}(k)$
+					\item $\widehat{f_1f_2}=\dfrac{(f_1*f_2)(k)}{(2\pi)^{\sfrac{D}{2}}}$
+				\end{itemize}
+			\end{multicols*}
+		\item Per ogni $f_1,f_2$ in $L^2$ vale $(f_1,f_2)_{L^2}=(\widehat{f_1},\widehat{f_2})$
+		\item La trasformata di Fourier si può estendere alle distribuzioni tramite $\widehat{F}(\varphi)=F(\widehat{\varphi})$ ed è un omeomorfismo di $S'$.
+			\begin{itemize}[label=$\cdot$]
+					\item $\widehat{\delta(x)}(k)=\dfrac{1}{\sqrt{2\pi}}$
+					\item $\widehat{\mathcal{P}\dfrac{1}{x}}(k)=-i\sqrt{\frac{\pi}{2}}\text{sgn}(x)$
+			\end{itemize}
+		\item La trasformata di Fourier in $S'$ rispetta :
+			\begin{itemize}[label=$\cdot$]
+				\item $\widehat{P(\partial_J)F}(k)=P(ik_j)\widehat{F}(k)$
+				\item $\widehat{P(x^J)F}(k)=P(i\partial_j)\widehat{F}(k)$
+				\item Tutte le proprietà scritte precedentemente per $\mathcal{F}$ in $L^1$
+			\end{itemize}
+	\end{itemize}
+\end{center}
+
+\end{multicols*}
+
+\end{document}

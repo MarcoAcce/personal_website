@@ -1,0 +1,843 @@
+\documentclass[11pt,a4paper,twoside]{book}
+\usepackage{fouriernc} %New Century Schoolbook with Fourier math
+\usepackage[utf8]{inputenc} 
+\usepackage{amsmath, amsthm, amsfonts, amssymb, xfrac}
+\usepackage[italian]{babel}
+\usepackage{titling, titlesec}  
+\usepackage[left=2.5cm, right=2cm, top=2cm, bottom=2cm]{geometry} %Gestione margini pagina
+\usepackage{perpage} %Permette di resettare una numerazione per pagina
+\usepackage{fancyhdr} %Lo uso per avere titolo e autore running
+\usepackage[hidelinks]{hyperref} %lo uso per avere l'indice cliccabiile
+\usepackage{graphicx, wrapfig, float} %Immagini
+\usepackage[shortlabels]{enumitem}
+\usepackage{ulem}
+
+\usepackage{pdfpages}
+
+
+\MakePerPage{footnote} %Resetta la numerazione delle footnote per pagina
+
+%Autore-------------------------------------------
+\author{Marco Accerenzi}
+\date{}
+\title{Appunti di meccanica statistica}
+
+
+%Titleformat-----------------------------------------------
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\titleformat{\section}{\huge\bfseries}{{\Large \thesection}}{0.5em}{}
+\titleformat{\subsection}{\Large\bfseries}{{\large \thesubsection}}{0.5em}{}
+\titleformat{\paragraph}[runin]{\normalsize\bfseries}{{}}{0}{}
+
+%Pagestyle pagine normali--------------------------------
+\pagestyle{fancy} %Serve per poter modificare le pagine con fancyhdr facilmente
+\renewcommand{\sectionmark}[1]{ \markright{#1}{} }
+
+\lhead[]{\small Marco Accerenzi}  %Autore a sinistra nelle pagine dispari
+\chead[\small \rightmark]{} %Capitolo al centro nelle pagine pari
+\rhead[]{\small Appunti di meccanica statistica} %Titolo a destra nelle pagine dispari
+\fancyfoot[LE,RO]{\large\thepage} %Numero pagina grande a sinistra in basso nelle pagine dispari
+\fancyfoot[C]{}
+\renewcommand{\headrulewidth}{0.25pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+%Modifica pagestyle pagine plain-------------------------------------------
+\fancypagestyle{plain}{
+\fancyhf{} %Toglie tutti i footer ed header
+\fancyfoot[LO,RE]{\thepage} 
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+}
+
+%Tcolorbox per i teoremi, esempi ed esercizi---------------------------
+\usepackage[skins, breakable, theorems]{tcolorbox}
+
+%Box per proposizione
+\newtcbtheorem[number within=section]{Proposizione}{Proposizione}{
+	enhanced,
+	boxrule=0pt,frame hidden,
+	borderline west={2.5pt}{0pt}{black},
+	colback=yellow!1!white,
+	sharp corners,
+	coltitle=black,
+	attach title to upper={\noindent},
+	fonttitle=\bfseries\large,
+}{thm}
+%Box per proposizione
+\newtcbtheorem[number within=section]{Definizione}{Definizione}{
+	enhanced,
+	boxrule=0pt,frame hidden,
+	borderline west={2.5pt}{0pt}{black},
+	colback=yellow!1!white,
+	sharp corners,
+	coltitle=black,
+	attach title to upper={\noindent},
+	fonttitle=\bfseries\large,
+}{thm}
+%Box per proposizione
+\newtcbtheorem[number within=section]{Teorema}{Teorema}{
+	enhanced,
+	boxrule=0pt,frame hidden,
+	borderline west={2.5pt}{0pt}{black},
+	colback=yellow!1!white,
+	sharp corners,
+	coltitle=black,
+	attach title to upper={\noindent},
+	fonttitle=\bfseries\large,
+}{thm}
+
+%Ambienti per proposizione, definizione, lemma e corollario
+\newenvironment{proposizione}[1][\empty]{\begin{Proposizione}{
+\ifx\empty#1\relax\else\mdseries\itshape#1\\\fi
+}{}}{\end{Proposizione}}  
+\newenvironment{teorema}[1][\empty]{\begin{Teorema}{
+\ifx\empty#1\relax\else\mdseries\itshape#1\\\fi
+}{}}{\end{Teorema}} 
+\newenvironment{definizione}[1][\empty]{\begin{Definizione}{
+\ifx\empty#1\relax\else\mdseries\itshape#1\\\fi
+}{}}{\end{Definizione}}
+
+
+%Box per pezzi generici importanti-------------------------
+\newenvironment{importante}[1][~]{ 
+  \begin{center}\begin{tcolorbox}[enhanced,
+  before skip=2mm,after skip=3mm,
+  boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
+  colback=white,
+  colframe=white!20!black,
+  sharp corners,arc=3mm,
+  underlay={
+  	\path[fill=red!50!black,draw=none] (interior.south west) rectangle 			
+  	node[white]{\Huge\bfseries !} ([xshift=4mm]interior.north west);
+  },
+  drop fuzzy shadow]
+ {\ifx\empty#1\relax\else\mdseries\bfseries#1\\\fi}
+ \normalsize 
+  }{
+	\end{tcolorbox}\end{center}
+}
+
+%Box per esempi----------------------
+\newenvironment{esempio}[1][Esempio]{ 
+  \begin{center}\begin{tcolorbox}[
+  title={#1:\\},
+  width=0.9\linewidth,
+  flush right,
+  enhanced jigsaw, 
+  colback=white, 
+  frame hidden, 
+  sharpish corners, arc=3mm,
+  borderline west = {1pt}{0pt}{gray},
+  borderline south = {1pt}{0pt}{gray},
+  coltitle=black, 
+  fonttitle=\small\bfseries, 
+  attach title to upper, 
+  breakable,
+  top=2.5pt, bottom=0.3pt]\small
+  }{
+ \normalsize \end{tcolorbox}\end{center}
+}
+
+%Ambiente proof con riga a sinistra---------------------------
+\newenvironment{dimo}[1][\proofname]{
+	\begin{tcolorbox}[
+	breakable, 
+	enhanced, 
+	interior hidden, 
+	frame hidden, 
+	borderline west = {1pt}{0pt}{gray}, 
+	top=0pt, bottom=0pt, left=0pt]
+\begin{proof}[#1:~]
+}
+{
+\end{proof}
+\end{tcolorbox}
+}
+
+
+%Miste------------------------------------------------------------------
+\numberwithin{equation}{section} %Numerazione equazione per sezione
+\hypersetup{linktoc=all}
+\newcommand{\sectionbreak}{\clearpage}
+\def\shrug{\texttt{\raisebox{0.75em}{\char`\_}\char`\\\char`\_\kern-0.5ex(\kern-0.25ex\raisebox{0.25ex}{\rotatebox{45}{\raisebox{-.75ex}"\kern-1.5ex\rotatebox{-90})}}\kern-0.5ex)\kern-0.5ex\char`\_/\raisebox{0.75em}{\char`\_}}}
+
+%Indice--------------------------------------------------------
+\usepackage{tocloft}
+\renewcommand{\cftpartfont}{\large\bfseries}
+\renewcommand{\cftsecfont}{\bfseries}
+
+
+
+\begin{document}%-------------------------------------------------------------
+
+\frontmatter
+\pagestyle{empty}
+
+%Copertina----------------------------------------------------------------------
+\begin{titlepage}
+	\begin{center}
+
+	\begin{center}
+		\centering
+		Anno accademico 2020-2021\par
+		\vspace{.05\textheight}
+	\end{center}	
+
+		\vspace{.1\textheight}
+		{\LARGE\scshape \textsc{Marco Accerenzi}\par}
+		\vspace{.1\textheight}
+		\textsc{}\par
+		\vspace{.05\textheight}
+		{\Huge \textsc{Istituzioni di Fisica Teorica: Meccanica Statistica}\par}
+		\vspace{.05\textheight}
+		{\large Riassunto degli appunti\par}
+		\vfill
+		{\large
+Questo fascicoletto è un riassunto dei miei appunti personali del corso di \textit{Meccanica Statistica} dell'anno accademico 2020-2021 tenuto dal prof. Baldovin. \\Ho cercato di rendere rendere la notazione il più semplice e comprensibile possibile quindi in alcuni punti si discosta leggermente da quella del corso. \shrug
+
+  }
+  \vspace{2cm} 
+\end{center}
+\end{titlepage}
+
+%Inizio------------------------------------------------------------------------------
+\tableofcontents\thispagestyle{empty}
+%-----------------------------------------------------------------------------
+\mainmatter\pagestyle{fancy}
+\section{Introduzione termodinamica}
+
+Il comportamento macroscopico all'equilibrio di un sistema è completamente descritto dalla sua entropia $S$, funzione di variabili estensive, cioè linearmente additive. Tipicamente queste variabili estensive e macroscopiche sono: \begin{itemize}[label=$\cdot$]
+\item L'energia interna al sistema $U$
+\item Il volume occupato dal sistema $V$
+\item Il numero di particelle che compongono il sistema $N$
+\end{itemize}
+quindi
+\begin{equation}
+S=S(U,V,N)
+\end{equation}
+
+\subsection{Postulati}
+Il problema di fondo della termodinamica è la determinazione dello stato di equilibrio raggiunto da un sistema alla rimozione di un suo vincolo interno. Per esempio un sistema potrebbe essere diviso in due parti $A,B$ da una parete isolante e alla rimozione di questa parete un rimescolamento delle componenti porterà ad un nuovo equilibrio.
+
+\begin{definizione}
+Chiamiamo constrained entropy (entropia vincolata) l'entropia totale di un sistema termodinamico composto da due sottosistemi $A,B$ divisi da una parete interna che impedisce lo scambio della variabile estensiva $X_k$.
+\end{definizione}
+
+\begin{importante}[Postulato di additività]
+La constrained entropy di un sistema composto è
+\begin{equation}
+S_c^{tot}(X_k^A,X_k^B)=S^A(X_k^A)+S^B(X_k^B)
+\end{equation}
+\end{importante}
+
+LA condizione di chiusura sulle variabili estensive $X_k$ però è
+\begin{equation}
+X_k^{tot}=X_k^A+X_k^B
+\end{equation}
+quindi la constrained entropy si può vedere come funzione di solo una delle due $X_k^{A,B}$ e della $X_k^{tot}$
+\[
+S_c^{tot}(X_k^A|X_k^{tot})=S^A(X_k^A)+S^B(X_k^{tot}-X_k^A)
+\]
+
+Questo problema è risolto dal postulato di massima entropia
+
+\begin{importante}[Postulato di massima entropia]
+Una volta rimosso il vincolo interno sulla variabile estensiva $X_k^A$ questa assumerà il valore $\overline{X_k^A}$ che massimizza $S_c^{tot}$, quindi l'entropia totale del sistema al nuovo equilibrio è
+\begin{equation}
+S^{tot}\left(X_k^{tot}\right)=\max_{X_k^A} \left\{ \> S_c^{tot}\left(X_k^A|X_k^{tot}\right) \right\} = S_c^{tot}\left(\overline{X_k^A}|X_k^{tot}\right)
+\end{equation}
+\end{importante}
+
+Il terzo postulato sull'entropia è
+\begin{importante}[Postulato di omogeneità]
+L'entropia è una funzione omogenea di grado $1$ 
+\begin{equation}
+S(\lambda U,\lambda V, \lambda N) = \lambda S(U,V,N) \qquad \forall \lambda > 0
+\end{equation}
+\end{importante}
+
+questo postulato permette, fissato il numero di particelle del sistema, di definire l'entropia specifica $s$ come funzione di energia e volumi specifici e di ottenere l'entropia totale a partire da quella specifica
+\[
+u:=\dfrac{U}{N} \,,\>  v=\dfrac{V}{N} \,,\> s(u,v):=S\left(\dfrac{U}{N},\dfrac{V}{N}\right)  \implies S(U,V,N)=N s(u,v)
+\]
+
+\subsection{Equazioni di stato}
+
+Abbiamo detto che $S=S(U,V,N)$ contiene tutta l'informazione sul sistema termodinamico all'equilibrio, possiamo però esprimere la termodinamica in modo equivalente tramite le equazioni di stato che definiscono $3$ parametri intensivi:
+\begin{align}
+\dfrac{1}{T}(U,V,N)=\dfrac{\partial S}{\partial U} (U,V,N) \\
+\dfrac{P}{T}(U,V,N)=\dfrac{\partial S}{\partial V} (U,V,N) \\
+\dfrac{\mu}{T}(U,V,N)=-\dfrac{\partial S}{\partial N} (U,V,N) \\
+\end{align}
+
+e questo ci dà la prima \textbf{legge della termodinamica} in rappresentazione per entropia:
+\begin{equation}
+dS=\dfrac{1}{T}dU+\dfrac{P}{T}dV-\dfrac{\mu}{T}dN
+\end{equation}
+
+Questa insieme all'omogeneità dell'entropia ci permette di dimostrare la \textbf{relazione di Euler}
+\begin{equation}
+S=\dfrac{1}{T}U+\dfrac{P}{T}V-\dfrac{\mu}{T}N
+\end{equation}
+\begin{dimo}\begin{align*}
+S(U,V,N)&=\dfrac{\partial}{\partial \lambda} \,\lambda S(U,V,N) = 
+   \dfrac{\partial}{\partial \lambda} \, S(\lambda U,\lambda V,\lambda N) =\\
+&= \dfrac{\partial S(\lambda U,\lambda V,\lambda N)}{\partial \lambda U} \dfrac{\partial \lambda U}{\partial \lambda} +
+\dfrac{\partial S(\lambda U,\lambda V,\lambda N)}{\partial \lambda V} \dfrac{\partial \lambda V}{\partial \lambda} +
+\dfrac{\partial S(\lambda U,\lambda V,\lambda N)}{\partial \lambda N} \dfrac{\partial \lambda N}{\partial \lambda} =\\
+&= \dfrac{1}{T}U+\dfrac{P}{T}V-\dfrac{\mu}{T}N  \qedhere
+\end{align*}\end{dimo}
+
+
+\subsection{Rappresentazione in energia}
+
+Sappiamo che nella materia convenzionale le temperature sono sempre positive, quindi
+\[
+\dfrac{\partial S}{\partial U} >0
+\]
+e potremo invertire e costruire $U=U(S,V,N)$.
+
+anche per la rappresentazione in energia avremo 3 postulati corrispondenti a quelli per l'entropia
+\begin{itemize}
+\item Additività : $U_c^{tot}(X_k^A,X_k^B)=U^A(X_k^A)+U^B(X_k^B)$
+\item Minima energia : $ U^{tot}\left(X_k^{tot}\right)=\min_{X_k^A} \left\{ \> U_c^{tot}\left(X_k^A|X_k^{tot}\right) \right\} = U_c^{tot}\left(\overline{X_k^A}|X_k^{tot}\right)$\footnote{In un processo termodinamico l'equilibrio corrisponderà al massimo per l'entropia in funzione di U,V,N o al minimo per l'energia in funzione di S,V,N. }
+\item Omogeneità : $U(\lambda S,\lambda V, \lambda N) = \lambda U(S,V,N) \qquad \forall \lambda > 0$
+\end{itemize}
+e $3$ equazioni di stato
+
+\begin{align*}
+T(U,V,N)=\dfrac{\partial U}{\partial S}(U,V,N)\\
+P(U,V,N)=-\dfrac{\partial U}{\partial V}(U,V,N)\\
+\mu(U,V,N)=\dfrac{\partial U}{\partial S}(u,V,N)
+\end{align*}
+
+tramite cui potremo tradurre in energia la prima legge della termodinamica 
+\begin{equation}
+dU=TdS-PdV+\mu dN
+\end{equation}
+e la sua relazione di Euler
+\[
+U=TS-PV+\mu N
+\]
+
+
+
+\section{Potenziali termodinamici}
+
+
+Un caso importante in termodinamica è lo studio di un sistema a contatto con una \textit{reservoir} molto grande con la quale è possibile lo scambio di una o più delle variabili $X_k$ da cui dipende l'entropia. Per semplicità supponiamo che il sistema sia separato ealla reervoir da una parete che fissi un parametro intensivo $P_k$ del sistema e permetta un particolare scambio di $X_k$
+\begin{itemize}[label=$\cdot$]
+\item Scambio termico $\iff$ Parete diatermica, rigida e impermeabile $\iff$ Fissata $T$
+\item Scambio termico e meccanico $\iff$ Parete diatermica, mobile e impermeabile $\iff$ Fissate $T,P$
+\item Scambio termico e di particelle $\iff$ Parete diatermica, fissa e permeabile $\iff$ Fissate $T,\mu$
+\end{itemize}
+
+\subsection{Trasformata di Legendre-Fenchel}
+
+Data una funzione $f:\mathbb{R}\rightarrow\mathbb{R}$ ne definiamo la trasformata di Legendre-Fenchel come
+\begin{equation}
+f^*(p)=\begin{cases}
+\sup_{x}\left\{px-f(x)\right\} & \text{funzioni convesse}\\
+\inf_{x}\left\{px-f(x)\right\} & \text{funzioni concave}\\
+\end{cases}
+\end{equation}
+
+Notiamo che in ambo i casi se per un $p$ fissato $f$ è differenziabile nel $\overline{x}$ che estremizza il secondo membro allora $p$ è il coefficiente angolare della tangente ad $f(x)$ in $\overline{x}$.
+
+Con una doppia tranformazione di Legendre-Fenchel otteniamo la massima funzione convessa minore di $f(x)$ ( o minima funzione concava maggiore di $f(x)$) quindi se $f$ ha concavità fissa avremo $f^{**}(x)=f(x)$.
+
+Per funzioni differenziabili con derivata monotòna la trasformata di Legendre-Fenchel si può ottenere con
+\[
+f^*(p)=p\,x(p)-f(x(p)) \qquad \text{con } x(p) \text{ ottenuto invertendo } f'(x)=p
+\]
+
+\subsection{Energie libere}
+Lavorando in rappresentazione per energia, sia il sistema a contatto con una reservoir in modo da poter scambiare la $X_k$ estensiva con
+\[
+X_k^{tot}=X_k+X_k^{res}\qquad X_k^{res}>>X_k
+\]
+allora con un espansione di taylor di $U^{res}$ rispetto a $X_k$ attotno a $X_k\sim 0$ che corrisponde a $X_k^{res}\sim X_k^{tot}$
+\begin{align*}
+U^{res}(X_k^{res}) &= 
+U^{res}_{k}(X_k^{tot}) + \left.\dfrac{\partial U^{res}}{\partial X_k^{res}}(X_k^{res})\right|_{X_k^{res}=X_{tot}} \dfrac{\partial X_k^{res}}{\partial X_k} X_k + o = \\
+&\approx U^{res}(X_k^{tot}) - \left.\dfrac{\partial U^{res}}{\partial X_k^{res}}(X_k^{res})\right|_{X_k^{res}=X_{tot}}X_k
+\end{align*}
+
+Chiamando poi
+\begin{equation}
+P_k^{res}:=\dfrac{\partial U^{res}}{\partial X_k^{res}}(X_k^{res})\approx\dfrac{\partial U^{res}}{\partial X_k^{res}}(X_k^{tot})
+\end{equation}
+avremo che all'equilibrio
+\[
+\dfrac{\partial U_c^{tot} }{\partial X_k}=\dfrac{\partial U}{\partial X_k}(X_k)+\dfrac{\partial U_{res}}{\partial X_k^{res}}(X_k^{res})\dfrac{\partial X_k^{res}}{\partial X_k}(X_k)=0 \implies P_k^{res}=P_k:=\dfrac{\partial U}{\partial X_k}(X_k)
+\]
+e quindi l'energia del reservoir all'equilibrio sarà
+\begin{equation}
+U^{res}(X_k^{res}) = \text{const} - P_k X_k
+\end{equation}
+
+\begin{importante}
+Il postulato di minima energia si potrà riscrivere come
+\begin{equation}
+U^{tot}=\min_{X_k}\left\{ U(X_k) - P_k X_k \right\} =: U[X_k](P_k)
+\end{equation}
+\end{importante}
+
+
+Potremo interpretare questa ultima equazione come una trasformata di Legendre-Fenchel che all'equilibrio manda l'energia interna $U(X_k)$ nel potenziale termodinamico $U[X_k](P_k)$.
+
+Per i tre tipi di reservoir citati prima quindi i possibili potenziali termodinamici in rappresentazione per energia sono:
+\begin{itemize}[label=$\cdot$]
+\item Scambio termico: $X_k=S\, , \> P_k=T$
+\[
+F(T,V,N) := U[S](T,V,N) = U(\overline{S},V,N)-T\overline{S}
+\]
+\item Scambio termico e meccanico: $X_k=S\, ,\> X_{k'}=V\, , \> P_k=T\, , \> P_{k'}=P$
+\[
+G(T,P,N) := U[S,V](T,P,N) = U(\overline{S},\overline{V},N)-T\overline{S}+P\overline{V}
+\]
+\item Scambio termico e di particelle: $X_k=S\, ,\> X_{k'}=N\, , \> P_k=T\, , \> P_{k'}=\mu$
+\[
+\mathcal{G}(T,V,\mu) := U[S,N](T,V,\mu)=U(\overline{S},V,\overline{N})-T\overline{S}-\mu\overline{N}
+\]
+\end{itemize}
+Chiameremo $F$ energia libera di Helmholtz, $G$ energia libera di Gibbs e $\mathcal{G}$ potenziale gran canonico.
+
+\subsection{Funzioni di Massieu}
+
+Adesso vogliamo trattare i potenziali termodinamici in rappresentazione per entropia.
+Sia ancora il sistema a contatto con una reservoir in modo da poter scambiare la $X_k$ estensiva con
+\[
+x_k^{tot}=X_k+X_k^{res}\qquad X_k^{res}>>X_k
+\]
+sempre con un espansione di Taylor avremo
+\begin{align*}
+S^{res}(X_k^{res}) &= 
+S^{res}_{k}(X_k^{tot}) + \left.\dfrac{\partial S^{res}}{\partial X_k^{res}}(X_k^{res})\right|_{X_k^{res}=X_{tot}} \dfrac{\partial X_k^{res}}{\partial X_k} X_k + o = \\
+&\approx S^{res}(X_k^{tot}) - \dfrac{\partial S^{res}}{\partial X_k^{res}}(X_k^{tot})\,X_k 
+\end{align*}
+Definendo
+\[
+F_k:=\dfrac{\partial S}{\partial X_k}(X_k) \qquad 
+F_k^{res}:=\dfrac{\partial S^{res}}{\partial X_k^{res}}(X_k^{res}) \approx 
+F_k^{res}:=\dfrac{\partial S^{res}}{\partial X_k^{res}}(X_k^{tot})
+\]
+All'equilibrio avremo che $F_k^{res}=F_k$ e quindi l'entropia del reservoir all'equilibrio sarà
+\begin{equation}\label{espansioneEntropia}
+S^{res}(X_k^{res}) = \text{const} - F_k X_k
+\end{equation}
+
+\begin{importante}
+Il postulato di massima entropia si potrà riscrivere come
+\begin{equation}
+S^{tot}=\max_{X_k}\left\{ S(X_k) - F_k X_k \right\} =: S[X_k](F_k)
+\end{equation}
+\end{importante}
+
+che ancora si potrà vedere come una trasformata di Legendre-Fenchel che manda l'entropia all'equilibrio nel poteziale termodinamico.
+
+Per i tre tipi di reservoir citati prima quindi i possibili potenziali termodinamici in rappresentazione per entropia sono:
+\begin{itemize}[label=$\cdot$]
+\item Scambio termico: $X_k=U\, , \> P_k=T$
+\[
+S[U]\left(\dfrac{1}{T},V,N\right) = S(\overline{U},V,N)-\dfrac{1}{T}\overline{U}
+\]
+con $S[U,N]=-\dfrac{F}{T}$
+\item Scambio termico e meccanico: $X_k=U\, ,\> X_{k'}=V\, , \> P_k=\dfrac{1}{T}\, , \> P_{k'}=P$
+\[
+S[U,V]\left(\dfrac{1}{T},P,N\right) = U(\overline{S},\overline{V},N)-\dfrac{1}{T}\overline{U}-\dfrac{P}{T}\overline{V}
+\]
+con $S[U,V]=-\dfrac{G}{T}$
+\item Scambio termico e di particelle: $X_k=U\, ,\> X_{k'}=N\, , \> P_k=\dfrac{1}{T}\, , \> P_{k'}=\mu$
+\[
+S[U,N]\left(\dfrac{1}{T},V,\mu\right) = U(\overline{S},V,\overline{N})-\dfrac{1}{T}\overline{U} +\dfrac{\mu}{T}\overline{N}
+\]
+con $S[U,N]=-\dfrac{\mathcal{G}}{T}$
+\end{itemize}
+
+
+\section{Meccanica statistica classica}
+La meccanica statistica vuole riconciliare la termodinamica, aspetto macroscopico, con la meccanica delle particelle, aspetto microscopico.
+
+In sistemi macroscopici avremo $N\sim 10^{24}$ particelle nel sistema quindi incorreremo in effetti inaspettati.
+
+Chiamiamo \textbf{microstato} del sistema il vettore $6N$ dimensionale $x$ degli atti di moto del sistema (coordinate e velocità di tutte le particelle) e  \textbf{macrostato} del sistema il vettore $X:=(E,V,N)$ composto da energia, volume e numero di particella complessivi del sistema.
+Possiamo considerare $X_k=F_{X_k}(x)$ quindi le $X_k$ ``erediteranno'' la dipendenza temporale solo dalle $x(t)$.
+
+Il microstato è formato dalle coordinate lagrangiane del sistema quindi la dipendenza temporale sarà data da
+\begin{equation}
+\dfrac{d}{dt}X_k(t)=\dfrac{\partial X_k(x(t))}{\partial t}=\sum_{i=1}^N \dfrac{\partial X_k}{\partial q_i}\dfrac{\partial q_i (t)}{\partial t} +\dfrac{\partial X_k}{\partial p_i}\dfrac{\partial p_i (t)}{\partial t} = \{X_k,H\}
+\end{equation}
+dove $H$ è l'Hamiltoniana e dalle equazioni di Hamilton si ritrova la definizione delle parentesi di Poisson.
+
+Ad ogni macrostato $X$ associamo una densità di probabilità nello spazio delle fasi $\rho(t)$ normalizzata
+\[
+\int \rho(x,t) \, d^{6N}x =1
+\]
+
+Questa densità di probabilità è un campo nello spazio delle fasi dipendente dal tempo quindi ammette due diverse derivate per il tempo:
+\begin{enumerate}[i.]
+\item $\displaystyle \dfrac{\partial}{\partial t}\rho(x,t)=\lim_{\epsilon\rightarrow 0}\dfrac{\rho(x,t+\epsilon)-\rho(x,t)}{\epsilon}$
+\item $\displaystyle \dfrac{d}{dt}\rho(x,t)=\sum_{i=1}^N \dfrac{\partial \rho(x,t)}{\partial q_i}\dfrac{\partial q_i(t)}{\partial t} + \dfrac{\partial \rho(x,t)}{\partial t}\dfrac{\partial p_i(t)}{\partial t} + \dfrac{\partial \rho}{\partial t}(x,t)=\{\rho,H\}+\dfrac{\partial}{\partial t}\rho(x,t)$
+\end{enumerate}
+
+La densità di probabilità permette di calcolare i valori medi per le $X_k$ associati ad un macrostato $X_{td}(t)$, che denoteremo con $X_{td,k}(t)$ tramite
+\begin{equation}
+X_{td,k}(t)=\mathbb{E}[X_k](t)=\int X_k(y)\, \rho(y,t) \> d^{6N}y \qquad \text{con } y=x(0) \qquad \text{Schrödinger}
+\end{equation}
+o equivalentemente tramite
+\begin{equation}
+X_{td,k}(t)=\mathbb{E}[X_k](t)=\int X_k(x(t))\, \rho(y,0) \> d^{6N}y \qquad \text{con } y=x(0) \qquad \text{Heisenberg}
+\end{equation}
+
+\begin{teorema}[Liouville]
+La densità di probabilità rispetta
+\[
+\dfrac{d}{dt}\rho(x,t)=0 \iff \dfrac{\partial}{\partial t}\rho(x,t)=-\{\rho,H\}
+\]
+\end{teorema}
+
+In meccanica statistica una \textit{statistical ensemble} è un insieme contenente un grande numero di copie di un dato sistema ciascuna corrispondente ad uno dei suoi possibili stati, tutte considerate insieme. Quindi una ensemble corrisponde ad una distribuzione di probabilità sul microstato del sistema.
+
+La \textit{microcanonical ensemble} è l'ensemble per un sistema isolato con energia totale determinata.
+
+\subsection{Microcanonical ensemble}
+
+All'equilibrio la densità di probabilità è stazionaria perchè
+\[
+0=\dfrac{d}{dt}X_{td,k}(t)=\int X_k(x)\dfrac{\partial\rho(x,t)}{\partial t}\>d^{6Nx}\implies \dfrac{\partial\rho(x,t)}{\partial t}=0
+\]
+Per una densità di probabilità stazionaria, come conseguenza del teorema di Lioville, vale 
+\[
+\dfrac{\partial}{\partial t} \rho_{st}(x,t)=0 \iff \{\rho_{st},H\}=0
+\]
+Questo si risolve immediatamente se $\rho_{st}(x)=\rho_{st}(H(x))$ infatti con la definizione delle parentesi di Poisson
+\[
+\{\rho_{st},H\}=\sum_{i=1}^N \dfrac{\partial \rho}{\partial q_i}\dfrac{\partial H}{\partial p_i} - \dfrac{\partial \rho}{\partial p_i}\dfrac{\partial H}{\partial q_i} = 
+\sum_{i=1}^N \dfrac{\partial \rho}{\partial H}\left( 
+\dfrac{\partial H}{\partial q_i} \dfrac{\partial H}{\partial p_i} - \dfrac{\partial H}{\partial p_i}\dfrac{\partial H}{\partial q_i} \right) = \dfrac{\partial \rho}{\partial H}\{H,H\}=0
+\]
+
+Ma essendo la dipendenza spaziale di $\rho$ dovuta da $H$ allora su un dato guscio di energia $H(x)=E^{tot}$ di spessore $\Delta E^{tot}$\footnote{Questo in realtà dovrebbe essere un livello di energia di spessore infinitesimo ma sappiamo che per $N$ grandi il volume $2N$-dim nello spazio delle fasi non dipende dallo spessore quindi possiamo considerare un qualsiasi $\Delta E$.} la densità di probabilità stazionaria sarà anche uniforme!
+
+Si dimostra che questa soluzione è un attrattore per q.o. densità di probabilità di non-equilibrio 	quindi $\rho_{st}(H(x))$ è un equilibrio stabile per la densità di probabilità, chiamato \textbf{densità di probabilità microcanonica}
+\begin{equation}
+\rho_{mc}(x)=\rho_{st}(H(x))
+\end{equation}
+
+Questo procedimento si può ripetere per altre variabili dinamiche $X_k$ conservate con $\{X_k,H\}=0$ e quindi più in generale
+\[
+\rho_{mc}(x)=\rho_{st}(H(x),X_k(x))
+\]
+
+Essendo $\rho_{mc}$ uniforme tutti i microstati accessibili (cioè tutti quelli possibili per le conservazione di $E,X_k$ ) sono equiprobabili, quindi per $\Gamma(E,X)$ il volume del guscio energetico di energia $E$ e spessore $\Delta E$ \footnote{Ogni punto di $D$ è un microstato accessibile quindi il volume $2N$-dim del guscio sarà proporzionale al numero dei microstati accessibili.}
+\[
+\Gamma(E,X)=\int_{D} d^{6N}x \qquad D=\left\{x:E-\dfrac{\Delta E}{2}\leq H(x)\leq E+\dfrac{\Delta E}{2}\right\}
+\] 
+\begin{importante}
+La densità di probabilità microcanonica è
+\begin{equation}
+\rho_{mc}(x)=\dfrac{\mathbb{1}_D(x)}{\Gamma(E,X)}
+\end{equation}
+dove $\mathbb{1}_D(x)$ è la funzione indicatrice dell'insieme $D$.
+\end{importante}
+
+\subsubsection{Entropia}
+
+Consideriamo un sistema isolta diviso in due parti $A,B$ da una parete interna che le mantiene entrambe individualmente isolate con $U^{tot}=U^A+U^B$.
+Allora il volume del guscio di energia \textit{contrained} $E=U_c^{tot}$ di spessore $\Delta U^{tot}$ è\footnote{Abbiamo detto che questo volume corrisponde in qualche modo al numero di microstati accessibili: essendo le due parti indipendenti ed isolate il numero totale di microstati complessivamente accessibili sarà il prodotto dei microstati accessibili per le due parti.}
+\begin{equation}\label{volumeGuscioComposto}
+\Gamma^{tot}_c(U^A,U^B,X)=\Gamma^A(U^A,X^A)\,\Gamma^B(U^B,X^B)
+\end{equation}
+quindi per il logaritmo $\ln(\Gamma^{tot})=\ln(\Gamma^A)+\ln(\Gamma^B)$ ed essendo l'entropia constrained additiva 
+\[
+S_c(\ln(\Gamma^{tot}(U^A,U^B,X)\,))=S(\ln(\Gamma^A(U^A,X^A)\,))+S(\ln(\Gamma^B(U^B,X^B)\,))
+\]
+
+Assumendo che entropia ed entropia constrained abbiano la stessa dipendenza da $\ln\Gamma$ possiamo applicare
+\[
+f(x+y)=f(x)+f(y)\implies f(x)=c\,x \qquad \text{Equazione di Cauchy}
+\]
+e quindi
+\begin{equation}
+S(U^A,X^A)=k_B\,\ln\left( \dfrac{\Gamma^A(U^A,X^A)}{\Gamma_0(N^A)} \right)
+\end{equation}
+
+\begin{equation}
+S_c^{tot}(U^A,X^A,U^B,X^B)=k_B\,\ln\left( \dfrac{\Gamma_c^{tot}(U^A,X^A,U^B,X^B)}{\Gamma_0(N^A,N^A)} \right)
+\end{equation}
+
+dove abbiamo chiamato $\Gamma_0$ il volume nello spazio delle fasi occupato da un singolo microstato e $k_b$ è la costante di Boltzamann.
+
+Il rapporto $X(U,X):=\dfrac{\Gamma(U,X)}{\Gamma_0(N)}$ sarà esattamente il numero di microstati accessibili e quindi
+\begin{equation} 
+S(U,X)=k_B \ln Z(U,X)
+\end{equation}
+
+Alla rimozione del vincolo termico tra le due parti la termodinamica ci dice che l'entropia totale sarà uguale all'entropia constrained massima $S^{tot}(U^{tot},X^{tot})=S_c^{tot}(\overline{U^A},X^A|U^{tot})$ quindi chiamiamo
+\[
+\Gamma^{tot}(U^{tot},X^{tot})=\Gamma_c^{tot}(\overline{U^A}|U^{tot},X^{tot})=\Gamma^A(\overline{U^A},X^A)\,\Gamma^B(U^{tot}-\overline{U^A},X^B)=\max_{U^A}\left\{\Gamma_c^{tot}(U^A|U^{tot},X^{tot})\right\}
+\]
+e l'entropia \textit{termodinamica} sarà
+\begin{equation}
+S_{td}^{tot}(U^{tot},X^{tot})= k_b\ln\left( \dfrac{\Gamma^{tot}(U^{tot},X^{tot})}{\Gamma_0(N^A,N^B)} \right)=k_b\max_{U^A}\left\{ \ln\left( \dfrac{\Gamma_c^{tot}(U^A|U^{tot},X^{tot})}{\Gamma_0(N^A,N^B)} \right)\right\}
+\end{equation}
+
+Se invece calcoliamo il volume del guscio di energia come 
+\begin{align*}
+\Gamma_{mc}^{tot}(U^{tot},X^{tot}) &= \sum_{U^A}\Gamma^A(U^A,X^A)\,\Gamma(U^{tot}-U^A,X^B)=\\
+&\int \dfrac{d U^A}{\Delta U}\Gamma^A(U^A,X^A)\Gamma^B(U^{tot}-U^A,X^B) = \int \dfrac{\Delta U^A}{\Delta U} \Gamma_c^{tot}(U^A,U^{tot}-U^A)=
+\\ &\approx \max_{U^A}\left\{\Gamma_c^{tot}(U^A|U^{tot},X^{tot})\right\}
+\end{align*}
+troviamo con questo l'entropia \textit{microcanonica}
+\begin{equation} 
+S_{mc}(U,X)=k_b\ln\left( \dfrac{\Gamma_{mc}^{tot}(U^{tot},X^{tot})}{\Gamma_0(N^A,N^B)} \right)=k_B \ln Z_{mc}(U,X)
+\end{equation}
+
+L'entropia microcanonica sarà leggermente maggiore di quella termodinamica perchè ``tiene conto'' delle possibili fluttuazioni attorno al massimo.
+
+\sectionbreak
+\subsection{Dalla microcanonica alle altre ensemble}
+L'enseble microcanonica porta a conti difficoltosi e inoltre i sistemi isolati sono solo un caso teorico, per questo introduciamo altre ensemble più comode.
+
+Sia il sistema a contatto con una reservoir con cui può scambiare delle $X_k$ in modo che
+\[
+X_k^{tot}=X_k+X_k^{res} \qquad X_k^{res}>>X_k
+\]
+allora il numero di microstati si potrà esprimere tramite \eqref{volumeGuscioComposto} come
+\[
+Z_c^{tot}(X_k|X_k^{tot})=Z(X_k)Z^{res}(X_k^{tot}-X_k)
+\]
+e ricordando l'espansione \eqref{espansioneEntropia} per l'entropia della reservoir
+\[
+S^{res}(X_k)=\text{const}-P_kX_k
+\]
+e quindi 
+\begin{align*}
+Z_c^{tot}(X_k|P_k)=Z(X_k)Z^{res}(X_k|P_k) \implies \ln Z_c^{tot}(X_k|P_k) = \ln Z(X_k)+ \ln Z^{res}(X_k|P_k) \implies
+S_c^{tot}=S(X_k)-P_kX_k +o
+\end{align*}
+ma allora
+\[
+S_c^{tot}(X_k|P_k)=S(X_k)-P_kX_k +o =k_B\ln Z(X_k)+k_B\ln Z^{res}(X_k|P_k)=k_b\ln Z_c^{tot}(X_k|P_k)
+\]
+che significa
+\begin{equation}
+Z_c^{tot}(X_k|P_k)=\text{const} \>e^{ \dfrac{S(X_k)-X_kP_k}{k_B} +o }
+\end{equation}
+\[
+Z^{tot}(P_k)=\int \dfrac{dX_k}{\Delta X_k} \text{const} \>\exp{\left( \dfrac{S(X_k)-X_kP_k}{k_B} +o \right)}
+\]
+Il termine $\displaystyle e^{-\frac{X_kP_k}{k_B}}$ è detto fattore di Boltzmann.
+
+Per un sistema a contatto con una reservoir la $X_k$ può oscillare e l'entropia di sistema+entropia corrisponde alla definizione del potenziale di Massieu in meccanica statistica
+\[
+S_{sm}[X_k](P_k):=k_B\ln Z^{tot}(P_k)
+\]
+e troviamo che
+\begin{align*}
+S_{sm}[X_k](P_k) &= k_B\ln\left( \int \dfrac{dX_k}{\Delta X_k} \text{const} \>\exp{\left( \dfrac{S(X_k)-X_kP_k}{k_B} +o \right)} \right)\\
+ & = k_B\ln(\text{const})+k_B\ln\left( \int \dfrac{dX_k}{\Delta X_k} \exp{\left( \dfrac{S(X_k)-X_kP_k}{k_B} +o \right)} \right) =\\
+  & \approx k_B\ln(\text{const})+k_B\max_{X_k}\left\{ \ln\left( \exp{\left( \dfrac{S(X_k)-X_kP_k}{k_B} \right)} \right)\right\} =\\
+ &=S_{td}[X_k](P_k)+k_B\text{const}
+\end{align*}
+
+Studiando (omesso) l'esponenziale si trova che più precisamente
+\begin{equation}
+S_{sm}[X_k](P_k)=S_{td}[X_k](P_k)=\dfrac{\ln N}{2} +k_B\text{const}
+\end{equation}
+In condizioni tipiche le due definizioni differiscono al più di un termine $\ln N$ però in punti critici le definizioni potrebbero differire significativamente.
+\par~\par
+La densità di probabilità perchè il sistema abbia un valore specifico $X_k=Y$ è
+\begin{align*}
+\rho(X_k=Y|P_k) \,\Delta X_k&=\int \rho_{mc}(x,x^{res})\mathbb{1}_{X_k=Y}(x)\,d^{6N}x\,d^{6N^{res}}x^{res} =
+   \int \dfrac{\mathbb{1}_{D}(x)}{\Gamma^{tot}(X^{tot})} \mathbb{1}_{X_k=Y}(x)\,d^{6N}x\,d^{6N^{res}}x^{res} =\\
+&= \dfrac{1}{\Gamma^{tot}(X^{tot})} \int \mathbb{1}_{X_k^{res}-Y}(x^{res}) \mathbb{1}_{X_k=Y}(x)\,d^{6N}x\,d^{6N^{res}}x^{res}=\\
+&= \dfrac{1}{\Gamma^{tot}(X^{tot})} \left( \int  \mathbb{1}_{X_k=Y}(x)\,d^{6N}x \right) \left( \int \mathbb{1}_{X_k^{res}-Y}(x^{res})\,d^{6N^{res}}x^{res}\right) =\\
+&= \dfrac{\Gamma(X_k=Y)\,\Gamma(X_k^{tot}-Y)}{\Gamma^{tot}(X^{tot})}=\dfrac{\dfrac{\Gamma(X_k=Y)}{\Gamma_0(N)}\dfrac{\Gamma(X_k^{tot}-Y)}{\Gamma_0(N^{res}} }{\dfrac{\Gamma^{tot}(X^{tot})}{\Gamma_0(N)\Gamma_0(N^{res})}} =\\
+&= \dfrac{Z_c^{tot}(X_k=Y|P_k)}{Z^{tot}(P_k)} 
+\end{align*}
+
+dato che per un sistema+reservoir possiamo sempre assumere che $\Gamma_0(N)\Gamma_0(N^{res})=\Gamma_0^{tot}(N,N^{res})$
+\begin{equation}
+\rho(X_k=Y|P_k) \approx \dfrac{\exp{\left( \dfrac{S(X_k=Y)-YP_k}{k_B} \right)} }{\displaystyle\int dX_k \exp{\left( \dfrac{S(X_k=Y)-YP_k}{k_B} \right)}} = 
+\dfrac{\exp{\left( \dfrac{S(X_k=Y)-YP_k}{k_B} \right)} }{\Delta X_k \,Z^{tot}(P_k)}
+\end{equation}
+
+La probabilità che il sistema si trovi nel microstato $x$ si potrà ottenere a partire da $\mathcal{P}(X_x=Y|P_k)$ con la regola della probabilità condizionata.
+
+\begin{esempio}[Probabilità condizionata]
+Date $\mathcal{P}(A|B,C), \mathcal{P}(B|C)$ vale 
+\[
+\mathcal{P}(A|C)=\sum_B \mathcal{P}(A|B,C)\mathcal{P}(B|C) = 
+\sum_B \dfrac{\mathcal{P}(A,B,C)}{\mathcal{P}(B,C)} \dfrac{\mathcal{P}(B,C)}{\mathcal{P}(C)} = 
+\sum_B \dfrac{\mathcal{P}(A,B,C)}{\mathcal{P}(C)}
+\]
+e se vale $B\cap C= B$, cioè se specificare l'evento $C$ è irrilevante per l'evento $B$, allora $\mathcal{P}(A|B,C)=\mathcal{P}(A|B)$ e quindi si può semplificare
+\[
+\mathcal{P}(A|C)=\sum_B \mathcal{P}(A|B)\mathcal{P}(B|C)
+\]
+\end{esempio}
+
+Sapendo che $P_k^{res}=P_k$ e quindi specificare $P_k$ è irrilevante una volta noto il valore di $X_k$
+\[
+\mathcal{P}(x|X_k=Y,P_k)=\mathcal{P}(x|X_k=Y)
+\]
+
+e sapendo che la densità probabilità microcanica per un microstato $x$ dato $X_k$
+\[
+\rho(x|X_k=Y)= \dfrac{\mathbb{1}_{X_k=Y}(x)}{\Gamma(X_k=Y)}\approx\dfrac{\Delta X_k \delta(X_k(x)-Y)}{\Gamma_0(N)\,\exp{\left(\dfrac{S(X_k=Y)}{k_B}\right)}}
+\]
+e quindi la probabilità è
+\begin{equation}\label{densitàProbabilitàMicrostatoP}
+\rho(x|P_k)=\int dY \rho(x|X_k=Y)\rho(X_k=Y|P_k)=\dfrac{\exp{\left(-\dfrac{P_kX_k(x)}{k_B} \right)} }{\Gamma_0(N)Z^{tot}(P_k)}
+\end{equation}
+
+\par~\par
+
+Possiamo calcolare il valor medio della $X_k$ fluttuante tramite
+\[
+\mathbb{E}(X_k)=\int dY \rho(X_k=Y|P_k)\,Y=\dots=-k_B\dfrac{\partial}{\partial P_k}\ln Z^{tot}(P_k)
+\]
+
+
+\paragraph{Riassumendo:} Ad un macrostato potremo associare due densità di probabilità, una per il microstato del sistema $\rho(x|X_k)$ e una perchè la variabile scambiata col sistema abbia valore $X_k$ stabilito $\rho(X_k|P_k)$.
+
+Il potenziale di Massieu si otterrà con $S_{sm}[X](P_k)=k_B\ln Z^{tot}(P_k)$ e corrisponde a quello termodinamico corretto.
+
+Presentiamo le ensemble corrispondenti alle tre reservoir senza dilungarci troppo, intendendo che quanto riportato deriva più o meno direttamente da quello visto sopra.
+
+
+\subsubsection{Canonical ensemble}
+La \textit{canonical ensemble} corrisponde al caso di un sistema a contatto termico con un reservoir.
+Per $X_k=U$ e $P_k=\dfrac{1}{T}$ avremo
+\[
+S_{td}[U](\dfrac{1}{T},X)=S(\overline{U},X)\dfrac{\overline{U}}{T}=-\dfrac{F(T,X)}{T}
+\]
+dove $F$ è l'energia libera di Helholtz.
+\[
+Z_{can}(\dfrac{1}{T},X)=\dfrac{1}{\Gamma_0(N)}\int e^{-\beta F_U(x)}\,d^{6N}x=\dfrac{1}{\Delta U}\int dU e^{\dfrac{S(U,X)}{k_B}-\beta U}
+\]
+dove $\beta:=\dfrac{1}{Tk_B}$ e $F_U(x)$ è la funzione che restituisce l'energia del sistema a valori fissati degli altri parametri estensivi del sistema.
+\begin{equation}
+Z_{can}(\dfrac{1}{T},X)=\exp{\left( S_{sm}[U](\dfrac{1}{T},X) \right)} \approx \exp{\left(-\beta F(T,X)\right)}
+\end{equation}
+che ci dice che
+\begin{equation}
+F(T,V,N)=-k_BT\ln\left(Z_{can}(\dfrac{1}{T},X)\right)
+\end{equation}
+La densità di probabilità canonica è
+\begin{equation}
+\rho_{can}(x)=\dfrac{e^{-\beta F_U(x)} }{\Gamma_0(N)Z_{can}(\dfrac{1}{T},X)}
+\end{equation}
+\[
+\rho_{can}(U)=\dfrac{\exp{\left( \dfrac{S(U,X)}{k_B}-\beta U \right)}}{\Delta U Z_{can}(\dfrac{1}{T},X)}
+\]
+e quindi abbiamo
+\[
+\mathbb{E}[U]=-\dfrac{\partial}{\partial \beta}\ln Z_{can}(\beta, X)
+\]
+
+\subsubsection{Gibbs ensemble}
+La \textit{Gibbs ensemble} corrisponde al caso di un sistema a contatto termico e meccanico con un reservoir.
+Per $X_k=U,\, P_k=\dfrac{1}{T}$ e $X_{k'}=V,\, P_{k'}=\dfrac{P}{T}$ avremo
+\[
+S_{td}[U,V]\left(\dfrac{1}{T},\dfrac{P}{T},X\right)=-\dfrac{G(T,P,X)}{T}
+\]
+dove $G$ è l'energia libera di Gibbs.
+\[
+Z_{G}\left(\dfrac{1}{T},\dfrac{P}{T},X\right)=\dfrac{1}{\Gamma_0(N)}\int e^{-\beta F_U(x)}\,e^{-\beta PF_V(x)}\,d^{6N}x
+\]
+che però, dato che $F_V(x)$ è scomoda, si preferisce scrivere come
+\[
+Z_G\left(\dfrac{1}{T},\dfrac{P}{T},X\right)=\dfrac{1}{\Delta V}\int_0^\infty dV e^{-\beta P V}Z_{can}\left(\dfrac{1}{T},V,X\right)=\exp{\left(\dfrac{S_{sm}[U,V]\left(\dfrac{1}{T},\dfrac{P}{T},X\right)}{k_B} \right)}\approx \exp{\left( -\beta G(T,P,X) \right)}
+\]
+che ci dice
+\begin{equation}
+G(T,P,N)=-k_BT\,\ln Z_G\left(\dfrac{1}{T},\dfrac{P}{T},X\right)
+\end{equation}
+La densità di probabilità di Gibbs è
+\begin{equation}
+\rho_{G}(x)=\dfrac{e^{-\beta F_U(x)}e^{-\beta P F_V(x)}}{\Gamma_0(N)\,Z_G\left(\dfrac{1}{T},\dfrac{P}{T},X\right)}
+\end{equation}
+\[
+\rho_{G}(U,V)=\dfrac{\exp{\left( \dfrac{S(U,V,X)}{k_B}-\beta U-\beta P V \right)}}{\Delta U\Delta V Z_G\left(\dfrac{1}{T},\dfrac{P}{T},X\right)}
+\]
+e quindi abbiamo
+\[
+\mathbb{E}(U+PV)=-\dfrac{\partial}{\partial \beta}\ln Z_G(\beta,\beta P, X) \qquad \mathbb{E}(V)=-k_B T\dfrac{\partial}{\partial P}\ln Z_G(\beta, \beta P,X)
+\]
+La $\mathbb{E}(U+PV)$ corrisponde in meccanica statistica all'entalpia termodinamica, in particolare
+\[
+\dfrac{\partial\mathbb{E}(U+PV)}{\partial T}=C_P
+\]
+
+\subsubsection{Grand canonical ensemble}
+La \textit{Grand canonical ensemble} corrisponde al caso di un sistema a contatto termico e chimico con un reservoir.
+Per $X_k=U,\, P_k=\dfrac{1}{T}$ e $X_{k'}=N,\, P_{k'}=-\dfrac{\mu}{T}$ avremo
+\[
+S_{td}[U,N]\left(\dfrac{1}{T},X,\dfrac{\mu}{T}\right)=-\dfrac{\mathcal{G}(T,X,\mu)}{T}
+\]
+dove $\mathcal{G}$ è il potenziale gran canonico.
+\[
+Z_{gc}\left(\dfrac{1}{T},X,\dfrac{\mu}{T}\right)=\sum_{N=0}^{\infty}\dfrac{1}{\Gamma_0(N)}\int e^{-\beta F_U(x)}\,e^{\beta\mu F_N(x)}\,d^{6N}x
+\]
+O equivalentemente
+\[
+Z_{gc}\left(\dfrac{1}{T},X,\dfrac{\mu}{T}\right)=\sum_{N=0}^\infty e^{\beta\mu N}Z_{can}(\dfrac{1}{T},X,N)\approx e^{-\beta\mathcal{G}(T,X,\mu)}
+\]
+che ci dice
+\begin{equation}
+\mathcal{G}(T,V,\mu)=-k_BT\ln Z_{gc}\left(\dfrac{1}{T},X,\dfrac{\mu}{T}\right)
+\end{equation}
+La densità di probabilità gran canonica è
+\begin{equation}
+\rho_{gc}(x)=\dfrac{ e^{-\beta F_U(x)} e^{\beta\mu F_N(x)} }{\Gamma_0(N)\,Z_{gc}\left( \dfrac{1}{T},X,\dfrac{\mu}{T} \right) }
+\end{equation}
+\[
+\rho_{gc}(U,N)=\dfrac{ \dfrac{S(U,X,N)}{k_B}-\beta U+\beta U N }{\Delta U\,Z_{gc}\left( \dfrac{1}{T},X,\dfrac{\mu}{T} \right) }
+\]
+e quindi abbiamo
+\[
+\mathbb{E}(U-\mu N)=-\dfrac{\partial}{\partial \beta}\ln Z_{gc}(\beta,X,\beta\mu) \qquad
+\mathbb{E}(N)=k_BT\dfrac{\partial}{\partial\mu}\ln Z_{gc}(\beta,X,\beta\mu)
+\]
+
+
+\includepdf[landscape=true,pages=-]{formulario.pdf}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
