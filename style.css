@@ -1,94 +1,350 @@
 :root {
-  --menu-height: 4rem;
+  /* plastic bezel around the glass (your old grey border) */
+  --bezel: clamp(10px, 3.6vmin, 56px);
+  /* height of the bottom strip that holds the navigation */
+  --strip: clamp(48px, 9vmin, 88px);
+  /* outer cabinet and glass corner rounding */
+  --cabinet-radius: clamp(16px, 4.5vmin, 48px);
+  --glass-radius: clamp(20px, 7vmin, 84px);
+
+  /* cabinet: yellowed off-white plastic */
+  --plastic-hi: #f4efda;
+  --plastic: #e7e0c5;
+  --plastic-lo: #cec39f;
+  --edge: 92, 78, 42;         /* dark beige used for outlines and shadows (r, g, b) */
+
+  /* the darker beige frame around the glass */
+  --frame: #b8a981;
+  --frame-lo: #9c8d65;
+
+  /* keys, knobs, grille */
+  --key-hi: #f2edd7;
+  --key-lo: #d6cdac;
+  --key-depth: #8c8262;
+  --key-text: #3a3524;
+  --amber: #ffb547;
+
+  /* screen: white glass, black text */
+  --glass: #f0efeb;           /* edge of the glass */
+  --glass-center: #ffffff;    /* centre of the glass */
+  --text: #111111;
+  --link: #1d3d91;
+  --glow: rgba(0, 0, 0, .22); /* slight ink bleed on text */
+  --shade: 34, 34, 38;        /* greyish tone of vignette and scanlines (r, g, b) */
+
+  /* effect strength */
+  --scanlines: .10;
+  --vignette: .52;
+  --glare: .10;
 }
 
+/*--------------------------------------------------------*/
 * {
   box-sizing: border-box;
-}
-
-body {
   margin: 0;
-  min-height: 100vh;
-  padding-bottom: var(--menu-height);
-  font-family: system-ui, sans-serif;
-  background: #111;
-  color: #eee;
+  padding: 0;
 }
 
-.content {
+html, body {
+  height: 100%;
+  overflow: hidden;              /* the TV never scrolls; the glass does */
+  background: #1f1c17;           /* the room around the TV */
+}
+
+/* --------------------------------------------------------
+   cabinet obj
+-------------------------------------------------------- */
+.tv {
+  position: fixed;
+  inset: 0;
+  padding: clamp(4px, 1.6vmin, 24px);
+  padding-bottom: max(clamp(4px, 1.6vmin, 24px), env(safe-area-inset-bottom));
+}
+
+.tv-body {
+  height: 100%;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) var(--strip);
+  padding: var(--bezel) var(--bezel) 0;
+  border-radius: var(--cabinet-radius);
+  background:
+    /* fine plastic grain */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    /* soft top-left light source */
+    radial-gradient(120% 90% at 20% 0%, var(--plastic-hi) 0%, var(--plastic) 45%, var(--plastic-lo) 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.7),
+    inset 0 -3px 0 rgba(var(--edge),.35),
+    inset 0 0 0 1px rgba(var(--edge),.35),
+    0 18px 50px rgba(0,0,0,.65);
+}
+
+/*--------------------------------------------------------
+   glass effect for fake monitor
+-------------------------------------------------------- */
+.well {                            /* dark recessed ring around the glass */
+  min-height: 0;
+  padding: clamp(6px, 1.5vmin, 18px);
+  border-radius: calc(var(--glass-radius) + 18px) / calc(var(--glass-radius) * .85 + 18px);
+  background: linear-gradient(160deg, var(--frame) 0%, var(--frame-lo) 100%);
+  box-shadow:
+    inset 0 3px 8px rgba(var(--edge),.65),   /* frame is recessed into the cabinet */
+    inset 0 -1px 0 rgba(255,255,255,.25),
+    0 1px 0 rgba(255,255,255,.75);           /* light catching the lip */
+}
+
+.screen {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--glass-radius) / calc(var(--glass-radius) * .85);
+  background: radial-gradient(ellipse at 50% 45%, var(--glass-center) 0%, var(--glass) 75%);
+  box-shadow: inset 0 0 0 2px rgba(var(--edge), .9), inset 0 0 0 3px rgba(0,0,0,.35);
+}
+
+/* --------------------------------------------------------
+   main content
+-------------------------------------------------------- */
+#content {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+
+  /* same centering as before */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 0.625rem;
-  width: 90%;
-  margin: 0 auto;
-  min-height: calc(100vh - var(--menu-height));
+  justify-content: center;
+
+  /* keeps text away from the rounded, dark corners */
+  padding: calc(var(--glass-radius) * .7) calc(var(--glass-radius) * .8);
+
+  color: var(--text);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  text-shadow: 0 0 1.5px var(--glow);
+  scrollbar-width: thick;
+  scrollbar-color: color-mix(in srgb, var(--text) 45%, transparent) transparent;
+  outline: none;
 }
+
+/* Vertical centering that never clips the top of tall pages
+   (plain "justify-content: center" would push the top out of reach). */
+#content > :first-child { margin-top: auto; }
+#content > :last-child  { margin-bottom: auto; }
+
+/* light default spacing; zero specificity, so your own page styles win */
+#content :where(h1, h2, h3, p, ul, ol) { margin-block: 0 .8em; }
+#content :where(h1) { font-size: clamp(1.6rem, 4.5vmin, 2.6rem); line-height: 1.15; }
+#content :where(a)  { color: var(--link); }
+
+/* images scale down to fit the glass instead of overflowing it
+   (zero specificity, so your own .picture rules still win) */
+#content :where(img) { max-width: 100%; height: auto; flex: none; }
+
+/*--------------------------------------------------------
+   effects
+--------------------------------------------------------*/
+.fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.fx-scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(var(--shade),0) 0,
+    rgba(var(--shade),0) 2px,
+    rgba(var(--shade),var(--scanlines)) 3px,
+    rgba(var(--shade),var(--scanlines)) 4px
+  );
+}
+
+/* dark edges and slight tube curvature (replaces #content::after) */
+.fx-vignette {
+  background: radial-gradient(
+    ellipse 85% 80% at 50% 50%,
+    rgba(var(--shade),0) 55%,
+    rgba(var(--shade),calc(var(--vignette) * .6)) 82%,
+    rgba(var(--shade),var(--vignette)) 100%
+  );
+  box-shadow:
+    inset 0 0 clamp(30px, 9vmin, 120px) rgba(var(--shade),.8),
+    inset 0 0 clamp(6px, 1.5vmin, 18px) rgba(var(--shade),.9);
+}
+
+/* reflected window light, upper left */
+.fx-glare {
+  background:
+    radial-gradient(ellipse 45% 30% at 22% 12%, rgba(255,255,255,var(--glare)) 0%, rgba(255,255,255,0) 70%),
+    linear-gradient(125deg, rgba(255,255,255,calc(var(--glare) * .6)) 0%, rgba(255,255,255,0) 32%);
+}
+
+/* channel-change static, triggered from app.js */
+.fx-static {
+  opacity: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0  .33 .33 .33 0 0  .33 .33 .33 0 0  0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px;
+}
+.fx-static.on { animation: static 320ms steps(4) 1; }
+
+@keyframes static {
+  0%   { opacity: .95; background-position: 0 0; }
+  25%  { opacity: .8;  background-position: -70px 40px; }
+  50%  { opacity: .6;  background-position: 30px -90px; }
+  75%  { opacity: .3;  background-position: -120px 10px; }
+  100% { opacity: 0;   background-position: 60px 80px; }
+}
+
+/* the one automatic moment: the set warms up on load */
+@media (prefers-reduced-motion: no-preference) {
+  .screen { animation: power-on 900ms cubic-bezier(.2,.7,.2,1) both; }
+  .fx-flicker {
+    background: rgba(var(--shade),.035);
+    animation: flicker 5s infinite steps(1);
+  }
+}
+@keyframes power-on {
+  0%   { transform: scale(.02, .004); filter: brightness(6); }
+  35%  { transform: scale(1, .004);   filter: brightness(5); }
+  100% { transform: scale(1, 1);      filter: brightness(1); }
+}
+@keyframes flicker {
+  0%, 92%, 96% { opacity: 0; }
+  94%, 98%     { opacity: 1; }
+}
+
+/*--------------------------------------------------------
+   menu - cabinet
+ --------------------------------------------------------*/
+.strip {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;    /* keeps the nav truly centred */
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.strip-left  { justify-self: start; display: flex; align-items: center; gap: clamp(8px, 2vmin, 20px); }
+.strip-right { justify-self: end;   display: flex; align-items: center; gap: clamp(8px, 2vmin, 18px); }
+
+.grille {
+  width: clamp(60px, 14vw, 180px);
+  height: clamp(18px, 4vmin, 38px);
+  border-radius: 6px;
+  background: repeating-linear-gradient(90deg, rgba(var(--edge),.75) 0 2px, transparent 2px 6px), var(--plastic-lo);
+  box-shadow: inset 0 2px 4px rgba(var(--edge),.55), 0 1px 0 rgba(255,255,255,.7);
+}
+
+.led {
+  width: clamp(7px, 1.2vmin, 11px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe2a8, var(--amber) 45%, #a35a00);
+  box-shadow: 0 0 8px 2px rgba(255,181,71,.6), inset 0 -1px 2px rgba(0,0,0,.4);
+}
+
+.knob {
+  width: clamp(26px, 5vmin, 46px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  position: relative;
+  background: conic-gradient(from 20deg, #f4efdb, #b9ae8a, #f7f3e2, #a89d7a, #f4efdb);
+  box-shadow:
+    0 0 0 3px rgba(var(--edge),.4),
+    0 3px 6px rgba(var(--edge),.55),
+    inset 0 0 0 2px rgba(255,255,255,.4);
+}
+.knob::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 9%;
+  width: 2px; height: 26%;
+  margin-left: -1px;
+  background: var(--key-text);
+  border-radius: 1px;
+  transform-origin: 50% 170%;
+}
+.knob:nth-child(1)::after { transform: rotate(-35deg); }
+.knob:nth-child(2)::after { transform: rotate(50deg); }
+
+/*--------------------------------------------------------
+   navigation
+--------------------------------------------------------*/
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(4px, 1vmin, 10px);
+}
+
+nav a {
+  display: block;
+  padding: .5em clamp(.8em, 2vmin, 1.4em);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-weight: 600;
+  font-size: clamp(12px, 1.9vmin, 15px);
+  line-height: 1;
+  color: var(--key-text);
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 6px;
+  background: linear-gradient(var(--key-hi), var(--key-lo));
+  box-shadow:
+    0 3px 0 var(--key-depth),
+    0 4px 6px rgba(var(--edge),.45),
+    inset 0 1px 0 rgba(255,255,255,.8);
+  transition: transform 90ms, box-shadow 90ms;
+}
+nav a:hover { background: linear-gradient(#fbf8ea, #e2d9b9); }
+
+nav a:active,
+nav a[aria-current="page"] {              /* pressed in */
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--key-depth), inset 0 2px 4px rgba(var(--edge),.4);
+}
+nav a[aria-current="page"] {              /* and lit */
+  color: #3a2200;
+  background: linear-gradient(#ffc766, var(--amber));
+  box-shadow:
+    0 1px 0 var(--key-depth),
+    inset 0 2px 4px rgba(var(--edge),.3),
+    0 0 10px rgba(255,181,71,.45);
+}
+nav a:focus-visible { outline: 2px solid var(--key-text); outline-offset: 3px; }
+
+/* --------------------------------------------------------
+small screens
+ -------------------------------------------------------- */
+@media (max-width: 720px) {
+  .grille, .strip-right { display: none; }
+  .strip { grid-template-columns: auto 1fr; }
+  .strip-left { padding-left: 4px; }
+  nav {
+    justify-self: center;
+    min-width: 0;
+    overflow-x: auto;
+    padding: 4px 4px 8px;      /* room so button shadows aren't clipped */
+  }
+  #content { padding: calc(var(--glass-radius) * .55) 16px; }
+}
+@media (max-width: 720px) and (orientation: portrait) {
+  :root { --glass-radius: 26px; }
+}
+
 
 .picture {
   width: 40vmin;
   height: 40vmin;
-  border-radius: 50%;
   object-fit: cover;
   border: 3px solid #444; 
 }
 
-.links {
+.social {
   display: flex;
   gap: 1rem;
-}
-
-.btn {
-  padding: 0.625rem 1.25rem;
-  border-radius: 0.5rem;
-  background: #eee;
-  color: #111;
-  text-decoration: none;
-  font-weight: 600;
-  transition: opacity 0.2s;
-}
-
-.btn:hover {
-  opacity: 0.8;
-}
-
-.menu {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: var(--menu-height);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  background: #111; 
-  border-top: 1px solid #222;
-}
-
-.menu a {
-  color: #aaa;
-  text-decoration: none;
-  font-size: 0.875rem;
-}
- 
-.menu a.current {
-  font-weight: bold;
-  color: #eee;
-}
- 
-.menu a:hover {
-  color: #eee;
-  text-shadow: 1px 1px 10px #4da6ff;
-}
-
-.link {
-  color: #eee;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.link:hover {
-  text-shadow: 1px 1px 10px #4da6ff;
 }
