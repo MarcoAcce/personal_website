@@ -316,6 +316,11 @@ html, body {
 #content :where(h1) { font-size: clamp(1.6rem, calc(4.5 * var(--u)), 2.6rem); line-height: 1.15; }
 #content :where(a)  { color: var(--link); }
 
+/* restores the padding for the sublist indentation
+  the * { padding: 0 } reset above stripped it */
+#content :where(ul, ol) { padding-left: 1.4em; }
+#content :where(li > ul, li > ol) { margin-block: .3em 0; }
+
 /* images scale down to fit the glass instead of overflowing it
    (zero specificity, so your own .picture rules still win) */
 #content :where(img) { max-width: 100%; height: auto; flex: none; }
