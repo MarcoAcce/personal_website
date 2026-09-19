@@ -1,27 +1,36 @@
 :root {
   /* ---- size of the set --------------------------------------------------
-     The TV no longer stretches to any window shape:
-     - portrait window (taller than wide): the set fills the window, but is never
-       wider than --tv-max-portrait (width / height), so near-square windows
-       don't produce a fat, squat set.
-     - landscape window: the set keeps a fixed --tv-ratio (width / height),
-       is centred, and is as large as fits.
-     Everything else is sized in "u" (1% of the set's width in portrait, of its
-     height in landscape), so the whole cabinet scales as one object.
-     cqw / cqh are measured against .tv (see below). */
-  --tv-ratio: 1.6;
-  --tv-max-portrait: .75;
-  --tv-w: min(100cqw, 100cqh * var(--tv-max-portrait));
-  --tv-h: 100cqh;
-  --u: calc(var(--tv-w) / 100);
+     The glass (the picture) is locked to 4:3 and made as large as fits, then
+     the cabinet shrink-wraps around it. --u is a proportional unit (~1% of the
+     available space) that scales all the cosmetic sizes together; cqw / cqh are
+     measured against .tv. The set is always a little smaller than the window
+     because of --room, and centred inside .tv. */
+  --tv-ratio: 1.6;            /* only seeds --u now (landscape) */
+  --tv-max-portrait: .75;     /* only seeds --u now (portrait)  */
+  --u: calc(min(100cqw, 100cqh * var(--tv-max-portrait)) / 100);
 
   /* plastic bezel around the glass (your old grey border) */
   --bezel: clamp(10px, calc(3.6 * var(--u)), 56px);
   /* height of the bottom strip that holds the navigation (portrait) */
   --strip: clamp(48px, calc(9 * var(--u)), 88px);
+  /* beige frame thickness between bezel and glass */
+  --well-pad: clamp(6px, calc(1.5 * var(--u)), 18px);
   /* outer cabinet and glass corner rounding */
   --cabinet-radius: clamp(16px, calc(4.5 * var(--u)), 48px);
   --glass-radius: clamp(20px, calc(7 * var(--u)), 84px);
+
+  /* everything the cabinet adds around the glass, so the 4:3 glass can be
+     sized to leave room for it (portrait: bezels + frame + bottom strip). */
+  --chrome-x: calc(2 * var(--bezel) + 2 * var(--well-pad));
+  --chrome-y: calc(var(--bezel) + var(--strip) + 2 * var(--well-pad));
+  /* largest 4:3 glass that fits both the width and the height available */
+  --glass-w: max(0px, min(
+      calc(100cqw - var(--chrome-x)),
+      calc((100cqh - var(--chrome-y)) * 4 / 3)
+  ));
+  /* full height of the framed glass (glass + frame), used to pin the
+     landscape row so a tall control panel can't stretch the cabinet. */
+  --well-h: calc(var(--glass-w) * 3 / 4 + 2 * var(--well-pad));
 
   /* cabinet: yellowed off-white plastic */
   --plastic-hi: #f4efda;
@@ -65,14 +74,15 @@
   --glare: .10;
 }
 
-/* landscape: fixed-ratio set, control panel to the right of the glass */
+/* landscape: control panel to the right of the glass, menu keys vertical */
 @media (orientation: landscape) {
   :root {
-    --tv-w: min(100cqw, 100cqh * var(--tv-ratio));
-    --tv-h: calc(var(--tv-w) / var(--tv-ratio));
-    --u: calc(var(--tv-h) / 100);
+    --u: calc(min(100cqh, 100cqw / var(--tv-ratio)) / 100);
     /* width of the control panel beside the glass */
     --panel: clamp(92px, calc(22 * var(--u)), 260px);
+    /* chrome now includes the side panel and the gap, not a bottom strip */
+    --chrome-x: calc(3 * var(--bezel) + 2 * var(--well-pad) + var(--panel));
+    --chrome-y: calc(2 * var(--bezel) + 2 * var(--well-pad));
   }
 }
 
@@ -113,10 +123,12 @@ html, body {
 
 .tv-body {
   flex: none;
-  width: var(--tv-w);
-  height: var(--tv-h);
+  /* wrap tightly around the glass + chrome, then .tv centres it */
+  width: fit-content;
+  height: fit-content;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) var(--strip);
+  grid-template-columns: auto;
+  grid-template-rows: auto var(--strip);
   padding: var(--bezel) var(--bezel) 0;
   border-radius: var(--cabinet-radius);
   background:
@@ -135,7 +147,6 @@ html, body {
    glass effect for fake monitor
 -------------------------------------------------------- */
 .well {                            /* dark recessed ring around the glass */
-  --well-pad: clamp(6px, calc(1.5 * var(--u)), 18px);
   position: relative;              /* anchor for the tube backdrop below */
   min-height: 0;
   padding: var(--well-pad);
@@ -165,7 +176,9 @@ html, body {
 .screen {
   position: relative;
   z-index: 1;                      /* above the unlit-tube backdrop in .well */
-  height: 100%;
+  width: var(--glass-w);
+  aspect-ratio: 4 / 3;             /* the monitor is always 4:3 */
+  margin-inline: auto;             /* stay centred if the strip is ever wider */
   overflow: hidden;
   isolation: isolate;
   border-radius: var(--glass-radius) / calc(var(--glass-radius) * .85);
@@ -404,18 +417,24 @@ html, body {
   box-shadow: 0 0 8px 2px rgba(255,181,71,.6), inset 0 -1px 2px rgba(0,0,0,.4);
 }
 
+/* The working control. One knob only; clicking it switches to the plain view.
+   It's a real <button> so it's keyboard- and screen-reader-accessible. */
 .knob {
   width: clamp(26px, calc(5 * var(--u)), 46px);
   aspect-ratio: 1;
+  border: 0;
+  padding: 0;
   border-radius: 50%;
   position: relative;
+  cursor: pointer;
   background: conic-gradient(from 20deg, #f4efdb, #b9ae8a, #f7f3e2, #a89d7a, #f4efdb);
   box-shadow:
     0 0 0 3px rgba(var(--edge),.4),
     0 3px 6px rgba(var(--edge),.55),
     inset 0 0 0 2px rgba(255,255,255,.4);
+  transition: transform 120ms ease;
 }
-.knob::after {
+.knob::after {                     /* the pointer notch */
   content: "";
   position: absolute;
   left: 50%; top: 9%;
@@ -423,10 +442,35 @@ html, body {
   margin-left: -1px;
   background: var(--key-text);
   border-radius: 1px;
+  transform: rotate(-32deg);
   transform-origin: 50% 170%;
 }
-.knob:nth-child(1)::after { transform: rotate(-35deg); }
-.knob:nth-child(2)::after { transform: rotate(50deg); }
+.knob:hover  { transform: rotate(10deg); }
+.knob:active { transform: rotate(24deg); }
+.knob:focus-visible { outline: 2px solid var(--key-text); outline-offset: 4px; }
+
+.knob-label {
+  font: 600 clamp(9px, calc(1.5 * var(--u)), 12px)/1.15 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color: var(--key-text);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Return-to-TV toggle. Hidden in the TV view, shown in the plain view. */
+.mode-back {
+  display: none;
+  align-items: center;
+  gap: .45em;
+  font: 600 14px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  padding: .55em .9em;
+  border-radius: 6px;
+  border: 1px solid #bfbfc6;
+  background: #f3f3f5;
+  color: #26262a;
+  cursor: pointer;
+}
+.mode-back:hover { background: #e7e7ec; }
+.mode-back:focus-visible { outline: 2px solid #26262a; outline-offset: 3px; }
 
 /*--------------------------------------------------------
    navigation
@@ -480,8 +524,8 @@ nav a:focus-visible { outline: 2px solid var(--key-text); outline-offset: 3px; }
  -------------------------------------------------------- */
 @media (orientation: landscape) {
   .tv-body {
-    grid-template-columns: minmax(0, 1fr) var(--panel);
-    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: auto var(--panel);
+    grid-template-rows: var(--well-h);
     column-gap: var(--bezel);
     padding: var(--bezel);
   }
@@ -501,8 +545,8 @@ nav a:focus-visible { outline: 2px solid var(--key-text); outline-offset: 3px; }
       0 1px 0 rgba(255,255,255,.7);
   }
 
-  /* top to bottom: knobs, menu keys, LED + speaker grille */
-  .strip-right { order: 1; justify-content: center; }
+  /* top to bottom: knob + label, menu keys, LED + speaker grille */
+  .strip-right { order: 1; flex-wrap: wrap; justify-content: center; }
   nav          { order: 2; }
   .strip-left  { order: 3; flex-direction: column; }
 
@@ -546,9 +590,15 @@ nav a:focus-visible { outline: 2px solid var(--key-text); outline-offset: 3px; }
    small screens (portrait only: landscape uses the side panel)
  -------------------------------------------------------- */
 @media (max-width: 720px) and (orientation: portrait) {
-  .grille, .strip-right { display: none; }
-  .strip { grid-template-columns: auto 1fr; }
-  .strip-left { padding-left: 4px; }
+  .strip-left { display: none; }             /* LED + grille are decoration */
+  .strip { grid-template-columns: 1fr auto; }/* nav | knob+label */
+  .strip-right {
+    justify-self: end;
+    flex-direction: column;                  /* label under the knob to stay narrow */
+    gap: 1px;
+  }
+  .knob { width: clamp(24px, 8vw, 36px); }
+  .knob-label { font-size: 9px; }
   nav {
     justify-self: center;
     min-width: 0;
@@ -570,4 +620,121 @@ nav a:focus-visible { outline: 2px solid var(--key-text); outline-offset: 3px; }
 .social {
   display: flex;
   gap: 1rem;
+}
+/* ========================================================
+   PLAIN VIEW
+   Toggled by the knob (adds .minimal to <body>). A traditional
+   static-site layout: content above, a minimal menu bar below,
+   greyish background. The TV cabinet is neutralised, not removed,
+   so the same markup and the same navigation drive both views.
+   ======================================================== */
+body.minimal { background: #e7e7ea; }
+
+body.minimal .tv {
+  padding: 0;
+  display: block;
+  container-type: normal;          /* stop being a sizing container */
+}
+body.minimal .tv-body {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border-radius: 0;
+  background: #e7e7ea;
+  box-shadow: none;
+}
+
+/* glass area becomes a plain content pane */
+body.minimal .well {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+body.minimal .well::after { content: none; }   /* no unlit-tube backdrop */
+body.minimal .screen {
+  width: auto;
+  aspect-ratio: auto;
+  flex: 1;
+  margin: 0;
+  border-radius: 0;
+  background: #f6f6f7;
+  box-shadow: none;
+  isolation: auto;
+  animation: none;
+}
+body.minimal .fx { display: none; }             /* scanlines, vignette, glare, static, flicker */
+
+body.minimal #content {
+  inset: 0;
+  background: #f6f6f7;
+  color: #1c1c1e;
+  text-shadow: none;
+  align-items: center;
+  padding: clamp(28px, 5vw, 72px) clamp(18px, 5vw, 48px);
+}
+/* cancel the TV's vertical-centering so plain pages start at the top */
+body.minimal #content > :first-child { margin-top: 0; }
+body.minimal #content > :last-child  { margin-bottom: 0; }
+
+/* the bottom menu bar */
+body.minimal .strip {
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  padding: 12px clamp(12px, 4vw, 28px);
+  background: #dedee2;
+  border-top: 1px solid #c8c8ce;
+  box-shadow: none;
+}
+body.minimal .strip-left { display: none; }
+body.minimal .strip-right {
+  order: 0;
+  justify-self: end;
+  justify-content: flex-end;
+  align-items: center;
+}
+body.minimal .knob,
+body.minimal .knob-label { display: none; }
+body.minimal .mode-back { display: inline-flex; }
+
+/* horizontal, centred, plain-text menu (undoes the landscape panel styling) */
+body.minimal nav {
+  order: 0;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(4px, 2vw, 14px);
+  min-height: 0;
+  padding: 0;
+  overflow: visible;
+}
+body.minimal nav > :first-child,
+body.minimal nav > :last-child { margin: 0; }
+
+body.minimal nav a {
+  padding: .4em .7em;
+  border-radius: 5px;
+  background: none;
+  box-shadow: none;
+  color: #33333a;
+  transform: none;
+  text-align: center;
+}
+body.minimal nav a:hover { background: #cfcfd6; }
+body.minimal nav a[aria-current="page"] {
+  color: #0b57d0;
+  background: none;
+  box-shadow: none;
+  transform: none;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body.minimal .screen { animation: none; }     /* no power-on in plain view */
 }

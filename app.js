@@ -107,6 +107,27 @@ async function loadPage(page, { push = true, flash = true } = {}) {
 }
 
 // --------------------------------------------------------
+// view mode: retro TV  <->  plain static site
+// The knob switches to the plain view; the "Retro view" button switches back.
+// Both just flip the `minimal` class on <body>; all the layout is in CSS.
+// --------------------------------------------------------
+const toPlainBtn = document.getElementById('to-plain');
+const toTvBtn    = document.getElementById('to-tv');
+
+function setView(mode) {
+    const minimal = mode === 'plain';
+    document.body.classList.toggle('minimal', minimal);
+    if (toPlainBtn) toPlainBtn.setAttribute('aria-pressed', String(minimal));
+}
+
+function toggleView() {
+    setView(document.body.classList.contains('minimal') ? 'tv' : 'plain');
+}
+
+toPlainBtn?.addEventListener('click', toggleView);
+toTvBtn?.addEventListener('click', toggleView);
+
+// --------------------------------------------------------
 // navigation
 // --------------------------------------------------------
 
