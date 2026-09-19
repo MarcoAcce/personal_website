@@ -127,6 +127,13 @@ function toggleView() {
 toPlainBtn?.addEventListener('click', toggleView);
 toTvBtn?.addEventListener('click', toggleView);
 
+// mobile visitors get the plain/minimal view by default
+function isMobileDevice() {
+    if (navigator.userAgentData) return navigator.userAgentData.mobile;
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+if (isMobileDevice()) setView('plain');
+
 // --------------------------------------------------------
 // navigation
 // --------------------------------------------------------
