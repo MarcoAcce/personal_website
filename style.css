@@ -456,21 +456,30 @@ html, body {
 .knob:active { transform: rotate(24deg); }
 .knob:focus-visible { outline: 2px solid var(--key-text); outline-offset: 4px; }
 
+/* the knob and labels */
+.knob-control {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, calc(1.2 * var(--u)), 10px);
+}
+
 .knob-label {
   font: 600 clamp(9px, calc(1.5 * var(--u)), 12px)/1.15 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   color: var(--key-text);
   text-align: center;
   white-space: nowrap;
 }
+.knob-label--active   { opacity: 1; }
+.knob-label--inactive { opacity: .45; }
 
-/* return-to-tv toggle. only for plain view. */
+/* return-to-tv toggle */
 .mode-back {
   display: none;
   align-items: center;
-  gap: .45em;
+  gap: .5em;
   font: 600 12px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  padding: .55em .9em;
-  border-radius: 6px;
+  padding: .5em .7em;
+  border-radius: 999px;
   border: 1px solid #bfbfc6;
   background: #f3f3f5;
   color: #26262a;
@@ -478,6 +487,30 @@ html, body {
 }
 .mode-back:hover { background: #e7e7ec; }
 .mode-back:focus-visible { outline: 2px solid #26262a; outline-offset: 3px; }
+
+.mode-back-option { color: #9a9aa2; }
+.mode-back-option--active { color: #0b57d0; }  /* matches the minimal-mode link/active-page blue */
+
+.mode-back-track {
+  position: relative;
+  flex: none;
+  width: 26px;
+  height: 15px;
+  border-radius: 999px;
+  background: #d8d8de;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.18);
+}
+.mode-back-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.35);
+  transform: translateX(11px);   
+}
 
 /*--------------------------------------------------------
    navigation
@@ -525,9 +558,7 @@ nav a[aria-current="page"] {              /* and lit */
 nav a:focus-visible { outline: 2px solid var(--key-text); outline-offset: 3px; }
 
 /* --------------------------------------------------------
-   landscape: the controls move to a panel on the right of the
-   glass, like an old television, and the menu keys stack.
-   (Markup order is unchanged; `order` only rearranges it visually.)
+   landscape
  -------------------------------------------------------- */
 @media (orientation: landscape) {
   .tv-body {
@@ -628,19 +659,15 @@ nav a:focus-visible { outline: 2px solid var(--key-text); outline-offset: 3px; }
   display: flex;
   gap: 1rem;
 }
-/* ========================================================
+/* --------------------------------------------------------
    PLAIN VIEW
-   Toggled by the knob (adds .minimal to <body>). A traditional
-   static-site layout: content above, a minimal menu bar below,
-   greyish background. The TV cabinet is neutralised, not removed,
-   so the same markup and the same navigation drive both views.
-   ======================================================== */
+   -------------------------------------------------------- */
 body.minimal { background: #e7e7ea; }
 
 body.minimal .tv {
   padding: 0;
   display: block;
-  container-type: normal;          /* stop being a sizing container */
+  container-type: normal;          
 }
 body.minimal .tv-body {
   width: 100%;
@@ -685,11 +712,11 @@ body.minimal #content {
   align-items: center;
   padding: clamp(28px, 5vw, 72px) clamp(18px, 5vw, 48px);
 }
-/* cancel the TV's vertical-centering so plain pages start at the top */
+/* cancel the TV's vertical-centering */
 body.minimal #content > :first-child { margin-top: 0; }
 body.minimal #content > :last-child  { margin-bottom: 0; }
 
-/* the bottom menu bar */
+/* bottom menu */
 body.minimal .strip {
   grid-template-columns: 1fr auto 1fr;
   gap: 12px;
@@ -709,7 +736,7 @@ body.minimal .knob,
 body.minimal .knob-label { display: none; }
 body.minimal .mode-back { display: inline-flex; }
 
-/* horizontal, centred, plain-text menu (undoes the landscape panel styling) */
+/* horizontal, centered, plain-text menu */
 body.minimal nav {
   order: 0;
   flex-flow: row wrap;

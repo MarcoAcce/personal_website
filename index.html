@@ -43,11 +43,17 @@
                 </nav>
 
                 <div class="strip-right">
-                    <button type="button" class="knob" id="to-plain"
-                            aria-label="Switch to plain view"></button>
-                    <span class="knob-label" aria-hidden="true">Plain view</span>
-                    <button type="button" class="mode-back" id="to-tv">
-                        Retro view
+                    <div class="knob-control">
+                        <span class="knob-label knob-label--active" aria-hidden="true">Retro</span>
+                        <button type="button" class="knob" id="to-plain"
+                                aria-label="Switch to minimal view"></button>
+                        <span class="knob-label knob-label--inactive" aria-hidden="true">Minimal</span>
+                    </div>
+                    <button type="button" class="mode-back" id="to-tv"
+                            aria-label="Switch to retro view">
+                        <span class="mode-back-option mode-back-option--inactive" aria-hidden="true">Retro</span>
+                        <span class="mode-back-track" aria-hidden="true"><span class="mode-back-thumb"></span></span>
+                        <span class="mode-back-option mode-back-option--active" aria-hidden="true">Minimal</span>
                     </button>
                 </div>
             </div>
