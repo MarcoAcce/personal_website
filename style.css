@@ -1,11 +1,27 @@
 :root {
+  /* ---- size of the set --------------------------------------------------
+     The TV no longer stretches to any window shape:
+     - portrait window (taller than wide): the set fills the window, but is never
+       wider than --tv-max-portrait (width / height), so near-square windows
+       don't produce a fat, squat set.
+     - landscape window: the set keeps a fixed --tv-ratio (width / height),
+       is centred, and is as large as fits.
+     Everything else is sized in "u" (1% of the set's width in portrait, of its
+     height in landscape), so the whole cabinet scales as one object.
+     cqw / cqh are measured against .tv (see below). */
+  --tv-ratio: 1.6;
+  --tv-max-portrait: .75;
+  --tv-w: min(100cqw, 100cqh * var(--tv-max-portrait));
+  --tv-h: 100cqh;
+  --u: calc(var(--tv-w) / 100);
+
   /* plastic bezel around the glass (your old grey border) */
-  --bezel: clamp(10px, 3.6vmin, 56px);
-  /* height of the bottom strip that holds the navigation */
-  --strip: clamp(48px, 9vmin, 88px);
+  --bezel: clamp(10px, calc(3.6 * var(--u)), 56px);
+  /* height of the bottom strip that holds the navigation (portrait) */
+  --strip: clamp(48px, calc(9 * var(--u)), 88px);
   /* outer cabinet and glass corner rounding */
-  --cabinet-radius: clamp(16px, 4.5vmin, 48px);
-  --glass-radius: clamp(20px, 7vmin, 84px);
+  --cabinet-radius: clamp(16px, calc(4.5 * var(--u)), 48px);
+  --glass-radius: clamp(20px, calc(7 * var(--u)), 84px);
 
   /* cabinet: yellowed off-white plastic */
   --plastic-hi: #f4efda;
@@ -49,6 +65,17 @@
   --glare: .10;
 }
 
+/* landscape: fixed-ratio set, control panel to the right of the glass */
+@media (orientation: landscape) {
+  :root {
+    --tv-w: min(100cqw, 100cqh * var(--tv-ratio));
+    --tv-h: calc(var(--tv-w) / var(--tv-ratio));
+    --u: calc(var(--tv-h) / 100);
+    /* width of the control panel beside the glass */
+    --panel: clamp(92px, calc(22 * var(--u)), 260px);
+  }
+}
+
 /*--------------------------------------------------------*/
 * {
   box-sizing: border-box;
@@ -75,10 +102,19 @@ html, body {
     max(var(--room), env(safe-area-inset-right))
     max(var(--room), env(safe-area-inset-bottom))
     max(var(--room), env(safe-area-inset-left));
+
+  /* .tv is the box the set is fitted into: it measures the free space, and the
+     set is centred inside it. */
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tv-body {
-  height: 100%;
+  flex: none;
+  width: var(--tv-w);
+  height: var(--tv-h);
   display: grid;
   grid-template-rows: minmax(0, 1fr) var(--strip);
   padding: var(--bezel) var(--bezel) 0;
@@ -99,8 +135,10 @@ html, body {
    glass effect for fake monitor
 -------------------------------------------------------- */
 .well {                            /* dark recessed ring around the glass */
+  --well-pad: clamp(6px, calc(1.5 * var(--u)), 18px);
+  position: relative;              /* anchor for the tube backdrop below */
   min-height: 0;
-  padding: clamp(6px, 1.5vmin, 18px);
+  padding: var(--well-pad);
   border-radius: calc(var(--glass-radius) + 18px) / calc(var(--glass-radius) * .85 + 18px);
   background: linear-gradient(160deg, var(--frame) 0%, var(--frame-lo) 100%);
   box-shadow:
@@ -109,8 +147,24 @@ html, body {
     0 1px 0 rgba(255,255,255,.75);           /* light catching the lip */
 }
 
+/* Unlit tube behind the glass. It fills exactly the glass area (inside the
+   beige frame) so that while the screen scales up on power-on, the space it
+   hasn't covered yet reads as a dark switched-off CRT, not beige plastic.
+   Once the screen is at full size this is completely hidden. It sits only in
+   the content region, so the frame colour and the monitor border are unchanged. */
+.well::after {
+  content: "";
+  position: absolute;
+  inset: var(--well-pad);          /* = the glass area, inside the frame */
+  z-index: 0;                      /* behind .screen (z-index:1) */
+  border-radius: var(--glass-radius) / calc(var(--glass-radius) * .85);
+  background: radial-gradient(ellipse at 50% 45%, #1b1b1f 0%, #0a0a0c 78%);
+  pointer-events: none;
+}
+
 .screen {
   position: relative;
+  z-index: 1;                      /* above the unlit-tube backdrop in .well */
   height: 100%;
   overflow: hidden;
   isolation: isolate;
@@ -240,7 +294,7 @@ html, body {
 
 /* light default spacing; zero specificity, so your own page styles win */
 #content :where(h1, h2, h3, p, ul, ol) { margin-block: 0 .8em; }
-#content :where(h1) { font-size: clamp(1.6rem, 4.5vmin, 2.6rem); line-height: 1.15; }
+#content :where(h1) { font-size: clamp(1.6rem, calc(4.5 * var(--u)), 2.6rem); line-height: 1.15; }
 #content :where(a)  { color: var(--link); }
 
 /* images scale down to fit the glass instead of overflowing it
@@ -276,8 +330,8 @@ html, body {
     rgba(var(--shade),var(--vignette)) 100%
   );
   box-shadow:
-    inset 0 0 clamp(30px, 9vmin, 120px) rgba(var(--shade),.8),
-    inset 0 0 clamp(6px, 1.5vmin, 18px) rgba(var(--shade),.9);
+    inset 0 0 clamp(30px, calc(9 * var(--u)), 120px) rgba(var(--shade),.8),
+    inset 0 0 clamp(6px, calc(1.5 * var(--u)), 18px) rgba(var(--shade),.9);
 }
 
 /* reflected window light, upper left */
@@ -331,19 +385,19 @@ html, body {
   gap: 12px;
   min-width: 0;
 }
-.strip-left  { justify-self: start; display: flex; align-items: center; gap: clamp(8px, 2vmin, 20px); }
-.strip-right { justify-self: end;   display: flex; align-items: center; gap: clamp(8px, 2vmin, 18px); }
+.strip-left  { justify-self: start; display: flex; align-items: center; gap: clamp(8px, calc(2 * var(--u)), 20px); }
+.strip-right { justify-self: end;   display: flex; align-items: center; gap: clamp(8px, calc(2 * var(--u)), 18px); }
 
 .grille {
-  width: clamp(60px, 14vw, 180px);
-  height: clamp(18px, 4vmin, 38px);
+  width: clamp(60px, calc(14 * var(--u)), 180px);
+  height: clamp(18px, calc(4 * var(--u)), 38px);
   border-radius: 6px;
   background: repeating-linear-gradient(90deg, rgba(var(--edge),.75) 0 2px, transparent 2px 6px), var(--plastic-lo);
   box-shadow: inset 0 2px 4px rgba(var(--edge),.55), 0 1px 0 rgba(255,255,255,.7);
 }
 
 .led {
-  width: clamp(7px, 1.2vmin, 11px);
+  width: clamp(7px, calc(1.2 * var(--u)), 11px);
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 30%, #ffe2a8, var(--amber) 45%, #a35a00);
@@ -351,7 +405,7 @@ html, body {
 }
 
 .knob {
-  width: clamp(26px, 5vmin, 46px);
+  width: clamp(26px, calc(5 * var(--u)), 46px);
   aspect-ratio: 1;
   border-radius: 50%;
   position: relative;
@@ -381,15 +435,15 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(4px, 1vmin, 10px);
+  gap: clamp(4px, calc(1 * var(--u)), 10px);
 }
 
 nav a {
   display: block;
-  padding: .5em clamp(.8em, 2vmin, 1.4em);
+  padding: .5em clamp(.8em, calc(2 * var(--u)), 1.4em);
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-weight: 600;
-  font-size: clamp(12px, 1.9vmin, 15px);
+  font-size: clamp(12px, calc(1.9 * var(--u)), 15px);
   line-height: 1;
   color: var(--key-text);
   text-decoration: none;
@@ -420,9 +474,78 @@ nav a[aria-current="page"] {              /* and lit */
 nav a:focus-visible { outline: 2px solid var(--key-text); outline-offset: 3px; }
 
 /* --------------------------------------------------------
-small screens
+   landscape: the controls move to a panel on the right of the
+   glass, like an old television, and the menu keys stack.
+   (Markup order is unchanged; `order` only rearranges it visually.)
  -------------------------------------------------------- */
-@media (max-width: 720px) {
+@media (orientation: landscape) {
+  .tv-body {
+    grid-template-columns: minmax(0, 1fr) var(--panel);
+    grid-template-rows: minmax(0, 1fr);
+    column-gap: var(--bezel);
+    padding: var(--bezel);
+  }
+
+  /* the panel: a slightly recessed plate */
+  .strip {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: calc(2 * var(--u));
+    padding: calc(2.4 * var(--u)) calc(1.8 * var(--u));
+    border-radius: calc(var(--cabinet-radius) * .6);
+    background: linear-gradient(180deg, rgba(var(--edge), .04), rgba(var(--edge), .14));
+    box-shadow:
+      inset 0 2px 6px rgba(var(--edge), .35),
+      inset 0 -1px 0 rgba(255,255,255,.5),
+      0 1px 0 rgba(255,255,255,.7);
+  }
+
+  /* top to bottom: knobs, menu keys, LED + speaker grille */
+  .strip-right { order: 1; justify-content: center; }
+  nav          { order: 2; }
+  .strip-left  { order: 3; flex-direction: column; }
+
+  .knob { width: clamp(28px, calc(7 * var(--u)), 60px); }
+
+  nav {
+    flex: 1 1 0;
+    min-height: 0;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: clamp(6px, calc(1.6 * var(--u)), 16px);
+    padding: 4px 4px 8px;       /* room so key shadows aren't clipped */
+    overflow-y: auto;           /* only kicks in on very short windows */
+    scrollbar-width: none;
+  }
+  /* centre the keys without ever pushing the first one out of reach */
+  nav > :first-child { margin-top: auto; }
+  nav > :last-child  { margin-bottom: auto; }
+
+  nav a {
+    padding: .8em .4em;
+    font-size: clamp(12px, calc(2.1 * var(--u)), 17px);
+    text-align: center;
+  }
+
+  .led { align-self: center; width: clamp(8px, calc(1.6 * var(--u)), 14px); }
+  .grille {
+    width: 100%;
+    height: clamp(40px, calc(14 * var(--u)), 140px);
+    /* horizontal slats instead of vertical ones */
+    background: repeating-linear-gradient(0deg, rgba(var(--edge),.75) 0 2px, transparent 2px 6px), var(--plastic-lo);
+  }
+}
+/* very short windows (phone held sideways): drop the grille to save room */
+@media (orientation: landscape) and (max-height: 420px) {
+  .grille { display: none; }
+}
+
+/* --------------------------------------------------------
+   small screens (portrait only: landscape uses the side panel)
+ -------------------------------------------------------- */
+@media (max-width: 720px) and (orientation: portrait) {
   .grille, .strip-right { display: none; }
   .strip { grid-template-columns: auto 1fr; }
   .strip-left { padding-left: 4px; }
@@ -433,15 +556,13 @@ small screens
     padding: 4px 4px 8px;      /* room so button shadows aren't clipped */
   }
   #content { padding: 12px 8px; }
-}
-@media (max-width: 720px) and (orientation: portrait) {
   :root { --glass-radius: 26px; }
 }
 
 
 .picture {
-  width: 40vmin;
-  height: 40vmin;
+  width: calc(40 * var(--u));
+  height: calc(40 * var(--u));
   object-fit: cover;
   border: 3px solid #444; 
 }

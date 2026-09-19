@@ -1,24 +1,30 @@
-const content = document.querySelector('#content');
-const noise = document.querySelector('.fx-static');
-const navLinks = document.querySelectorAll('nav [data-page]');
+const content   = document.querySelector('#content');
+const noise     = document.querySelector('.fx-static');
+const navLinks  = document.querySelectorAll('nav [data-page]');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-const images = [
-    '1.jpg',
-    '2.jpeg',
-    '3.jpg',
-    '4.jpg'
-];
+const HOME_IMAGES = ['1.jpg', '2.jpeg', '3.jpg', '4.jpg'];
+const AVATAR_INTERVAL = 10000;   // ms between home-page picture swaps
 
-// loading effect
+// Home-page picture rotation. Kept at module scope so it can be cancelled
+// whenever we navigate, which stops a new timer stacking on top of the old
+// one every time Home is opened.
+let avatarTimer = null;
+let lastImage = null;
+
+// --------------------------------------------------------
+// small helpers
+// --------------------------------------------------------
+
+// channel-change static, played on navigation
 function flashStatic() {
     if (reduceMotion.matches) return;
     noise.classList.remove('on');
-    void noise.offsetWidth; // restart the animation
+    void noise.offsetWidth;      // reflow, so the animation can restart
     noise.classList.add('on');
 }
 
-// active effect on current page in navigation
+// light the key for the current page (and clear the others)
 function markActive(page) {
     navLinks.forEach(link => {
         if (link.dataset.page === page)
@@ -28,41 +34,66 @@ function markActive(page) {
     });
 }
 
-function getRandomImage() {
-    const file = images[Math.floor(Math.random() * images.length)];
+// a random home image that isn't the one already showing
+function nextImage() {
+    if (HOME_IMAGES.length < 2) return `media/${HOME_IMAGES[0]}`;
+    let file;
+    do { file = HOME_IMAGES[Math.floor(Math.random() * HOME_IMAGES.length)]; }
+    while (file === lastImage);
+    lastImage = file;
     return `media/${file}`;
 }
 
-function pageFromURL() {
-    const path = location.pathname.replace(/^\/+|\/+$/g, "");
-    return (path === "" || path === "index.html") ? "home" : path;
+function stopAvatarRotation() {
+    if (avatarTimer !== null) {
+        clearInterval(avatarTimer);
+        avatarTimer = null;
+    }
 }
 
+// Show a random avatar, then cycle it. Cycling is auto-motion, so it's
+// suppressed when the visitor asks for reduced motion; they still get one
+// random picture per visit.
+function startAvatarRotation() {
+    const avatar = document.getElementById('avatar');
+    if (!avatar) return;
 
-// page load
+    avatar.src = nextImage();
+    if (reduceMotion.matches) return;
+    avatarTimer = setInterval(() => { avatar.src = nextImage(); }, AVATAR_INTERVAL);
+}
+
+// which page the current URL points at
+function pageFromURL() {
+    const path = location.pathname.replace(/^\/+|\/+$/g, '');
+    return (path === '' || path === 'index.html') ? 'home' : path;
+}
+
+// --------------------------------------------------------
+// page loading
+// --------------------------------------------------------
 async function loadPage(page, { push = true, flash = true } = {}) {
     if (flash) flashStatic();
+    stopAvatarRotation();        // whatever we're leaving, stop its timer
 
     try {
         const response = await fetch(`/pages/${page}.html`);
         if (!response.ok)
             throw new Error(`Page not found: ${response.status}`);
 
-        const html = await response.text();
-        content.innerHTML = html;
+        content.innerHTML = await response.text();
         markActive(page);
 
         if (push)
-            history.pushState({ page }, "", `/${page}`);
+            history.pushState({ page }, '', `/${page}`);
     } catch (error) {
         console.error(error);
         markActive(null);
-        // Render your 404 state inside the main shell
         content.innerHTML = `
             <div class="error-page">
                 <h1>404</h1>
-                <p>Oops! The page you're looking for doesn't exist.</p>
-                <a href="/home" data-page="home">Return Home</a>
+                <p>No signal. That page isn't on this channel.</p>
+                <a href="/home" data-page="home">Return home</a>
             </div>
         `;
     }
@@ -70,39 +101,34 @@ async function loadPage(page, { push = true, flash = true } = {}) {
     // start each page at the top of the glass
     content.scrollTop = 0;
     if (flash) content.focus({ preventScroll: true });
-    if(pageFromURL() == 'home'){
-        const avatar = document.getElementById('avatar');
-        avatar.src = getRandomImage(); 
-        setInterval( 
-                    (function(){
-                        avatar.src = getRandomImage();}
-                        )
-                    , 10000); 
-    }
+
+    if (pageFromURL() === 'home')
+        startAvatarRotation();
 }
 
-// click listener for navigation
+// --------------------------------------------------------
+// navigation
+// --------------------------------------------------------
+
 // Delegated on document so links inside loaded pages (like the 404
-// "Return Home" link) work too, not just the ones in the nav.
-document.addEventListener("click", event => {
+// "Return home" link) work too, not just the ones in the nav.
+document.addEventListener('click', event => {
     // let ctrl/cmd/shift-click and middle-click behave normally
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey)
         return;
 
-    const link = event.target.closest("[data-page]");
+    const link = event.target.closest('[data-page]');
     if (!link) return;
 
     event.preventDefault();
-    if(pageFromURL() != link.dataset.page)
+    if (pageFromURL() !== link.dataset.page)
         loadPage(link.dataset.page);
 });
 
-// back and forward browser buttons
-window.addEventListener("popstate", () => {
+// browser back / forward
+window.addEventListener('popstate', () => {
     loadPage(pageFromURL(), { push: false });
 });
 
 // initial load (no static: the power-on animation covers it)
 loadPage(pageFromURL(), { push: false, flash: false });
-
-
