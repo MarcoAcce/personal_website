@@ -1,15 +1,15 @@
 :root {
-  /* ---- size of the set --------------------------------------------------
-     The glass (the picture) is locked to 4:3 and made as large as fits, then
-     the cabinet shrink-wraps around it. --u is a proportional unit (~1% of the
-     available space) that scales all the cosmetic sizes together; cqw / cqh are
-     measured against .tv. The set is always a little smaller than the window
-     because of --room, and centred inside .tv. */
-  --tv-ratio: 1.6;            /* only seeds --u now (landscape) */
-  --tv-max-portrait: .75;     /* only seeds --u now (portrait)  */
+  /* ---------------------------------------------------------------------
+     The screen is 4:3 and as large as possible
+     the cabinet shrink-wraps around it. 
+     --u is a proportional unit (~1% of the available space) 
+     cqw / cqh are measured against .tv. 
+  --------------------------------------------------------------------- */
+  --tv-ratio: 1.6;            
+  --tv-max-portrait: .75;    
   --u: calc(min(100cqw, 100cqh * var(--tv-max-portrait)) / 100);
 
-  /* plastic bezel around the glass (your old grey border) */
+  /* plastic bezel around the glass */
   --bezel: clamp(10px, calc(3.6 * var(--u)), 56px);
   /* height of the bottom strip that holds the navigation (portrait) */
   --strip: clamp(48px, calc(9 * var(--u)), 88px);
@@ -19,26 +19,27 @@
   --cabinet-radius: clamp(16px, calc(4.5 * var(--u)), 48px);
   --glass-radius: clamp(20px, calc(7 * var(--u)), 84px);
 
-  /* everything the cabinet adds around the glass, so the 4:3 glass can be
-     sized to leave room for it (portrait: bezels + frame + bottom strip). */
+  /* ---------------------------------------------------------------------
+  everything around the glass, so the monior 4:3 glass can be
+     sized (portrait: bezels + frame + bottom strip). 
+  --------------------------------------------------------------------- */
   --chrome-x: calc(2 * var(--bezel) + 2 * var(--well-pad));
   --chrome-y: calc(var(--bezel) + var(--strip) + 2 * var(--well-pad));
-  /* largest 4:3 glass that fits both the width and the height available */
+  /* largest 4:3 */
   --glass-w: max(0px, min(
       calc(100cqw - var(--chrome-x)),
       calc((100cqh - var(--chrome-y)) * 4 / 3)
   ));
-  /* full height of the framed glass (glass + frame), used to pin the
-     landscape row so a tall control panel can't stretch the cabinet. */
+  /* full height of (glass + frame) */
   --well-h: calc(var(--glass-w) * 3 / 4 + 2 * var(--well-pad));
 
   /* cabinet: yellowed off-white plastic */
   --plastic-hi: #f4efda;
   --plastic: #e7e0c5;
   --plastic-lo: #cec39f;
-  --edge: 92, 78, 42;         /* dark beige used for outlines and shadows (r, g, b) */
+  --edge: 92, 78, 42;         /* dark beige used for outlines and shadows */
 
-  /* the darker beige frame around the glass */
+  /* darker beige frame around the glass */
   --frame: #b8a981;
   --frame-lo: #9c8d65;
 
@@ -55,18 +56,19 @@
   --text: #111111;
   --link: #1d3d91;
   --glow: rgba(0, 0, 0, .22); /* slight ink bleed on text */
-  --shade: 34, 34, 38;        /* greyish tone of vignette and scanlines (r, g, b) */
+  --shade: 34, 34, 38;        /* greyish tone of vignette and scanlines */
 
   /* empty space between the TV and the edge of the browser window */
   --room: clamp(12px, 4vmin, 64px);
 
-  /* scrollbar (beige to match the keys; see the XP-blue option further down) */
+  /* retro scrollbar */
   --sb-size: 17px;
-  --sb-track-a: #e2dbbc;
-  --sb-track-b: #f7f3e3;
-  --sb-face-hi: #fbf8ea;
-  --sb-face-lo: #d6cdac;
-  --sb-edge: #8c8262;
+  --sb-track-a: #c8c8c8;
+  --sb-track-b: #e8e8e8;
+  --sb-face-hi: #f4f4f4;
+  --sb-face-lo: #c0c0c0;
+  --sb-edge: #6e6e6e;
+  --sb-edge-hover: #4a4a4a;
 
   /* effect strength */
   --scanlines: .10;
@@ -105,16 +107,16 @@ html, body {
 .tv {
   position: fixed;
   inset: 0;
-  /* --room keeps the set a little smaller than the window on every screen;
-     the max() keeps it clear of notches and home bars on phones */
+  /* ---------------------------------------------------------------------
+    --room keeps the set smaller than the window
+     max() keeps it clear of notches and home bars on phones 
+  --------------------------------------------------------------------- */
   padding:
     max(var(--room), env(safe-area-inset-top))
     max(var(--room), env(safe-area-inset-right))
     max(var(--room), env(safe-area-inset-bottom))
     max(var(--room), env(safe-area-inset-left));
 
-  /* .tv is the box the set is fitted into: it measures the free space, and the
-     set is centred inside it. */
   container-type: size;
   display: flex;
   align-items: center;
@@ -123,7 +125,6 @@ html, body {
 
 .tv-body {
   flex: none;
-  /* wrap tightly around the glass + chrome, then .tv centres it */
   width: fit-content;
   height: fit-content;
   display: grid;
@@ -146,23 +147,22 @@ html, body {
 /*--------------------------------------------------------
    glass effect for fake monitor
 -------------------------------------------------------- */
-.well {                            /* dark recessed ring around the glass */
-  position: relative;              /* anchor for the tube backdrop below */
+.well {                            /* dark recessed ring around glass */
+  position: relative;              /* anchor for tube backdrop below */
   min-height: 0;
   padding: var(--well-pad);
   border-radius: calc(var(--glass-radius) + 18px) / calc(var(--glass-radius) * .85 + 18px);
   background: linear-gradient(160deg, var(--frame) 0%, var(--frame-lo) 100%);
   box-shadow:
-    inset 0 3px 8px rgba(var(--edge),.65),   /* frame is recessed into the cabinet */
+    inset 0 3px 8px rgba(var(--edge),.65),   /* frame is recessed */
     inset 0 -1px 0 rgba(255,255,255,.25),
     0 1px 0 rgba(255,255,255,.75);           /* light catching the lip */
 }
 
-/* Unlit tube behind the glass. It fills exactly the glass area (inside the
-   beige frame) so that while the screen scales up on power-on, the space it
-   hasn't covered yet reads as a dark switched-off CRT, not beige plastic.
-   Once the screen is at full size this is completely hidden. It sits only in
-   the content region, so the frame colour and the monitor border are unchanged. */
+/* ---------------------------------------------------------------------
+  unlit tube behind the glass, so that while the screen scales up on power-on
+  the background is black
+--------------------------------------------------------------------- */
 .well::after {
   content: "";
   position: absolute;
@@ -191,10 +191,6 @@ html, body {
 -------------------------------------------------------- */
 #content {
   position: absolute;
-
-  /* The scroll pane sits slightly inside the glass. Its top and bottom edges
-     stay clear of the rounded corners, so the scrollbar arrows aren't
-     clipped by them. The padding below is reduced to compensate. */
   inset: calc(var(--glass-radius) * .5) 12px;
   overflow-y: auto;
 
@@ -202,9 +198,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 0.625rem;
-  /* NOTE: no justify-content here. With overflow, "center" pushes the top of
-     the page out of reach (that was the cut-off top). Short pages are
-     centred by the auto margins below instead. */
+  /* NOTE: no justify-content here. */
 
   padding: max(12px, calc(var(--glass-radius) * .25)) calc(var(--glass-radius) * .6);
 
@@ -216,62 +210,61 @@ html, body {
   outline: none;
 }
 
-/* Centre short pages vertically; tall pages simply start at the top and scroll.
-   (Auto margins only absorb free space when there is some.) */
 #content > :first-child { margin-top: auto; }
 #content > :last-child  { margin-bottom: auto; }
 
 /* --------------------------------------------------------
-   text pages: <article class="text-page"> ... </article>
-   A left-aligned reading column with justified text that
-   doesn't fill the whole width of the glass.
+   text pages 
+    - left-aligned reading column
+    - justified text 
+    - doesn't fill the whole width
 -------------------------------------------------------- */
 .text-page {
-  align-self: flex-start;      /* column sits on the left (use margin-inline: auto instead to centre it) */
+  align-self: flex-start;      
   width: 100%;
-  max-width: 60ch;             /* line length, tweak to taste */
+  max-width: 60ch;             
   text-align: justify;
   text-justify: inter-word;
-  hyphens: auto;               /* fewer big gaps in justified monospace; relies on lang="en" */
+  hyphens: auto;              
   overflow-wrap: break-word;
 }
 .text-page :where(h1, h2, h3) { text-align: left; hyphens: manual; }
 
 /* --------------------------------------------------------
-   scrollbar (Windows XP style: arrow buttons, grippy thumb)
+   scrollbar TV mode 
 -------------------------------------------------------- */
-@supports selector(::-webkit-scrollbar) {      /* Chrome, Edge, Safari */
-  #content::-webkit-scrollbar { width: var(--sb-size); height: var(--sb-size); }
-  #content::-webkit-scrollbar-corner { background: transparent; }
+@supports selector(::-webkit-scrollbar) {     
+  body:not(.minimal) #content::-webkit-scrollbar { width: var(--sb-size); height: var(--sb-size); }
+  body:not(.minimal) #content::-webkit-scrollbar-corner { background: transparent; }
 
-  #content::-webkit-scrollbar-track {
+  body:not(.minimal) #content::-webkit-scrollbar-track {
     background: linear-gradient(90deg, var(--sb-track-a), var(--sb-track-b) 60%, var(--sb-track-a));
     box-shadow: inset 0 0 0 1px rgba(var(--edge), .25);
   }
 
-  #content::-webkit-scrollbar-thumb {
+  body:not(.minimal) #content::-webkit-scrollbar-thumb {
     border: 1px solid var(--sb-edge);
     border-radius: 4px;
     background:
       /* grip lines in the middle */
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Cpath d='M0 1h7M0 3h7M0 5h7' stroke='%238c8262' stroke-width='1'/%3E%3C/svg%3E") center / 7px 7px no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Cpath d='M0 1h7M0 3h7M0 5h7' stroke='%236e6e6e' stroke-width='1'/%3E%3C/svg%3E") center / 7px 7px no-repeat,
       linear-gradient(90deg, var(--sb-face-hi), var(--sb-face-lo));
     box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
   }
-  #content::-webkit-scrollbar-thumb:hover {
-    border-color: #a35a00;
+  body:not(.minimal) #content::-webkit-scrollbar-thumb:hover {
+    border-color: var(--sb-edge-hover);
     background:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Cpath d='M0 1h7M0 3h7M0 5h7' stroke='%23a35a00' stroke-width='1'/%3E%3C/svg%3E") center / 7px 7px no-repeat,
-      linear-gradient(90deg, #fff6dc, #f1d9a4);
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Cpath d='M0 1h7M0 3h7M0 5h7' stroke='%234a4a4a' stroke-width='1'/%3E%3C/svg%3E") center / 7px 7px no-repeat,
+      linear-gradient(90deg, #ffffff, #d4d4d4);
   }
-  #content::-webkit-scrollbar-thumb:active {
+  body:not(.minimal) #content::-webkit-scrollbar-thumb:active {
     background:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Cpath d='M0 1h7M0 3h7M0 5h7' stroke='%23a35a00' stroke-width='1'/%3E%3C/svg%3E") center / 7px 7px no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Cpath d='M0 1h7M0 3h7M0 5h7' stroke='%234a4a4a' stroke-width='1'/%3E%3C/svg%3E") center / 7px 7px no-repeat,
       linear-gradient(90deg, var(--sb-face-lo), var(--sb-face-hi));
   }
 
   /* arrow buttons */
-  #content::-webkit-scrollbar-button:single-button {
+  body:not(.minimal) #content::-webkit-scrollbar-button:single-button {
     display: block;
     width: var(--sb-size);
     height: var(--sb-size);
@@ -279,29 +272,42 @@ html, body {
     border-radius: 4px;
     box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
   }
-  #content::-webkit-scrollbar-button:single-button:vertical:decrement {
+  body:not(.minimal) #content::-webkit-scrollbar-button:single-button:vertical:decrement {
     background:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M4.5 0 9 6H0z' fill='%233a3524'/%3E%3C/svg%3E") center / 9px 6px no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M4.5 0 9 6H0z' fill='%232b2b2b'/%3E%3C/svg%3E") center / 9px 6px no-repeat,
       linear-gradient(90deg, var(--sb-face-hi), var(--sb-face-lo));
   }
-  #content::-webkit-scrollbar-button:single-button:vertical:increment {
+  body:not(.minimal) #content::-webkit-scrollbar-button:single-button:vertical:increment {
     background:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M0 0h9L4.5 6z' fill='%233a3524'/%3E%3C/svg%3E") center / 9px 6px no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M0 0h9L4.5 6z' fill='%232b2b2b'/%3E%3C/svg%3E") center / 9px 6px no-repeat,
       linear-gradient(90deg, var(--sb-face-hi), var(--sb-face-lo));
   }
-  #content::-webkit-scrollbar-button:single-button:hover { border-color: #a35a00; }
-  #content::-webkit-scrollbar-button:single-button:active {
+  body:not(.minimal) #content::-webkit-scrollbar-button:single-button:hover { border-color: var(--sb-edge-hover); }
+  body:not(.minimal) #content::-webkit-scrollbar-button:single-button:active {
     box-shadow: inset 0 2px 4px rgba(var(--edge), .45);
   }
+
+  /* --------------------------------------------------------
+     scrollbar minimal mode
+  -------------------------------------------------------- */
+  body.minimal #content::-webkit-scrollbar { width: 10px; height: 10px; }
+  body.minimal #content::-webkit-scrollbar-track { background: transparent; }
+  body.minimal #content::-webkit-scrollbar-thumb {
+    background: #c8c8ce;
+    border-radius: 6px;
+    border: 2px solid #f6f6f7; 
+  }
+  body.minimal #content::-webkit-scrollbar-thumb:hover { background: #adadb4; }
 }
 
-/* Firefox can only recolour its scrollbar (no arrows or grip).
-   This is inside @supports because in current Chrome the standard
-   scrollbar-* properties would switch the custom styling above off. */
 @supports not selector(::-webkit-scrollbar) {
-  #content {
+  body:not(.minimal) #content {
     scrollbar-width: auto;
     scrollbar-color: var(--sb-edge) var(--sb-track-a);
+  }
+  body.minimal #content {
+    scrollbar-width: thin;
+    scrollbar-color: #c8c8ce transparent;
   }
 }
 
@@ -393,7 +399,7 @@ html, body {
  --------------------------------------------------------*/
 .strip {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;    /* keeps the nav truly centred */
+  grid-template-columns: 1fr auto 1fr;    /* keeps the nav centered */
   align-items: center;
   gap: 12px;
   min-width: 0;
@@ -417,8 +423,9 @@ html, body {
   box-shadow: 0 0 8px 2px rgba(255,181,71,.6), inset 0 -1px 2px rgba(0,0,0,.4);
 }
 
-/* The working control. One knob only; clicking it switches to the plain view.
-   It's a real <button> so it's keyboard- and screen-reader-accessible. */
+/* --------------------------------------------------------
+  knob control 
+-------------------------------------------------------- */
 .knob {
   width: clamp(26px, calc(5 * var(--u)), 46px);
   aspect-ratio: 1;
@@ -434,7 +441,7 @@ html, body {
     inset 0 0 0 2px rgba(255,255,255,.4);
   transition: transform 120ms ease;
 }
-.knob::after {                     /* the pointer notch */
+.knob::after {                    
   content: "";
   position: absolute;
   left: 50%; top: 9%;
@@ -456,12 +463,12 @@ html, body {
   white-space: nowrap;
 }
 
-/* Return-to-TV toggle. Hidden in the TV view, shown in the plain view. */
+/* return-to-tv toggle. only for plain view. */
 .mode-back {
   display: none;
   align-items: center;
   gap: .45em;
-  font: 600 14px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font: 600 12px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   padding: .55em .9em;
   border-radius: 6px;
   border: 1px solid #bfbfc6;
