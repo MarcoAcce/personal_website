@@ -1,0 +1,66 @@
+<!-- GitHub Pages serves this for any unmatched path (no server rewrites).
+     Keep it identical to index.html so client-side routing can take over. -->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Website</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="./media/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./media/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./media/icons//favicon-16x16.png">
+    <link rel="manifest" href="./media/icons//site.webmanifest">
+</head>
+<body>
+    <script type="module" src="app.js"></script>
+
+    <div class="tv">
+        <div class="tv-body">
+
+            <div class="well">
+                <div class="screen">
+                    <main id="content" tabindex="-1"></main>
+
+                    <div class="fx fx-scanlines"></div>
+                    <div class="fx fx-flicker"></div>
+                    <div class="fx fx-vignette"></div>
+                    <div class="fx fx-glare"></div>
+                    <div class="fx fx-static"></div>
+                </div>
+            </div>
+
+            <div class="strip">
+                <div class="strip-left" aria-hidden="true">
+                    <span class="led"></span>
+                    <span class="grille"></span>
+                </div>
+
+                <nav aria-label="Main">
+                    <a href="home" data-page="home">Home</a>
+                    <a href="about" data-page="about">About</a>
+                    <a href="projects" data-page="projects">Projects</a>
+                    <a href="cats" data-page="cats">Cats</a>
+                </nav>
+
+                <div class="strip-right">
+                    <div class="knob-control">
+                        <span class="knob-label knob-label--active" aria-hidden="true">Retro</span>
+                        <button type="button" class="knob" id="to-plain"
+                                aria-label="Switch to minimal view"></button>
+                        <span class="knob-label knob-label--inactive" aria-hidden="true">Minimal</span>
+                    </div>
+                    <button type="button" class="mode-back" id="to-tv"
+                            aria-label="Switch to retro view">
+                        <span class="mode-back-option mode-back-option--inactive" aria-hidden="true">Retro</span>
+                        <span class="mode-back-track" aria-hidden="true"><span class="mode-back-thumb"></span></span>
+                        <span class="mode-back-option mode-back-option--active" aria-hidden="true">Minimal</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
