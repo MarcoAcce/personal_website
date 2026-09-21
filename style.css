@@ -723,6 +723,7 @@ body.minimal #content > :last-child  { margin-bottom: 0; }
 
 /* bottom menu */
 body.minimal .strip {
+  display: grid;
   grid-template-columns: 1fr auto 1fr;
   gap: 12px;
   padding: 12px clamp(12px, 4vw, 28px);
