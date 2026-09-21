@@ -3,6 +3,8 @@ const noise     = document.querySelector('.fx-static');
 const navLinks  = document.querySelectorAll('nav [data-page]');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+const BASE_PATH = new URL('.', import.meta.url).pathname;
+
 const HOME_IMAGES = ['1.jpg', '2.jpeg', '3.jpg', '4.jpg'];
 const AVATAR_INTERVAL = 10000;   // ms between home-page picture swaps
 
@@ -65,7 +67,9 @@ function startAvatarRotation() {
 
 // which page the current URL points at
 function pageFromURL() {
-    const path = location.pathname.replace(/^\/+|\/+$/g, '');
+    let path = location.pathname;
+    if (path.startsWith(BASE_PATH)) path = path.slice(BASE_PATH.length);
+    path = path.replace(/^\/+|\/+$/g, '');
     return (path === '' || path === 'index.html') ? 'home' : path;
 }
 
@@ -77,7 +81,7 @@ async function loadPage(page, { push = true, flash = true } = {}) {
     stopAvatarRotation();        // whatever we're leaving, stop its timer
 
     try {
-        const response = await fetch(`/pages/${page}.html`);
+        const response = await fetch(`${BASE_PATH}pages/${page}.html`);
         if (!response.ok)
             throw new Error(`Page not found: ${response.status}`);
 
@@ -85,7 +89,7 @@ async function loadPage(page, { push = true, flash = true } = {}) {
         markActive(page);
 
         if (push)
-            history.pushState({ page }, '', `/${page}`);
+            history.pushState({ page }, '', `${BASE_PATH}${page}`);
     } catch (error) {
         console.error(error);
         markActive(null);
@@ -93,7 +97,7 @@ async function loadPage(page, { push = true, flash = true } = {}) {
             <div class="error-page">
                 <h1>404</h1>
                 <p>No signal. That page isn't on this channel.</p>
-                <a href="/home" data-page="home">Return home</a>
+                <a href="home" data-page="home">Return home</a>
             </div>
         `;
     }
